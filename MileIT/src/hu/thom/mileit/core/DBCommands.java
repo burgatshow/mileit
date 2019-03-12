@@ -23,7 +23,10 @@ public class DBCommands implements Serializable {
 	public static final String SQL_U_CAR_PRIMARY = "UPDATE cars SET active = 0 WHERE car_id <> ? AND user_id = ?";
 	
 	// Maintenances
-	public static final String SQL_S_MAINTENANCES = "SELECT * FROM maintenances ORDER BY date DESC ";
+	public static final String SQL_S_MAINTENANCES = "SELECT m.*, c.friendly_name, c.plate_number, pm.name FROM maintenances m, cars c, payment_method pm WHERE c.car_id = m.car_id AND m.pm_id = pm.pm_id AND m.user_id = ? ORDER BY m.date DESC";
+	public static final String SQL_I_MAINTENANCE = "INSERT INTO maintenances (car_id, pm_id, odometer, date, description, amount, user_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
+	public static final String SQL_U_MAINTENANCE = "UPDATE maintenances SET car_id = ?, pm_id = ?, odometer = ?, date = ?, description = ?, amount = ? WHERE user_id = ? AND mntnc_id = ?";
+	public static final String SQL_S_MAINTENANCE = "SELECT * FROM maintenances WHERE mntnc_id = ?";
 
 	// Payment methods
 	public static final String SQL_S_PAYMENTS = "SELECT * FROM payment_method WHERE user_id = ? ORDER BY name";

@@ -34,6 +34,8 @@ public class Controller extends HttpServlet {
 	public static final String LOCATIONS = "/WEB-INF/pages/locations.jsp";
 	public static final String LOCATIONS_FORM = "/WEB-INF/pages/locations-form.jsp";
 	public static final String PROFILE_FORM = "/WEB-INF/pages/profile-form.jsp";
+	public static final String MAINTENANCES = "/WEB-INF/pages/maintenances.jsp";
+	public static final String MAINTENANCES_FORM = "/WEB-INF/pages/maintenances-form.jsp";
 
 	public DBManager dbm = null;
 

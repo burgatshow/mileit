@@ -26,6 +26,13 @@ $(document).ready(
 				endDate: new Date(),
 				weekStart: 1
 			});
+			
+			$('#maintenanceDate').datepicker({
+				format : "yyyy-mm-dd",
+				todayHighlight : true,
+				endDate: new Date(),
+				weekStart: 1
+			});
 
 			$('#confirm-archive').on(
 					'show.bs.modal',
