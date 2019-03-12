@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app id="WebApp_ID" version="3.0"
+	xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
+	<display-name>MileIT</display-name>
+	<welcome-file-list>
+		<welcome-file>index</welcome-file>
+	</welcome-file-list>
+
+	<security-constraint>
+		<display-name>Protected pages</display-name>
+		<web-resource-collection>
+			<web-resource-name>All Resources</web-resource-name>
+			<url-pattern>/*</url-pattern>
+		</web-resource-collection>
+		<auth-constraint>
+			<role-name>users</role-name>
+		</auth-constraint>
+	</security-constraint>
+	<login-config>
+		<auth-method>FORM</auth-method>
+		<form-login-config>
+			<form-login-page>/login.jsp</form-login-page>
+			<form-error-page>/login-error.jsp</form-error-page>
+		</form-login-config>
+	</login-config>
+	<security-constraint>
+		<display-name>Allowed resources</display-name>
+		<web-resource-collection>
+			<web-resource-name>Application resources</web-resource-name>
+			<url-pattern>/img/*</url-pattern>
+			<url-pattern>/js/*</url-pattern>
+			<url-pattern>/css/*</url-pattern>
+			<url-pattern>/img/*</url-pattern>
+			<url-pattern>/fonts/*</url-pattern>
+		</web-resource-collection>
+	</security-constraint>
+	<security-role>
+		<role-name>users</role-name>
+	</security-role>
+	<session-config>
+		<session-timeout>15</session-timeout>
+	</session-config>
+</web-app>
