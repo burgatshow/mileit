@@ -9,7 +9,11 @@ public class UserModel extends Model {
 
 	public UserModel() {
 	}
-
+	
+	public UserModel(int id) {
+		setId(id);
+	}
+	
 	public String getUsername() {
 		return username;
 	}
