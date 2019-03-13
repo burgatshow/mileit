@@ -25,6 +25,8 @@ public class DBManager implements Serializable {
 	private Connection con;
 	private PreparedStatement ps;
 	private ResultSet rs;
+	
+	private static LoggerHelper logger = new LoggerHelper();
 
 	/**
 	 * Constructor
@@ -34,14 +36,12 @@ public class DBManager implements Serializable {
 			try {
 				ds = (DataSource) new InitialContext().lookup("jdbc/mileit");
 			} catch (Exception e) {
-				// FIXME
-				e.printStackTrace();
+				logger.logException("DBManager()", e);
 			}
 		}
 	}
 
 	public boolean archiveCar(int id) {
-		System.out.println(id);
 		try {
 			con = ds.getConnection();
 			ps = con.prepareStatement(DBCommands.SQL_U_CAR_ARCHIVE);
@@ -52,8 +52,7 @@ public class DBManager implements Serializable {
 			}
 
 		} catch (Exception e) {
-			// FIXME
-			e.printStackTrace();
+			logger.logException("archiveCar()", e);
 		} finally {
 			closeConnection();
 		}
@@ -72,8 +71,7 @@ public class DBManager implements Serializable {
 					rs.close();
 				}
 			} catch (Exception e) {
-				// FIXME
-				e.printStackTrace();
+				logger.logException("closeConnection()", e);
 			}
 		}
 
@@ -83,8 +81,7 @@ public class DBManager implements Serializable {
 					ps.close();
 				}
 			} catch (Exception e) {
-				// FIXME
-				e.printStackTrace();
+				logger.logException("closeConnection()", e);
 			}
 		}
 
@@ -94,8 +91,7 @@ public class DBManager implements Serializable {
 					con.close();
 				}
 			} catch (Exception e) {
-				// FIXME
-				e.printStackTrace();
+				logger.logException("closeConnection()", e);
 			}
 		}
 	}
@@ -142,7 +138,7 @@ public class DBManager implements Serializable {
 				}
 
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.logException("createUpdateCar()", e);
 			} finally {
 				closeConnection();
 			}
@@ -173,8 +169,7 @@ public class DBManager implements Serializable {
 					return true;
 				}
 			} catch (Exception e) {
-				// FIXME
-				e.printStackTrace();
+				logger.logException("createUpdateLocation()", e);
 			} finally {
 				closeConnection();
 			}
@@ -205,8 +200,7 @@ public class DBManager implements Serializable {
 					return true;
 				}
 			} catch (Exception e) {
-				// FIXME
-				e.printStackTrace();
+				logger.logException("createUpdateMaintenance()", e);
 			} finally {
 				closeConnection();
 			}
@@ -233,8 +227,7 @@ public class DBManager implements Serializable {
 					return true;
 				}
 			} catch (Exception e) {
-				// FIXME
-				e.printStackTrace();
+				logger.logException("createUpdatePaymentMethod()", e);
 			} finally {
 				closeConnection();
 			}
@@ -268,8 +261,7 @@ public class DBManager implements Serializable {
 					return true;
 				}
 			} catch (Exception e) {
-				// FIXME
-				e.printStackTrace();
+				logger.logException("createUpdateRefuel()", e);
 			} finally {
 				closeConnection();
 			}
@@ -302,13 +294,10 @@ public class DBManager implements Serializable {
 				car.setEndDate(rs.getTimestamp("end_date"));
 				car.setDescription(rs.getString("description"));
 				car.setFriendlyName(rs.getString("friendly_name"));
-				// FIXME
-				// car.setId(rs.getInt("user_id"));
 				car.setActive(rs.getInt("active") == 1 ? true : false);
 			}
 		} catch (Exception e) {
-			// FIXME
-			e.printStackTrace();
+			logger.logException("getCar()", e);
 		} finally {
 			closeConnection();
 		}
@@ -317,7 +306,7 @@ public class DBManager implements Serializable {
 
 	public List<CarModel> getCars(int user_id) {
 		List<CarModel> cars = new ArrayList<CarModel>();
-
+		
 		try {
 			con = ds.getConnection();
 			ps = con.prepareStatement(DBCommands.SQL_S_CARS);
@@ -341,14 +330,12 @@ public class DBManager implements Serializable {
 				car.setEndDate(rs.getTimestamp("end_date"));
 				car.setDescription(rs.getString("description"));
 				car.setFriendlyName(rs.getString("friendly_name"));
-				// FIXME
 				car.setActive(rs.getInt("active") == 1 ? true : false);
 
 				cars.add(car);
 			}
 		} catch (Exception e) {
-			// FIXME
-			e.printStackTrace();
+			logger.logException("getCars()", e);
 		} finally {
 			closeConnection();
 		}
@@ -369,8 +356,7 @@ public class DBManager implements Serializable {
 			}
 
 		} catch (Exception e) {
-			// FIXME
-			e.printStackTrace();
+			logger.logException("getFuelPriceStats()", e);
 		} finally {
 			closeConnection();
 		}
@@ -409,8 +395,7 @@ public class DBManager implements Serializable {
 				rf.getPayment().setId(rs.getInt("pm_id"));
 			}
 		} catch (Exception e) {
-			// FIXME
-			e.printStackTrace();
+			logger.logException("getLastRefuel()", e);
 		} finally {
 			closeConnection();
 		}
@@ -431,8 +416,7 @@ public class DBManager implements Serializable {
 						rs.getDouble("longitude"), rs.getDouble("latitude"));
 			}
 		} catch (Exception e) {
-			// FIXME
-			e.printStackTrace();
+			logger.logException("getLocation()", e);
 		} finally {
 			closeConnection();
 		}
@@ -461,8 +445,7 @@ public class DBManager implements Serializable {
 				ls.add(l);
 			}
 		} catch (Exception e) {
-			// FIXME
-			e.printStackTrace();
+			logger.logException("getLocations()", e);
 		} finally {
 			closeConnection();
 		}
@@ -498,8 +481,7 @@ public class DBManager implements Serializable {
 				ms.add(m);
 			}
 		} catch (Exception e) {
-			// FIXME
-			e.printStackTrace();
+			logger.logException("getMaintenances()", e);
 		} finally {
 			closeConnection();
 		}
@@ -528,8 +510,7 @@ public class DBManager implements Serializable {
 				mm.setAmount(rs.getDouble("amount"));
 			}
 		} catch (Exception e) {
-			// FIXME
-			e.printStackTrace();
+			logger.logException("getMaintenance()", e);
 		} finally {
 			closeConnection();
 		}
@@ -552,8 +533,7 @@ public class DBManager implements Serializable {
 				pm.setDescription(rs.getString("description"));
 			}
 		} catch (Exception e) {
-			// FIXME
-			e.printStackTrace();
+			logger.logException("getPaymentMethod()", e);
 		} finally {
 			closeConnection();
 		}
@@ -574,8 +554,7 @@ public class DBManager implements Serializable {
 				pms.add(new PaymentMethodModel(rs.getInt("pm_id"), rs.getString("name"), rs.getString("description")));
 			}
 		} catch (Exception e) {
-			// FIXME
-			e.printStackTrace();
+			logger.logException("getPaymentMethods()", e);
 		} finally {
 			closeConnection();
 		}
@@ -606,8 +585,7 @@ public class DBManager implements Serializable {
 				rf.setPayment(new PaymentMethodModel(rs.getInt("pm_id")));
 			}
 		} catch (Exception e) {
-			// FIXME
-			e.printStackTrace();
+			logger.logException("getRefuel()", e);
 		} finally {
 			closeConnection();
 		}
@@ -649,8 +627,7 @@ public class DBManager implements Serializable {
 				refuels.add(refuel);
 			}
 		} catch (Exception e) {
-			// FIXME
-			e.printStackTrace();
+			logger.logException("getRefuels()", e);
 		} finally {
 			closeConnection();
 		}
@@ -674,8 +651,7 @@ public class DBManager implements Serializable {
 				user.setUsername(rs.getString("username"));
 			}
 		} catch (Exception e) {
-			// FIXME
-			e.printStackTrace();
+			logger.logException("getUserProfile()", e);
 		} finally {
 			closeConnection();
 		}
@@ -697,8 +673,7 @@ public class DBManager implements Serializable {
 				user.setUsername(rs.getString("username"));
 			}
 		} catch (Exception e) {
-			// FIXME
-			e.printStackTrace();
+			logger.logException("getUserProfile()", e);
 		} finally {
 			closeConnection();
 		}
@@ -725,7 +700,7 @@ public class DBManager implements Serializable {
 			}
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.logException("setPrimaryCar()", e);
 		} finally {
 			closeConnection();
 		}
@@ -747,8 +722,7 @@ public class DBManager implements Serializable {
 					return true;
 				}
 			} catch (Exception e) {
-				// FIXME
-				e.printStackTrace();
+				logger.logException("updateUserProfile()", e);
 			} finally {
 				closeConnection();
 			}
