@@ -22,7 +22,7 @@ public class IndexController extends Controller {
 			throws ServletException, IOException {
 		super.doGet(request, response);
 
-		request.setAttribute("page", "home");
+		request.setAttribute("page", "index");
 		request.setAttribute("lr", dbm.getLastRefuel(user.getId()));
 
 		List<RefuelsModel> fuelStats = dbm.getFuelPriceStats(user.getId());

@@ -128,7 +128,7 @@ public class DBManager implements Serializable {
 				if (ps.executeUpdate() == 1) {
 					isOK = true;
 				}
-
+				
 				if (isOK) {
 					if (setPrimaryCar(car.getUser().getId(), car.getId(), car.getOperation() == 0 ? true : false)) {
 						return true;
@@ -619,6 +619,7 @@ public class DBManager implements Serializable {
 				refuel.setFuelAmount(rs.getDouble("fuel_amount"));
 				refuel.setAmount(rs.getDouble("amount"));
 				refuel.setUnitPrice(rs.getDouble("unit_price"));
+				refuel.setDistance(rs.getDouble("prev_refuel_diff"));
 
 				refuel.setPayment(new PaymentMethodModel());
 				refuel.getPayment().setId(rs.getInt("pm_id"));

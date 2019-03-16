@@ -13,6 +13,7 @@ public class RefuelsModel extends Model {
 	private double unitPrice;
 	private double fuelAmount;
 	private double amount;
+	private double distance;
 	private UserModel user;
 	private CarModel car;
 	private LocationModel location;
@@ -132,6 +133,14 @@ public class RefuelsModel extends Model {
 		}
 	}
 
+	public double getDistance() {
+		return distance;
+	}
+
+	public void setDistance(double distance) {
+		this.distance = distance;
+	}
+
 	public double getAmount() {
 		return amount;
 	}
@@ -216,9 +225,10 @@ public class RefuelsModel extends Model {
 
 	@Override
 	public String toString() {
-		return "RefuelsModel [sdfDates=" + sdfDates + ", refuelTimestamp=" + refuelTimestamp + ", odometer=" + odometer + ", unitPrice=" + unitPrice
-				+ ", fuelAmount=" + fuelAmount + ", amount=" + amount + ", user=" + user + ", car=" + car + ", location=" + location + ", payment="
-				+ payment + ", toString()=" + super.toString() + "]";
+		return "RefuelsModel [sdfDates=" + sdfDates + ", refuelTimestamp=" + refuelTimestamp + ", odometer=" + odometer
+				+ ", unitPrice=" + unitPrice + ", fuelAmount=" + fuelAmount + ", amount=" + amount + ", user=" + user
+				+ ", car=" + car + ", location=" + location + ", payment=" + payment + ", toString()="
+				+ super.toString() + "]";
 	}
 
 }

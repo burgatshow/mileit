@@ -143,6 +143,7 @@ public class CarController extends Controller {
 				car.setDescription(request.getParameter("description"));
 				car.setFriendlyName(request.getParameter("friendlyName"));
 				car.setActive(request.getParameter("status"));
+				car.setUser(user);
 
 				if (dbm.createUpdateCar(car)) {
 					request.setAttribute("status", 1);
