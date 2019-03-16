@@ -11,3 +11,5 @@ MileIT/.settings/org.eclipse.wst.common.project.facet.core.xml
 MileIT/.settings/org.eclipse.wst.jsdt.ui.superType.container
 MileIT/.settings/org.eclipse.wst.jsdt.ui.superType.name
 
+*.class
+*.prefs
