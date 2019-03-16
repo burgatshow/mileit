@@ -39,7 +39,7 @@
 						<fmt:message key="refuels.form.fuel_amount" />
 					</p>
 					<p class="text-right display-4">
-						<strong><fmt:formatNumber type="number" pattern="###,## L" minFractionDigits="0" maxFractionDigits="2" value="${lr.fuelAmount}" /></strong>
+						<strong><fmt:formatNumber type="number" pattern="###,##" minFractionDigits="0" maxFractionDigits="2" value="${lr.fuelAmount}" /></strong>
 					</p>
 				</div>
 			</div>
@@ -51,7 +51,7 @@
 						</fmt:message>
 					</p>
 					<p class="text-right display-4">
-						<strong><fmt:formatNumber value="${lr.unitPrice}" type="currency" pattern="###.### ${user.currency}" minFractionDigits="2" maxFractionDigits="2" currencySymbol="" /></strong>
+						<strong><fmt:formatNumber value="${lr.unitPrice}" type="number" pattern="###.###" minFractionDigits="1" maxFractionDigits="2" currencySymbol="" /></strong>
 					</p>
 				</div>
 			</div>
@@ -63,7 +63,7 @@
 						</fmt:message>
 					</p>
 					<p class="text-right display-4">
-						<strong><fmt:formatNumber value="${lr.amount}" type="currency" pattern="# ${user.currency}" maxFractionDigits="0" currencySymbol="" /></strong>
+						<strong><fmt:formatNumber value="${lr.amount}" type="number" minFractionDigits="0" maxFractionDigits="0" /></strong>
 					</p>
 				</div>
 			</div>
