@@ -8,7 +8,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import hu.thom.mileit.models.RefuelsModel;
+import hu.thom.mileit.models.RefuelModel;
 
 @WebServlet("/index")
 public class IndexController extends Controller {
@@ -25,12 +25,12 @@ public class IndexController extends Controller {
 		request.setAttribute("page", "index");
 		request.setAttribute("lr", dbm.getLastRefuel(user.getId()));
 
-		List<RefuelsModel> fuelStats = dbm.getFuelPriceStats(user.getId());
+		List<RefuelModel> fuelStats = dbm.getFuelPriceStats(user.getId());
 		StringBuffer fuelStatKeys = new StringBuffer();
 		StringBuffer fuelStatValues = new StringBuffer();
 		StringBuffer fuelPaidAmount = new StringBuffer();
 		int i = 1;
-		for (RefuelsModel rm : fuelStats) {
+		for (RefuelModel rm : fuelStats) {
 			fuelStatKeys.append("'").append(df.format(rm.getRefuelTimestamp())).append("'");
 			fuelStatValues.append(rm.getUnitPrice());
 			fuelPaidAmount.append(rm.getAmount());

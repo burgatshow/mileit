@@ -35,6 +35,7 @@ public class CarController extends Controller {
 
 		switch (m) {
 		case "new":
+			request.setAttribute("carVendors", dbm.getCarVendors());
 			request.getRequestDispatcher(CARS_FORM).forward(request, response);
 			break;
 
@@ -53,6 +54,7 @@ public class CarController extends Controller {
 			break;
 
 		case "update":
+			request.setAttribute("carVendors", dbm.getCarVendors());
 			parseId(request);
 
 			CarModel car = dbm.getCar(id);
