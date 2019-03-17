@@ -14,8 +14,8 @@ public class DBCommands implements Serializable {
 	public static final String SQL_U_PROFILE = "UPDATE users SET currency = ?, locale = ? WHERE user_id = ?";
 
 	// Cars
-	public static final String SQL_I_CAR = "INSERT INTO cars (manufacturer, model, manufacture_date, color, vin, plate_number, fuel_capacity, fuel, start_date, end_date, description, friendly_name, user_id, active) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-	public static final String SQL_U_CAR = "UPDATE cars SET manufacturer = ?, model = ?, manufacture_date = ?, color = ?, vin = ?, plate_number = ?, fuel_capacity = ?, fuel = ?, start_date = ?, end_date = ?, description = ?, friendly_name = ?, active = ? WHERE car_id = ?";
+	public static final String SQL_I_CAR = "INSERT INTO cars (manufacturer, model, manufacture_date, color, UPPER(vin), UPPER(plate_number), fuel_capacity, fuel, start_date, end_date, description, friendly_name, user_id, active) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+	public static final String SQL_U_CAR = "UPDATE cars SET manufacturer = ?, model = ?, manufacture_date = ?, color = ?, vin = UPPER(?), plate_number = UPPER(?), fuel_capacity = ?, fuel = ?, start_date = ?, end_date = ?, description = ?, friendly_name = ?, active = ? WHERE car_id = ?";
 	public static final String SQL_U_CAR_ARCHIVE = "UPDATE cars SET archived = 1 WHERE car_id = ?";
 	public static final String SQL_S_CARS = "SELECT * FROM cars WHERE user_id = ? AND archived = 0 ORDER BY active DESC, plate_number ASC";
 	public static final String SQL_S_CAR = "SELECT * FROM cars WHERE car_id = ?";
@@ -23,7 +23,7 @@ public class DBCommands implements Serializable {
 	public static final String SQL_U_CAR_PRIMARY = "UPDATE cars SET active = 0 WHERE car_id <> ? AND user_id = ?";
 	
 	// Maintenances
-	public static final String SQL_S_MAINTENANCES = "SELECT m.*, c.friendly_name, c.plate_number, pm.name FROM maintenances m, cars c, payment_method pm WHERE c.car_id = m.car_id AND m.pm_id = pm.pm_id AND m.user_id = ? ORDER BY m.date DESC";
+	public static final String SQL_S_MAINTENANCES = "SELECT m.*, c.friendly_name, UPPER(c.plate_number), pm.name FROM maintenances m, cars c, payment_method pm WHERE c.car_id = m.car_id AND m.pm_id = pm.pm_id AND m.user_id = ? ORDER BY m.date DESC";
 	public static final String SQL_I_MAINTENANCE = "INSERT INTO maintenances (car_id, pm_id, odometer, date, description, amount, user_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
 	public static final String SQL_U_MAINTENANCE = "UPDATE maintenances SET car_id = ?, pm_id = ?, odometer = ?, date = ?, description = ?, amount = ? WHERE user_id = ? AND mntnc_id = ?";
 	public static final String SQL_S_MAINTENANCE = "SELECT * FROM maintenances WHERE mntnc_id = ?";
@@ -41,7 +41,7 @@ public class DBCommands implements Serializable {
 	public static final String SQL_S_LOCATION = "SELECT * FROM places WHERE place_id = ?";
 
 	// Refuels
-	public static final String SQL_S_REFUELS = "SELECT r.*, c.plate_number, c.friendly_name, p.name AS location, pm.name AS payment_method_name FROM cars c, refuels r, places p, payment_method pm WHERE r.car_id IN (SELECT car_id FROM cars WHERE user_id = ?) AND pm.pm_id = r.pm_id AND c.car_id = r.car_id AND p.place_id = r.place_id ORDER BY r.refuel_timestamp DESC LIMIT 0,25";
+	public static final String SQL_S_REFUELS = "SELECT r.*, UPPER(c.plate_number), c.friendly_name, p.name AS location, pm.name AS payment_method_name FROM cars c, refuels r, places p, payment_method pm WHERE r.car_id IN (SELECT car_id FROM cars WHERE user_id = ?) AND pm.pm_id = r.pm_id AND c.car_id = r.car_id AND p.place_id = r.place_id ORDER BY r.refuel_timestamp DESC LIMIT 0,25";
 	public static final String SQL_I_REFUEL = "INSERT INTO refuels (car_id, place_id, refuel_timestamp, odometer, unit_price, fuel_amount, pm_id, amount, user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 	public static final String SQL_U_REFUEL = "UPDATE refuels SET car_id = ?, place_id = ?, refuel_timestamp = ?, odometer = ?, unit_price = ?, fuel_amount = ?, pm_id = ?, amount = ? WHERE refuel_id = ?";
 	public static final String SQL_S_REFUEL = "SELECT * FROM refuels WHERE refuel_id = ?";
