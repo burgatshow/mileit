@@ -6,18 +6,26 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
 
 import hu.thom.mileit.models.CarModel;
-import hu.thom.mileit.models.LocationModel;
+import hu.thom.mileit.models.PlaceModel;
 import hu.thom.mileit.models.MaintenanceModel;
 import hu.thom.mileit.models.PaymentMethodModel;
-import hu.thom.mileit.models.RefuelsModel;
+import hu.thom.mileit.models.RefuelModel;
 import hu.thom.mileit.models.UserModel;
 
+/**
+ * Contains all the methods operating with database tables
+ * 
+ * @author thom <tamas.bures@protonmail.com>
+ *
+ */
 public class DBManager implements Serializable {
 	private static final long serialVersionUID = -5527815745942370595L;
 
@@ -25,8 +33,11 @@ public class DBManager implements Serializable {
 	private Connection con;
 	private PreparedStatement ps;
 	private ResultSet rs;
-	
-	private static LoggerHelper logger = new LoggerHelper();
+
+	/**
+	 * Logger instance
+	 */
+	private static LoggerHelper logger = new LoggerHelper(DBManager.class);
 
 	/**
 	 * Constructor
@@ -41,6 +52,12 @@ public class DBManager implements Serializable {
 		}
 	}
 
+	/**
+	 * Method to be able to archive a car when the user decided to.
+	 * 
+	 * @param id int the user id
+	 * @return true on success, false otherwise
+	 */
 	public boolean archiveCar(int id) {
 		try {
 			con = ds.getConnection();
@@ -96,16 +113,23 @@ public class DBManager implements Serializable {
 		}
 	}
 
+	/**
+	 * Creates a new record or updates an existing one in table 'cars'
+	 * 
+	 * @param car {@link CarModel} a car object
+	 * @return true on success, false otherwise
+	 */
 	public boolean createUpdateCar(CarModel car) {
 		if (car != null) {
 			try {
 				con = ds.getConnection();
 				ps = con.prepareStatement(car.getOperation() == 0 ? DBCommands.SQL_I_CAR : DBCommands.SQL_U_CAR);
 
-				ps.setString(1, car.getManufacturer());
+				ps.setInt(1, car.getManufacturer());
 				ps.setString(2, car.getModel());
 
-				ps.setTimestamp(3, car.getManufacturerDate() == null ? null : new Timestamp(car.getManufacturerDate().getTime()));
+				ps.setTimestamp(3,
+						car.getManufacturerDate() == null ? null : new Timestamp(car.getManufacturerDate().getTime()));
 				ps.setString(4, car.getColor());
 				ps.setString(5, car.getVin());
 				ps.setString(6, car.getPlateNumber());
@@ -124,19 +148,13 @@ public class DBManager implements Serializable {
 					ps.setInt(14, car.getId());
 				}
 
-				boolean isOK = false;
 				if (ps.executeUpdate() == 1) {
-					isOK = true;
-				}
-				
-				if (isOK) {
 					if (setPrimaryCar(car.getUser().getId(), car.getId(), car.getOperation() == 0 ? true : false)) {
 						return true;
 					} else {
 						return false;
 					}
 				}
-
 			} catch (Exception e) {
 				logger.logException("createUpdateCar()", e);
 			} finally {
@@ -148,11 +166,17 @@ public class DBManager implements Serializable {
 
 	}
 
-	public boolean createUpdateLocation(LocationModel l) {
+	/**
+	 * Creates a new record or updates an existing one in table 'places'
+	 * 
+	 * @param car {@link PlaceModel} a place object
+	 * @return true on success, false otherwise
+	 */
+	public boolean createUpdatePlace(PlaceModel l) {
 		if (l != null) {
 			try {
 				con = ds.getConnection();
-				ps = con.prepareStatement(l.getOperation() == 0 ? DBCommands.SQL_I_LOCATION : DBCommands.SQL_U_LOCATION);
+				ps = con.prepareStatement(l.getOperation() == 0 ? DBCommands.SQL_I_PLACE : DBCommands.SQL_U_PLACE);
 
 				ps.setString(1, l.getName());
 				ps.setString(2, l.getAddress());
@@ -178,16 +202,24 @@ public class DBManager implements Serializable {
 		return false;
 	}
 
+	/**
+	 * Creates a new record or updates an existing one in table 'maintenances'
+	 * 
+	 * @param car {@link MaintenanceModel} a maintenance object
+	 * @return true on success, false otherwise
+	 */
 	public boolean createUpdateMaintenance(MaintenanceModel m) {
 		if (m != null) {
 			try {
 				con = ds.getConnection();
-				ps = con.prepareStatement(m.getOperation() == 0 ? DBCommands.SQL_I_MAINTENANCE : DBCommands.SQL_U_MAINTENANCE);
-				
+				ps = con.prepareStatement(
+						m.getOperation() == 0 ? DBCommands.SQL_I_MAINTENANCE : DBCommands.SQL_U_MAINTENANCE);
+
 				ps.setInt(1, m.getCar().getId());
 				ps.setInt(2, m.getPayment().getId());
 				ps.setDouble(3, m.getOdometer());
-				ps.setTimestamp(4, m.getMaintenanceDate() == null ? null : new Timestamp(m.getMaintenanceDate().getTime()));
+				ps.setTimestamp(4,
+						m.getMaintenanceDate() == null ? null : new Timestamp(m.getMaintenanceDate().getTime()));
 				ps.setString(5, m.getDescription());
 				ps.setDouble(6, m.getAmount());
 				ps.setInt(7, m.getUser().getId());
@@ -208,6 +240,12 @@ public class DBManager implements Serializable {
 		return false;
 	}
 
+	/**
+	 * Creates a new record or updates an existing one in table 'payment_method'
+	 * 
+	 * @param car {@link PaymentMethodModel} a payment method object
+	 * @return true on success, false otherwise
+	 */
 	public boolean createUpdatePaymentMethod(PaymentMethodModel pm) {
 		if (pm != null) {
 			try {
@@ -236,7 +274,13 @@ public class DBManager implements Serializable {
 		return false;
 	}
 
-	public boolean createUpdateRefuel(RefuelsModel rf) {
+	/**
+	 * Creates a new record or updates an existing one in table 'refuels'
+	 * 
+	 * @param car {@link RefuelModel} a refuel object
+	 * @return true on success, false otherwise
+	 */
+	public boolean createUpdateRefuel(RefuelModel rf) {
 		if (rf != null) {
 			try {
 				con = ds.getConnection();
@@ -270,6 +314,12 @@ public class DBManager implements Serializable {
 		return false;
 	}
 
+	/**
+	 * Returns a single car record from the database identified by its ID
+	 * 
+	 * @param id int the car's ID
+	 * @return {@link CarModel} if found, null otherwise
+	 */
 	public CarModel getCar(int id) {
 		CarModel car = null;
 		try {
@@ -282,7 +332,7 @@ public class DBManager implements Serializable {
 			if (rs.next()) {
 				car = new CarModel();
 				car.setId(rs.getInt("car_id"));
-				car.setManufacturer(rs.getString("manufacturer"));
+				car.setManufacturer(rs.getInt("manufacturer"));
 				car.setModel(rs.getString("model"));
 				car.setManufacturerDate(rs.getTimestamp("manufacture_date"));
 				car.setColor(rs.getString("color"));
@@ -296,6 +346,7 @@ public class DBManager implements Serializable {
 				car.setFriendlyName(rs.getString("friendly_name"));
 				car.setActive(rs.getInt("active") == 1 ? true : false);
 			}
+			
 		} catch (Exception e) {
 			logger.logException("getCar()", e);
 		} finally {
@@ -304,9 +355,16 @@ public class DBManager implements Serializable {
 		return car;
 	}
 
+	/**
+	 * Returns a {@link List} of car records from the database identified by user ID
+	 * 
+	 * @param id int the user's ID
+	 * @return a {@link List} of {@link CarModel} objects if found, empty list
+	 *         otherwise
+	 */
 	public List<CarModel> getCars(int user_id) {
 		List<CarModel> cars = new ArrayList<CarModel>();
-		
+
 		try {
 			con = ds.getConnection();
 			ps = con.prepareStatement(DBCommands.SQL_S_CARS);
@@ -343,8 +401,44 @@ public class DBManager implements Serializable {
 		return cars;
 	}
 
-	public List<RefuelsModel> getFuelPriceStats(int user_id) {
-		List<RefuelsModel> statData = new ArrayList<RefuelsModel>();
+	/**
+	 * Collects the available, active car vendors from table 'sup_car_manufacturers'
+	 * 
+	 * @return returns a {@link Map} of {@link Integer} as key and a {@link String}
+	 *         as value of the available car vendors, or empty {@link Map} otherwise
+	 */
+	public Map<Integer, String> getCarVendors() {
+		Map<Integer, String> carVendors = new HashMap<Integer, String>();
+
+		try {
+			con = ds.getConnection();
+			ps = con.prepareStatement(DBCommands.SQL_S_CAR_VENDORS);
+
+			rs = ps.executeQuery();
+			
+			while (rs.next()) {
+				carVendors.put(rs.getInt("manufacturer_id"), rs.getString("name"));
+			}
+
+		} catch (Exception e) {
+			logger.logException("getCarVendors()", e);
+		} finally {
+			closeConnection();
+		}
+
+		return carVendors;
+	}
+
+	/**
+	 * Returns a {@link List} of refuel records from the database identified by user
+	 * ID
+	 * 
+	 * @param id int the user's ID
+	 * @return a {@link List} of {@link RefuelModel} objects if found, empty list
+	 *         otherwise
+	 */
+	public List<RefuelModel> getFuelPriceStats(int user_id) {
+		List<RefuelModel> statData = new ArrayList<RefuelModel>();
 		try {
 			con = ds.getConnection();
 			ps = con.prepareStatement(DBCommands.SQL_S_PRICE_GRAPH);
@@ -352,7 +446,7 @@ public class DBManager implements Serializable {
 
 			rs = ps.executeQuery();
 			while (rs.next()) {
-				statData.add(new RefuelsModel(rs.getTimestamp(1), rs.getDouble(2), rs.getDouble(3), rs.getDouble(4)));
+				statData.add(new RefuelModel(rs.getTimestamp(1), rs.getDouble(2), rs.getDouble(3), rs.getDouble(4)));
 			}
 
 		} catch (Exception e) {
@@ -365,13 +459,13 @@ public class DBManager implements Serializable {
 	}
 
 	/**
-	 * Returns the basic data from the last fuel for the user
+	 * Returns a {@link RefuelModel} for the active user with basic statistical data
 	 * 
-	 * @param username
-	 * @return
+	 * @param user_id int the user's ID
+	 * @return {@link RefuelModel} if found, null otherwise
 	 */
-	public RefuelsModel getLastRefuel(int user_id) {
-		RefuelsModel rf = null;
+	public RefuelModel getLastRefuel(int user_id) {
+		RefuelModel rf = null;
 		try {
 			con = ds.getConnection();
 			ps = con.prepareStatement(DBCommands.SQL_S_BIG_STAT);
@@ -380,11 +474,11 @@ public class DBManager implements Serializable {
 			rs = ps.executeQuery();
 
 			if (rs.next()) {
-				rf = new RefuelsModel();
+				rf = new RefuelModel();
 				rf.setCar(new CarModel());
 				rf.getCar().setId(rs.getInt("car_id"));
 				rf.setId(rs.getInt("refuel_id"));
-				rf.setLocation(new LocationModel());
+				rf.setLocation(new PlaceModel());
 				rf.getLocation().setId(rs.getInt("place_id"));
 				rf.setRefuelTimestamp(rs.getTimestamp("refuel_timestamp"));
 				rf.setOdometer(rs.getDouble("odometer"));
@@ -402,18 +496,18 @@ public class DBManager implements Serializable {
 		return rf;
 	}
 
-	public LocationModel getLocation(int id) {
-		LocationModel l = null;
+	public PlaceModel getLocation(int id) {
+		PlaceModel l = null;
 		try {
 			con = ds.getConnection();
-			ps = con.prepareStatement(DBCommands.SQL_S_LOCATION);
+			ps = con.prepareStatement(DBCommands.SQL_S_PLACE);
 			ps.setInt(1, id);
 
 			rs = ps.executeQuery();
 
 			if (rs.next()) {
-				l = new LocationModel(rs.getInt("place_id"), rs.getString("name"), rs.getString("address"), rs.getInt("user_id"),
-						rs.getDouble("longitude"), rs.getDouble("latitude"));
+				l = new PlaceModel(rs.getInt("place_id"), rs.getString("name"), rs.getString("address"),
+						rs.getInt("user_id"), rs.getDouble("longitude"), rs.getDouble("latitude"));
 			}
 		} catch (Exception e) {
 			logger.logException("getLocation()", e);
@@ -423,19 +517,19 @@ public class DBManager implements Serializable {
 		return l;
 	}
 
-	public List<LocationModel> getLocations(int id) {
-		List<LocationModel> ls = new ArrayList<LocationModel>();
+	public List<PlaceModel> getLocations(int id) {
+		List<PlaceModel> ls = new ArrayList<PlaceModel>();
 
 		try {
 			con = ds.getConnection();
-			ps = con.prepareStatement(DBCommands.SQL_S_LOCATIONS);
+			ps = con.prepareStatement(DBCommands.SQL_S_PLACES);
 			ps.setInt(1, id);
 
 			rs = ps.executeQuery();
 
-			LocationModel l = null;
+			PlaceModel l = null;
 			while (rs.next()) {
-				l = new LocationModel();
+				l = new PlaceModel();
 				l.setId(rs.getInt("place_id"));
 				l.setAddress(rs.getString("address"));
 				l.setName(rs.getString("name"));
@@ -488,7 +582,7 @@ public class DBManager implements Serializable {
 
 		return ms;
 	}
-	
+
 	public MaintenanceModel getMaintenance(int id) {
 		MaintenanceModel mm = null;
 		try {
@@ -562,8 +656,8 @@ public class DBManager implements Serializable {
 		return pms;
 	}
 
-	public RefuelsModel getRefuel(int id) {
-		RefuelsModel rf = null;
+	public RefuelModel getRefuel(int id) {
+		RefuelModel rf = null;
 		try {
 			con = ds.getConnection();
 			ps = con.prepareStatement(DBCommands.SQL_S_REFUEL);
@@ -572,11 +666,11 @@ public class DBManager implements Serializable {
 			rs = ps.executeQuery();
 
 			if (rs.next()) {
-				rf = new RefuelsModel();
+				rf = new RefuelModel();
 
 				rf.setCar(new CarModel(rs.getInt("car_id")));
 				rf.setId(rs.getInt("refuel_id"));
-				rf.setLocation(new LocationModel(rs.getInt("place_id")));
+				rf.setLocation(new PlaceModel(rs.getInt("place_id")));
 				rf.setRefuelTimestamp(rs.getTimestamp("refuel_timestamp"));
 				rf.setOdometer(rs.getDouble("odometer"));
 				rf.setFuelAmount(rs.getDouble("fuel_amount"));
@@ -592,8 +686,8 @@ public class DBManager implements Serializable {
 		return rf;
 	}
 
-	public List<RefuelsModel> getRefuels(int user_id) {
-		List<RefuelsModel> refuels = new ArrayList<RefuelsModel>();
+	public List<RefuelModel> getRefuels(int user_id) {
+		List<RefuelModel> refuels = new ArrayList<RefuelModel>();
 
 		try {
 			con = ds.getConnection();
@@ -602,16 +696,16 @@ public class DBManager implements Serializable {
 
 			rs = ps.executeQuery();
 
-			RefuelsModel refuel = null;
+			RefuelModel refuel = null;
 			while (rs.next()) {
-				refuel = new RefuelsModel();
+				refuel = new RefuelModel();
 				refuel.setCar(new CarModel());
 				refuel.getCar().setPlateNumber(rs.getString("plate_number"));
 				refuel.getCar().setFriendlyName(rs.getString("friendly_name"));
 
 				refuel.setId(rs.getInt("refuel_id"));
 
-				refuel.setLocation(new LocationModel());
+				refuel.setLocation(new PlaceModel());
 				refuel.getLocation().setId(rs.getInt("place_id"));
 				refuel.getLocation().setName(rs.getString("location"));
 				refuel.setRefuelTimestamp(rs.getTimestamp("refuel_timestamp"));
@@ -660,25 +754,7 @@ public class DBManager implements Serializable {
 	}
 
 	public UserModel getUserProfile(UserModel user) {
-		try {
-			con = ds.getConnection();
-			ps = con.prepareStatement(DBCommands.SQL_S_PROFILE);
-			ps.setString(1, user.getUsername());
-
-			rs = ps.executeQuery();
-
-			if (rs.next()) {
-				user.setCurrency(rs.getString("currency"));
-				user.setLocale(rs.getString("locale"));
-				user.setId(rs.getInt("user_id"));
-				user.setUsername(rs.getString("username"));
-			}
-		} catch (Exception e) {
-			logger.logException("getUserProfile()", e);
-		} finally {
-			closeConnection();
-		}
-		return user;
+		return getUserProfile(user.getUsername());
 	}
 
 	private boolean setPrimaryCar(int user_id, int car_id, boolean isNewCar) {
@@ -686,15 +762,14 @@ public class DBManager implements Serializable {
 
 		try {
 			con = ds.getConnection();
+			ps = con.prepareStatement(isNewCar ? DBCommands.SQL_I_CAR_PRIMARY : DBCommands.SQL_U_CAR_PRIMARY);
 			if (isNewCar) {
-				ps = con.prepareStatement(DBCommands.SQL_I_CAR_PRIMARY);
 				ps.setInt(1, user_id);
-				ps.setInt(2, user_id);
 			} else {
-				ps = con.prepareStatement(DBCommands.SQL_U_CAR_PRIMARY);
 				ps.setInt(1, car_id);
-				ps.setInt(2, user_id);
 			}
+
+			ps.setInt(2, user_id);
 
 			if (ps.executeUpdate() > 0) {
 				status = true;
@@ -715,8 +790,10 @@ public class DBManager implements Serializable {
 				con = ds.getConnection();
 				ps = con.prepareStatement(DBCommands.SQL_U_PROFILE);
 
-				ps.setString(1, (user.getCurrency() == null || "".equalsIgnoreCase(user.getCurrency())) ? "Ft" : user.getCurrency());
-				ps.setString(2, (user.getLocale() == null || "".equalsIgnoreCase(user.getLocale())) ? "hu" : user.getLocale());
+				ps.setString(1, (user.getCurrency() == null || "".equalsIgnoreCase(user.getCurrency())) ? "Ft"
+						: user.getCurrency());
+				ps.setString(2,
+						(user.getLocale() == null || "".equalsIgnoreCase(user.getLocale())) ? "hu" : user.getLocale());
 				ps.setString(3, user.getUsername());
 
 				if (ps.executeUpdate() == 1) {

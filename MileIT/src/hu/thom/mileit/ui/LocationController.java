@@ -7,7 +7,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import hu.thom.mileit.models.LocationModel;
+import hu.thom.mileit.models.PlaceModel;
 
 @WebServlet("/locations")
 public class LocationController extends Controller {
@@ -40,7 +40,7 @@ public class LocationController extends Controller {
 		case "update":
 			parseId(request);
 
-			LocationModel l = dbm.getLocation(id);
+			PlaceModel l = dbm.getLocation(id);
 			if (l != null) {
 				request.setAttribute("location", l);
 				request.getRequestDispatcher(LOCATIONS_FORM).forward(request, response);
@@ -76,7 +76,7 @@ public class LocationController extends Controller {
 		}
 
 		if (validationMessages.isEmpty()) {
-			LocationModel l = new LocationModel();
+			PlaceModel l = new PlaceModel();
 			l.setUser(user);
 
 			l.setName(request.getParameter("name"));
@@ -88,7 +88,7 @@ public class LocationController extends Controller {
 			case "new":
 				l.setOperation(0);
 
-				if (dbm.createUpdateLocation(l)) {
+				if (dbm.createUpdatePlace(l)) {
 					request.setAttribute("status", 0);
 				} else {
 					request.setAttribute("status", -1);
@@ -105,7 +105,7 @@ public class LocationController extends Controller {
 				l.setOperation(1);
 				l.setId(id);
 
-				if (dbm.createUpdateLocation(l)) {
+				if (dbm.createUpdatePlace(l)) {
 					request.setAttribute("status", 1);
 				} else {
 					request.setAttribute("status", -1);
