@@ -42,7 +42,7 @@ public class DBCommands implements Serializable {
 	public static final String SQL_S_PLACE = "SELECT * FROM places WHERE place_id = ?";
 
 	// Refuels
-	public static final String SQL_S_REFUELS = "SELECT r.*, UPPER(c.plate_number), c.friendly_name, p.name AS location, pm.name AS payment_method_name FROM cars c, refuels r, places p, payment_method pm WHERE r.car_id IN (SELECT car_id FROM cars WHERE user_id = ?) AND pm.pm_id = r.pm_id AND c.car_id = r.car_id AND p.place_id = r.place_id ORDER BY r.refuel_timestamp DESC LIMIT 0,25";
+	public static final String SQL_S_REFUELS = "SELECT r.*, UPPER(c.plate_number) AS plate_number, c.friendly_name, p.name AS location, pm.name AS payment_method_name, IFNULL(r.odometer-(SELECT odometer	FROM refuels AS p WHERE p.refuel_timestamp = (SELECT MAX(pp.refuel_timestamp) FROM refuels AS pp WHERE pp.refuel_timestamp < r.refuel_timestamp)), 0) AS prev_refuel_diff FROM cars AS c, refuels AS r, places AS p, payment_method AS pm WHERE r.car_id IN (SELECT c.car_id FROM cars AS c WHERE c.user_id = ?) AND pm.pm_id = r.pm_id AND c.car_id = r.car_id AND p.place_id = r.place_id ORDER BY r.refuel_timestamp DESC";
 	public static final String SQL_I_REFUEL = "INSERT INTO refuels (car_id, place_id, refuel_timestamp, odometer, unit_price, fuel_amount, pm_id, amount, user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 	public static final String SQL_U_REFUEL = "UPDATE refuels SET car_id = ?, place_id = ?, refuel_timestamp = ?, odometer = ?, unit_price = ?, fuel_amount = ?, pm_id = ?, amount = ? WHERE refuel_id = ?";
 	public static final String SQL_S_REFUEL = "SELECT * FROM refuels WHERE refuel_id = ?";
