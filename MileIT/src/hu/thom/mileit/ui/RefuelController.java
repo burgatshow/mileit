@@ -8,9 +8,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import hu.thom.mileit.models.CarModel;
-import hu.thom.mileit.models.LocationModel;
+import hu.thom.mileit.models.PlaceModel;
 import hu.thom.mileit.models.PaymentMethodModel;
-import hu.thom.mileit.models.RefuelsModel;
+import hu.thom.mileit.models.RefuelModel;
 
 @WebServlet("/refuels")
 public class RefuelController extends Controller {
@@ -46,7 +46,7 @@ public class RefuelController extends Controller {
 		case "update":
 			parseId(request);
 
-			RefuelsModel rf = dbm.getRefuel(id);
+			RefuelModel rf = dbm.getRefuel(id);
 			if (rf != null) {
 				request.setAttribute("refuel", rf);
 				request.setAttribute("cars", dbm.getCars(user.getId()));
@@ -85,9 +85,9 @@ public class RefuelController extends Controller {
 		}
 
 		if (validationMessages.isEmpty()) {
-			RefuelsModel rf = new RefuelsModel();
+			RefuelModel rf = new RefuelModel();
 			rf.setCar(new CarModel(request.getParameter("car")));
-			rf.setLocation(new LocationModel(request.getParameter("location")));
+			rf.setLocation(new PlaceModel(request.getParameter("location")));
 			rf.setPayment(new PaymentMethodModel(request.getParameter("paymentMethod")));
 			rf.setUser(user);
 

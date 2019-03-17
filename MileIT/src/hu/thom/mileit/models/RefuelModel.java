@@ -3,7 +3,7 @@ package hu.thom.mileit.models;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class RefuelsModel extends Model {
+public class RefuelModel extends Model {
 	private static final long serialVersionUID = -672842337477969286L;
 
 	private SimpleDateFormat sdfDates = new SimpleDateFormat("yyyy-MM-dd");
@@ -13,23 +13,24 @@ public class RefuelsModel extends Model {
 	private double unitPrice;
 	private double fuelAmount;
 	private double amount;
+	private double distance;
 	private UserModel user;
 	private CarModel car;
-	private LocationModel location;
+	private PlaceModel location;
 	private PaymentMethodModel payment;
 
-	public RefuelsModel() {
+	public RefuelModel() {
 	}
 
-	public RefuelsModel(int id) {
+	public RefuelModel(int id) {
 		setId(id);
 	}
 
-	public RefuelsModel(String id) {
+	public RefuelModel(String id) {
 		setId(id);
 	}
 
-	public RefuelsModel(Date refuelTimestamp, double odometer, double amount, double unitPrice) {
+	public RefuelModel(Date refuelTimestamp, double odometer, double amount, double unitPrice) {
 		this.refuelTimestamp = refuelTimestamp;
 		this.odometer = odometer;
 		this.amount = amount;
@@ -68,11 +69,11 @@ public class RefuelsModel extends Model {
 		this.car = car;
 	}
 
-	public LocationModel getLocation() {
+	public PlaceModel getLocation() {
 		return location;
 	}
 
-	public void setLocation(LocationModel location) {
+	public void setLocation(PlaceModel location) {
 		this.location = location;
 	}
 
@@ -132,6 +133,14 @@ public class RefuelsModel extends Model {
 		}
 	}
 
+	public double getDistance() {
+		return distance;
+	}
+
+	public void setDistance(double distance) {
+		this.distance = distance;
+	}
+
 	public double getAmount() {
 		return amount;
 	}
@@ -177,7 +186,7 @@ public class RefuelsModel extends Model {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		RefuelsModel other = (RefuelsModel) obj;
+		RefuelModel other = (RefuelModel) obj;
 		if (Double.doubleToLongBits(amount) != Double.doubleToLongBits(other.amount))
 			return false;
 		if (car == null) {
@@ -216,9 +225,10 @@ public class RefuelsModel extends Model {
 
 	@Override
 	public String toString() {
-		return "RefuelsModel [sdfDates=" + sdfDates + ", refuelTimestamp=" + refuelTimestamp + ", odometer=" + odometer + ", unitPrice=" + unitPrice
-				+ ", fuelAmount=" + fuelAmount + ", amount=" + amount + ", user=" + user + ", car=" + car + ", location=" + location + ", payment="
-				+ payment + ", toString()=" + super.toString() + "]";
+		return "RefuelsModel [sdfDates=" + sdfDates + ", refuelTimestamp=" + refuelTimestamp + ", odometer=" + odometer
+				+ ", unitPrice=" + unitPrice + ", fuelAmount=" + fuelAmount + ", amount=" + amount + ", user=" + user
+				+ ", car=" + car + ", location=" + location + ", payment=" + payment + ", toString()="
+				+ super.toString() + "]";
 	}
 
 }

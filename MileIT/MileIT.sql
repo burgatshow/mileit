@@ -3,7 +3,7 @@ USE `mileit`;
 
 CREATE TABLE IF NOT EXISTS `cars` (
   `car_id` int(11) NOT NULL AUTO_INCREMENT,
-  `manufacturer` varchar(20) COLLATE utf8mb4_hungarian_ci NOT NULL,
+  `manufacturer`int(11) NOT NULL,
   `model` varchar(20) COLLATE utf8mb4_hungarian_ci NOT NULL,
   `manufacture_date` datetime DEFAULT NULL,
   `color` varchar(7) COLLATE utf8mb4_hungarian_ci DEFAULT NULL,
@@ -74,3 +74,10 @@ CREATE TABLE IF NOT EXISTS `users` (
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `username` (`username`)
 ) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
+
+CREATE TABLE IF NOT EXISTS `sup_car_manufacturers` (
+  `manufacturer_id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) COLLATE utf8mb4_hungarian_ci NOT NULL DEFAULT '0',
+  `active` int(1) NOT NULL DEFAULT 1,
+  PRIMARY KEY (`manufacturer_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;

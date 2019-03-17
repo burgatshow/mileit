@@ -1,0 +1,34 @@
+<server description="new server">
+
+	<featureManager>
+		<feature>webProfile-7.0</feature>
+		<feature>localConnector-1.0</feature>
+	</featureManager>
+
+	<httpEndpoint host="*" httpPort="9080" httpsPort="9443" id="defaultHttpEndpoint"/>
+
+	<applicationManager autoExpand="true"/>
+
+	<logging traceSpecification="*=info"/>
+
+	<keyStore id="defaultKeyStore" password="WebAsWebAS"/>
+
+	<library id="MariaDB_Driver">
+		<fileset dir="c:\Users\Thom\eclipse\libs\mariadb" includes="*.jar"/>
+	</library>
+
+	<dataSource jndiName="jdbc/mileit">
+		<jdbcDriver libraryRef="MariaDB_Driver"/>
+		<properties databaseName="mileit" password="mariadb" portNumber="3307" serverName="W.X.Y.Z" user="mileit"/>
+	</dataSource>
+
+	<applicationMonitor updateTrigger="mbean"/>
+	<basicRegistry>
+		<user name="user1" password="password"/>
+		<group name="users">
+			<member name="user1"/>
+		</group>
+	</basicRegistry>
+
+	<webApplication id="MileIT" location="MileIT.war" name="MileIT"/>
+</server>
