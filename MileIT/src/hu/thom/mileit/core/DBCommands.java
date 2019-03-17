@@ -17,7 +17,7 @@ public class DBCommands implements Serializable {
 	public static final String SQL_I_CAR = "INSERT INTO cars (manufacturer, model, manufacture_date, color, vin, plate_number, fuel_capacity, fuel, start_date, end_date, description, friendly_name, user_id, active) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 	public static final String SQL_U_CAR = "UPDATE cars SET manufacturer = ?, model = ?, manufacture_date = ?, color = ?, vin = ?, plate_number = ?, fuel_capacity = ?, fuel = ?, start_date = ?, end_date = ?, description = ?, friendly_name = ?, active = ? WHERE car_id = ?";
 	public static final String SQL_U_CAR_ARCHIVE = "UPDATE cars SET archived = 1 WHERE car_id = ?";
-	public static final String SQL_S_CARS = "SELECT * FROM cars WHERE user_id = ? AND archived = 0 ORDER BY active DESC, plate_number ASC";
+	public static final String SQL_S_CARS = "SELECT * FROM cars AS c, sup_car_manufacturers AS v WHERE c.user_id = ? AND c.archived = 0 AND c.manufacturer = v.manufacturer_id ORDER BY c.active DESC, c.plate_number ASC";
 	public static final String SQL_S_CAR = "SELECT * FROM cars WHERE car_id = ?";
 	public static final String SQL_I_CAR_PRIMARY = "UPDATE cars SET active = 0 WHERE car_id <> (SELECT MAX(car_id) FROM cars WHERE user_id = ? LIMIT 1) AND user_id = ?";
 	public static final String SQL_U_CAR_PRIMARY = "UPDATE cars SET active = 0 WHERE car_id <> ? AND user_id = ?";
