@@ -9,7 +9,7 @@ public class CarModel extends Model {
 	private SimpleDateFormat sdfManufactureDate = new SimpleDateFormat("yyyy");
 	private SimpleDateFormat sdfDates = new SimpleDateFormat("yyyy-MM-dd");
 
-	private String manufacturer;
+	private int manufacturer;
 	private String model;
 	private Date manufacturerDate;
 	private String color;
@@ -23,24 +23,32 @@ public class CarModel extends Model {
 	private String friendlyName;
 	private boolean active;
 	private UserModel user;
-	
+
 	public CarModel() {
 	}
-	
+
 	public CarModel(int id) {
 		setId(id);
 	}
-	
+
 	public CarModel(String id) {
 		setId(id);
 	}
 
-	public String getManufacturer() {
+	public int getManufacturer() {
 		return manufacturer;
 	}
 
-	public void setManufacturer(String manufacturer) {
+	public void setManufacturer(int manufacturer) {
 		this.manufacturer = manufacturer;
+	}
+	
+	public void setManufacturer(String manufacturer) {
+		try {
+			this.manufacturer = Integer.parseInt(manufacturer);
+		} catch (Exception e) {
+			this.manufacturer = 0;
+		}
 	}
 
 	public String getModel() {
@@ -217,7 +225,7 @@ public class CarModel extends Model {
 		result = prime * result + ((friendlyName == null) ? 0 : friendlyName.hashCode());
 		result = prime * result + fuel;
 		result = prime * result + ((fuelCapacity == null) ? 0 : fuelCapacity.hashCode());
-		result = prime * result + ((manufacturer == null) ? 0 : manufacturer.hashCode());
+		result = prime * result + manufacturer;
 		result = prime * result + ((manufacturerDate == null) ? 0 : manufacturerDate.hashCode());
 		result = prime * result + ((model == null) ? 0 : model.hashCode());
 		result = prime * result + ((plateNumber == null) ? 0 : plateNumber.hashCode());
@@ -265,10 +273,7 @@ public class CarModel extends Model {
 				return false;
 		} else if (!fuelCapacity.equals(other.fuelCapacity))
 			return false;
-		if (manufacturer == null) {
-			if (other.manufacturer != null)
-				return false;
-		} else if (!manufacturer.equals(other.manufacturer))
+		if (manufacturer != other.manufacturer)
 			return false;
 		if (manufacturerDate == null) {
 			if (other.manufacturerDate != null)
