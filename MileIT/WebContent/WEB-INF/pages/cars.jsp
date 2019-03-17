@@ -1,7 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <c:set var="lang" value="${not empty param.lang ? param.lang : not empty lang ? lang : pageContext.request.locale}" />
 <fmt:setLocale value="${lang}" />
@@ -88,7 +87,7 @@
 									<td class="align-middle"><c:out value="${car.friendlyName}" /> <c:if test="${car.active}">
 											<span class="badge ml-1 badge-success"> <fmt:message key="cars.form.status.primary" /></span>
 										</c:if><br><span class="badge badge-dark"><c:out value="${car.description}" /></span></td>
-									<td class="align-middle carManufacturer"><c:out value="${fn:toLowerCase(car.manufacturerName)}" /></td>
+									<td class="align-middle"><c:out value="${car.manufacturerName}" /></td>
 									<td class="align-middle"><c:out value="${car.model}" /></td>
 									<td class="text-center align-middle"><c:out value="${car.plateNumber}" /></td>
 									<td class="align-middle text-center"><a href="?m=update&amp;id=<c:out value="${car.id}" />" class="btn btn-primary" role="button"><fmt:message
