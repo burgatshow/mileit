@@ -1,6 +1,6 @@
 package hu.thom.mileit.models;
 
-public class LocationModel extends Model {
+public class PlaceModel extends Model {
 	private static final long serialVersionUID = -7572511771682602027L;
 
 	private String name;
@@ -9,36 +9,36 @@ public class LocationModel extends Model {
 	private double latitude;
 	private UserModel user;
 
-	public LocationModel() {
+	public PlaceModel() {
 	}
 
-	public LocationModel(int id) {
+	public PlaceModel(int id) {
 		setId(id);
 	}
 	
-	public LocationModel(String id) {
+	public PlaceModel(String id) {
 		setId(id);
 	}
 
-	public LocationModel(int id, String name) {
+	public PlaceModel(int id, String name) {
 		setId(id);
 		this.name = name;
 	}
 
-	public LocationModel(int id, String name, String address) {
+	public PlaceModel(int id, String name, String address) {
 		setId(id);
 		this.name = name;
 		this.address = address;
 	}
 
-	public LocationModel(int id, String name, String address, int userId) {
+	public PlaceModel(int id, String name, String address, int userId) {
 		setId(id);
 		this.name = name;
 		this.address = address;
 		setId(userId);
 	}
 
-	public LocationModel(int id, String name, String address, int userId, double longitude, double latitude) {
+	public PlaceModel(int id, String name, String address, int userId, double longitude, double latitude) {
 		setId(id);
 		this.name = name;
 		this.address = address;
@@ -126,7 +126,7 @@ public class LocationModel extends Model {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		LocationModel other = (LocationModel) obj;
+		PlaceModel other = (PlaceModel) obj;
 		if (address == null) {
 			if (other.address != null)
 				return false;

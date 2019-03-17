@@ -72,6 +72,7 @@
 									<fmt:param value="${user.currency}" />
 								</fmt:message></th>
 							<th class="text-center"><fmt:message key="refuels.form.odometer" /></th>
+							<th class="text-center"><fmt:message key="refuels.form.distance" /></th>
 							<th class="text-center"><fmt:message key="table.actions" /></th>
 						</tr>
 					</thead>
@@ -88,6 +89,7 @@
 									<td class="text-right align-middle"><fmt:formatNumber type="number" pattern="###.##" maxFractionDigits="2" value="${r.fuelAmount}" /></td>
 									<td class="text-right align-middle"><fmt:formatNumber value="${r.amount}" type="currency" maxFractionDigits="0" currencySymbol="" /></td>
 									<td class="text-right align-middle"><fmt:formatNumber value="${r.odometer}" type="number" minFractionDigits="0" maxFractionDigits="0" /></td>
+									<td class="text-right align-middle"><fmt:formatNumber value="${r.distance}" type="number" minFractionDigits="0" maxFractionDigits="0" /></td>
 									<td class="align-middle text-center"><a href="?m=update&amp;id=<c:out value="${r.id}" />" class="btn btn-primary" role="button"><fmt:message
 												key="button.edit" /></a></td>
 								</tr>
