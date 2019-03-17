@@ -10,6 +10,7 @@ public class CarModel extends Model {
 	private SimpleDateFormat sdfDates = new SimpleDateFormat("yyyy-MM-dd");
 
 	private int manufacturer;
+	private String manufacturerName;
 	private String model;
 	private Date manufacturerDate;
 	private String color;
@@ -35,6 +36,14 @@ public class CarModel extends Model {
 		setId(id);
 	}
 
+	public String getManufacturerName() {
+		return manufacturerName;
+	}
+
+	public void setManufacturerName(String manufacturerName) {
+		this.manufacturerName = manufacturerName;
+	}
+
 	public int getManufacturer() {
 		return manufacturer;
 	}
@@ -42,7 +51,7 @@ public class CarModel extends Model {
 	public void setManufacturer(int manufacturer) {
 		this.manufacturer = manufacturer;
 	}
-	
+
 	public void setManufacturer(String manufacturer) {
 		try {
 			this.manufacturer = Integer.parseInt(manufacturer);

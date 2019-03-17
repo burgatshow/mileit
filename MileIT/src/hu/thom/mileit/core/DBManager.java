@@ -376,7 +376,8 @@ public class DBManager implements Serializable {
 			while (rs.next()) {
 				car = new CarModel();
 				car.setId(rs.getInt("car_id"));
-				car.setManufacturer(rs.getString("manufacturer"));
+				car.setManufacturer(rs.getInt("manufacturer_id"));
+				car.setManufacturerName(rs.getString("name"));
 				car.setModel(rs.getString("model"));
 				car.setManufacturerDate(rs.getTimestamp("manufacture_date"));
 				car.setColor(rs.getString("color"));
