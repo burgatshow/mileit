@@ -4,11 +4,18 @@ import java.io.IOException;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import hu.thom.mileit.models.PaymentMethodModel;
 
+/**
+ * Servlet class to manage payment method related operations
+ * 
+ * @author thom <tamas.bures@protonmail.com>
+ *
+ */
 @WebServlet("/payment_methods")
 public class PaymentMethodController extends Controller {
 	private static final long serialVersionUID = 2631517143636421486L;
@@ -20,11 +27,21 @@ public class PaymentMethodController extends Controller {
 		validationMessages.clear();
 	}
 
+	/**
+	 * Init method for this servlet
+	 * 
+	 * @see HttpServlet#init()
+	 */
 	@Override
 	public void init() throws ServletException {
 		super.init();
 	}
 
+	/**
+	 * Method to manage HTTP GET method.
+	 * 
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		super.doGet(request, response);
@@ -59,6 +76,11 @@ public class PaymentMethodController extends Controller {
 		}
 	}
 
+	/**
+	 * Method to manage HTTP POST method.
+	 * 
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		super.doPost(request, response);

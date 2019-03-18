@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -12,6 +13,12 @@ import hu.thom.mileit.models.PlaceModel;
 import hu.thom.mileit.models.PaymentMethodModel;
 import hu.thom.mileit.models.RefuelModel;
 
+/**
+ * Servlet class to manage refuel related operations
+ * 
+ * @author thom <tamas.bures@protonmail.com>
+ *
+ */
 @WebServlet("/refuels")
 public class RefuelController extends Controller {
 	private static final long serialVersionUID = 5999291452665397698L;
@@ -23,11 +30,21 @@ public class RefuelController extends Controller {
 		validationMessages.clear();
 	}
 
+	/**
+	 * Init method for this servlet
+	 * 
+	 * @see HttpServlet#init()
+	 */
 	@Override
 	public void init() throws ServletException {
 		super.init();
 	}
 
+	/**
+	 * Method to manage HTTP GET method.
+	 * 
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		super.doGet(request, response);
@@ -38,7 +55,7 @@ public class RefuelController extends Controller {
 		switch (m) {
 		case "new":
 			request.setAttribute("cars", dbm.getCars(user.getId()));
-			request.setAttribute("locations", dbm.getLocations(user.getId()));
+			request.setAttribute("locations", dbm.getPlaces(user.getId()));
 			request.setAttribute("paymentMethods", dbm.getPaymentMethods(user.getId()));
 			request.getRequestDispatcher(REFUELS_FORM).forward(request, response);
 			break;
@@ -50,7 +67,7 @@ public class RefuelController extends Controller {
 			if (rf != null) {
 				request.setAttribute("refuel", rf);
 				request.setAttribute("cars", dbm.getCars(user.getId()));
-				request.setAttribute("locations", dbm.getLocations(user.getId()));
+				request.setAttribute("locations", dbm.getPlaces(user.getId()));
 				request.setAttribute("paymentMethods", dbm.getPaymentMethods(user.getId()));
 				request.getRequestDispatcher(REFUELS_FORM).forward(request, response);
 			} else {
@@ -68,6 +85,11 @@ public class RefuelController extends Controller {
 		}
 	}
 
+	/**
+	 * Method to manage HTTP POST method.
+	 * 
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		super.doPost(request, response);
@@ -135,7 +157,7 @@ public class RefuelController extends Controller {
 			request.setAttribute("status", -2);
 			request.setAttribute("validationMessages", validationMessages);
 			request.setAttribute("cars", dbm.getCars(user.getId()));
-			request.setAttribute("locations", dbm.getLocations(user.getId()));
+			request.setAttribute("locations", dbm.getPlaces(user.getId()));
 			request.setAttribute("paymentMethods", dbm.getPaymentMethods(user.getId()));
 			request.getRequestDispatcher(REFUELS_FORM).forward(request, response);
 		}

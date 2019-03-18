@@ -4,11 +4,18 @@ import java.io.IOException;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import hu.thom.mileit.models.CarModel;
 
+/**
+ * Servlet class to manage car related operations
+ * 
+ * @author thom <tamas.bures@protonmail.com>
+ *
+ */
 @WebServlet("/cars")
 public class CarController extends Controller {
 	private static final long serialVersionUID = -1404168270197334376L;
@@ -20,14 +27,23 @@ public class CarController extends Controller {
 		validationMessages.clear();
 	}
 
+	/**
+	 * Init method for this servlet
+	 * 
+	 * @see HttpServlet#init()
+	 */
 	@Override
 	public void init() throws ServletException {
 		super.init();
 	}
 
+	/**
+	 * Method to manage HTTP GET method.
+	 * 
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
 	@Override
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		super.doGet(request, response);
 		request.setAttribute("page", "cars");
 
@@ -77,9 +93,13 @@ public class CarController extends Controller {
 		}
 	}
 
+	/**
+	 * Method to manage HTTP POST method.
+	 * 
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
 	@Override
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		super.doPost(request, response);
 		request.setAttribute("page", "cars");
 
