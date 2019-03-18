@@ -2,6 +2,12 @@ package hu.thom.mileit.core;
 
 import java.io.Serializable;
 
+/**
+ * All SQL commands used in {@link DBManager}
+ * 
+ * @author thom <tamas.bures@protonmail.com>
+ *
+ */
 public class DBCommands implements Serializable {
 	private static final long serialVersionUID = -1208055450418159794L;
 

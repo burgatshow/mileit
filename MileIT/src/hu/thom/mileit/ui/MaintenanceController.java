@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -11,6 +12,12 @@ import hu.thom.mileit.models.CarModel;
 import hu.thom.mileit.models.MaintenanceModel;
 import hu.thom.mileit.models.PaymentMethodModel;
 
+/**
+ * Servlet class to manage maintenance related operations
+ * 
+ * @author thom <tamas.bures@protonmail.com>
+ *
+ */
 @WebServlet("/maintenance")
 public class MaintenanceController extends Controller {
 	private static final long serialVersionUID = 2199011911238724358L;
@@ -22,11 +29,23 @@ public class MaintenanceController extends Controller {
 		validationMessages.clear();
 	}
 
+	/**
+	 * Init method for this servlet
+	 * 
+	 * @see HttpServlet#init()
+	 */
 	@Override
 	public void init() throws ServletException {
 		super.init();
 	}
 
+	/**
+	 * Method to manage HTTP GET method.
+	 * 
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+	 *      response)
+	 */
+	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		super.doGet(request, response);
 		request.setAttribute("page", "maintenance");
@@ -63,6 +82,12 @@ public class MaintenanceController extends Controller {
 		}
 	}
 
+	/**
+	 * Method to manage HTTP POST method.
+	 * 
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+	 *      response)
+	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		super.doPost(request, response);
 		request.setAttribute("page", "maintenance");
@@ -108,7 +133,7 @@ public class MaintenanceController extends Controller {
 
 				mm.setOperation(1);
 				mm.setId(id);
-				
+
 				if (dbm.createUpdateMaintenance(mm)) {
 					request.setAttribute("status", 1);
 				} else {

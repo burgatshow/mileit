@@ -128,8 +128,7 @@ public class DBManager implements Serializable {
 				ps.setInt(1, car.getManufacturer());
 				ps.setString(2, car.getModel());
 
-				ps.setTimestamp(3,
-						car.getManufacturerDate() == null ? null : new Timestamp(car.getManufacturerDate().getTime()));
+				ps.setTimestamp(3, car.getManufacturerDate() == null ? null : new Timestamp(car.getManufacturerDate().getTime()));
 				ps.setString(4, car.getColor());
 				ps.setString(5, car.getVin());
 				ps.setString(6, car.getPlateNumber());
@@ -212,14 +211,12 @@ public class DBManager implements Serializable {
 		if (m != null) {
 			try {
 				con = ds.getConnection();
-				ps = con.prepareStatement(
-						m.getOperation() == 0 ? DBCommands.SQL_I_MAINTENANCE : DBCommands.SQL_U_MAINTENANCE);
+				ps = con.prepareStatement(m.getOperation() == 0 ? DBCommands.SQL_I_MAINTENANCE : DBCommands.SQL_U_MAINTENANCE);
 
 				ps.setInt(1, m.getCar().getId());
 				ps.setInt(2, m.getPayment().getId());
 				ps.setDouble(3, m.getOdometer());
-				ps.setTimestamp(4,
-						m.getMaintenanceDate() == null ? null : new Timestamp(m.getMaintenanceDate().getTime()));
+				ps.setTimestamp(4, m.getMaintenanceDate() == null ? null : new Timestamp(m.getMaintenanceDate().getTime()));
 				ps.setString(5, m.getDescription());
 				ps.setDouble(6, m.getAmount());
 				ps.setInt(7, m.getUser().getId());
@@ -346,7 +343,7 @@ public class DBManager implements Serializable {
 				car.setFriendlyName(rs.getString("friendly_name"));
 				car.setActive(rs.getInt("active") == 1 ? true : false);
 			}
-			
+
 		} catch (Exception e) {
 			logger.logException("getCar()", e);
 		} finally {
@@ -416,7 +413,7 @@ public class DBManager implements Serializable {
 			ps = con.prepareStatement(DBCommands.SQL_S_CAR_VENDORS);
 
 			rs = ps.executeQuery();
-			
+
 			while (rs.next()) {
 				carVendors.put(rs.getInt("manufacturer_id"), rs.getString("name"));
 			}
@@ -497,7 +494,13 @@ public class DBManager implements Serializable {
 		return rf;
 	}
 
-	public PlaceModel getLocation(int id) {
+	/**
+	 * Returns a {@link PlaceModel} of a given place
+	 * 
+	 * @param id int the place's ID
+	 * @return {@link PlaceModel} if found, null otherwise
+	 */
+	public PlaceModel getPlace(int id) {
 		PlaceModel l = null;
 		try {
 			con = ds.getConnection();
@@ -507,8 +510,8 @@ public class DBManager implements Serializable {
 			rs = ps.executeQuery();
 
 			if (rs.next()) {
-				l = new PlaceModel(rs.getInt("place_id"), rs.getString("name"), rs.getString("address"),
-						rs.getInt("user_id"), rs.getDouble("longitude"), rs.getDouble("latitude"));
+				l = new PlaceModel(rs.getInt("place_id"), rs.getString("name"), rs.getString("address"), rs.getInt("user_id"),
+						rs.getDouble("longitude"), rs.getDouble("latitude"));
 			}
 		} catch (Exception e) {
 			logger.logException("getLocation()", e);
@@ -518,7 +521,15 @@ public class DBManager implements Serializable {
 		return l;
 	}
 
-	public List<PlaceModel> getLocations(int id) {
+	/**
+	 * Returns a {@link List} of place entries from the database identified by user
+	 * ID
+	 * 
+	 * @param id int the user's ID
+	 * @return a {@link List} of {@link PlaceModel} objects if found, empty list
+	 *         otherwise
+	 */
+	public List<PlaceModel> getPlaces(int id) {
 		List<PlaceModel> ls = new ArrayList<PlaceModel>();
 
 		try {
@@ -548,6 +559,14 @@ public class DBManager implements Serializable {
 		return ls;
 	}
 
+	/**
+	 * Returns a {@link List} of maintenance entries from the database identified by
+	 * user ID
+	 * 
+	 * @param id int the user's ID
+	 * @return a {@link List} of {@link MaintenanceModel} objects if found, empty
+	 *         list otherwise
+	 */
 	public List<MaintenanceModel> getMaintenances(int id) {
 		List<MaintenanceModel> ms = new ArrayList<MaintenanceModel>();
 
@@ -584,6 +603,12 @@ public class DBManager implements Serializable {
 		return ms;
 	}
 
+	/**
+	 * Returns a {@link MaintenanceModel} of a given maintenance
+	 * 
+	 * @param id int the maintenance's ID
+	 * @return {@link MaintenanceModel} if found, null otherwise
+	 */
 	public MaintenanceModel getMaintenance(int id) {
 		MaintenanceModel mm = null;
 		try {
@@ -612,6 +637,12 @@ public class DBManager implements Serializable {
 		return mm;
 	}
 
+	/**
+	 * Returns a {@link PaymentMethodModel} of a given payment method
+	 * 
+	 * @param id int the place's ID
+	 * @return {@link PaymentMethodModel} if found, null otherwise
+	 */
 	public PaymentMethodModel getPaymentMethod(int id) {
 		PaymentMethodModel pm = null;
 		try {
@@ -635,6 +666,14 @@ public class DBManager implements Serializable {
 		return pm;
 	}
 
+	/**
+	 * Returns a {@link List} of payment method entries from the database identified
+	 * by user ID
+	 * 
+	 * @param id int the user's ID
+	 * @return a {@link List} of {@link PaymentMethodModel} objects if found, empty
+	 *         list otherwise
+	 */
 	public List<PaymentMethodModel> getPaymentMethods(int id) {
 		List<PaymentMethodModel> pms = new ArrayList<PaymentMethodModel>();
 
@@ -657,6 +696,12 @@ public class DBManager implements Serializable {
 		return pms;
 	}
 
+	/**
+	 * Returns a {@link RefuelModel} of a given refuel
+	 * 
+	 * @param id int the refuel's ID
+	 * @return {@link RefuelModel} if found, null otherwise
+	 */
 	public RefuelModel getRefuel(int id) {
 		RefuelModel rf = null;
 		try {
@@ -687,6 +732,14 @@ public class DBManager implements Serializable {
 		return rf;
 	}
 
+	/**
+	 * Returns a {@link List} of refuel entries from the database identified by user
+	 * ID
+	 * 
+	 * @param id int the user's ID
+	 * @return a {@link List} of {@link RefuelModel} objects if found, empty list
+	 *         otherwise
+	 */
 	public List<RefuelModel> getRefuels(int user_id) {
 		List<RefuelModel> refuels = new ArrayList<RefuelModel>();
 
@@ -731,6 +784,12 @@ public class DBManager implements Serializable {
 		return refuels;
 	}
 
+	/**
+	 * Returns the user profile
+	 * 
+	 * @param user {@link String} username of the user
+	 * @return the completed {@link UserModel}
+	 */
 	public UserModel getUserProfile(String username) {
 		UserModel user = new UserModel();
 		try {
@@ -754,10 +813,25 @@ public class DBManager implements Serializable {
 		return user;
 	}
 
+	/**
+	 * Returns the user profile
+	 * 
+	 * @param user {@link UserModel} object containing the username
+	 * @return the completed {@link UserModel}
+	 */
 	public UserModel getUserProfile(UserModel user) {
 		return getUserProfile(user.getUsername());
 	}
 
+	/**
+	 * Sets the primary car of the user. All users have only one active primar car
+	 * at any given time
+	 * 
+	 * @param user_id  int ID of the user
+	 * @param car_id   int ID of the car which will be the primary one
+	 * @param isNewCar boolean this car is a newly added or an existing car
+	 * @return true on success, false otherwise
+	 */
 	private boolean setPrimaryCar(int user_id, int car_id, boolean isNewCar) {
 		boolean status = false;
 
@@ -785,16 +859,20 @@ public class DBManager implements Serializable {
 		return status;
 	}
 
+	/**
+	 * Updates the user profile in the database
+	 * 
+	 * @param user {@link UserModel} the user data need to be written into the DB
+	 * @return boolean true on success, false otherwise
+	 */
 	public boolean updateUserProfile(UserModel user) {
 		if (user.getUsername() != null && !"".equalsIgnoreCase(user.getUsername())) {
 			try {
 				con = ds.getConnection();
 				ps = con.prepareStatement(DBCommands.SQL_U_PROFILE);
 
-				ps.setString(1, (user.getCurrency() == null || "".equalsIgnoreCase(user.getCurrency())) ? "Ft"
-						: user.getCurrency());
-				ps.setString(2,
-						(user.getLocale() == null || "".equalsIgnoreCase(user.getLocale())) ? "hu" : user.getLocale());
+				ps.setString(1, (user.getCurrency() == null || "".equalsIgnoreCase(user.getCurrency())) ? "Ft" : user.getCurrency());
+				ps.setString(2, (user.getLocale() == null || "".equalsIgnoreCase(user.getLocale())) ? "hu" : user.getLocale());
 				ps.setString(3, user.getUsername());
 
 				if (ps.executeUpdate() == 1) {

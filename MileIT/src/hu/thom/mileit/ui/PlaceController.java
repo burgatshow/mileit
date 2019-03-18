@@ -4,27 +4,44 @@ import java.io.IOException;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import hu.thom.mileit.models.PlaceModel;
 
+/**
+ * Servlet class to manage place related operations
+ * 
+ * @author thom <tamas.bures@protonmail.com>
+ *
+ */
 @WebServlet("/locations")
-public class LocationController extends Controller {
+public class PlaceController extends Controller {
 	private static final long serialVersionUID = 2631517143636421486L;
 
 	/**
 	 * Constructor
 	 */
-	public LocationController() {
+	public PlaceController() {
 		validationMessages.clear();
 	}
 
+	/**
+	 * Init method for this servlet
+	 * 
+	 * @see HttpServlet#init()
+	 */
 	@Override
 	public void init() throws ServletException {
 		super.init();
 	}
 
+	/**
+	 * Method to manage HTTP GET method.
+	 * 
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		super.doGet(request, response);
@@ -40,25 +57,30 @@ public class LocationController extends Controller {
 		case "update":
 			parseId(request);
 
-			PlaceModel l = dbm.getLocation(id);
+			PlaceModel l = dbm.getPlace(id);
 			if (l != null) {
 				request.setAttribute("location", l);
 				request.getRequestDispatcher(LOCATIONS_FORM).forward(request, response);
 			} else {
 				request.setAttribute("status", -1);
-				request.setAttribute("locations", dbm.getLocations(user.getId()));
+				request.setAttribute("locations", dbm.getPlaces(user.getId()));
 				request.getRequestDispatcher(LOCATIONS).forward(request, response);
 			}
 			break;
 		case "":
 		case "cancel":
 		default:
-			request.setAttribute("locations", dbm.getLocations(user.getId()));
+			request.setAttribute("locations", dbm.getPlaces(user.getId()));
 			request.getRequestDispatcher(LOCATIONS).forward(request, response);
 			break;
 		}
 	}
 
+	/**
+	 * Method to manage HTTP POST method.
+	 * 
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		super.doPost(request, response);
@@ -94,7 +116,7 @@ public class LocationController extends Controller {
 					request.setAttribute("status", -1);
 				}
 
-				request.setAttribute("locations", dbm.getLocations(user.getId()));
+				request.setAttribute("locations", dbm.getPlaces(user.getId()));
 				request.getRequestDispatcher(LOCATIONS).forward(request, response);
 
 				break;
@@ -111,7 +133,7 @@ public class LocationController extends Controller {
 					request.setAttribute("status", -1);
 				}
 
-				request.setAttribute("locations", dbm.getLocations(user.getId()));
+				request.setAttribute("locations", dbm.getPlaces(user.getId()));
 				request.getRequestDispatcher(LOCATIONS).forward(request, response);
 				break;
 

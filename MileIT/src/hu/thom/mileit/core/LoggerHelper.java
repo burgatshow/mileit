@@ -4,6 +4,12 @@ import java.io.Serializable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * Logger class for application logging
+ * 
+ * @author thom <tamas.bures@protonmail.com>
+ *
+ */
 public final class LoggerHelper implements Serializable {
 	private static final long serialVersionUID = 7114711640573939717L;
 
@@ -12,7 +18,10 @@ public final class LoggerHelper implements Serializable {
 	private Class<?> loggingClass;
 
 	private Logger logger;
-	
+
+	/**
+	 * Constructor
+	 */
 	public LoggerHelper() {
 		if (logger == null) {
 			logger = Logger.getAnonymousLogger();
@@ -20,6 +29,11 @@ public final class LoggerHelper implements Serializable {
 		}
 	}
 
+	/**
+	 * Constructor using a {@link Class} name to configure.
+	 * 
+	 * @param loggingClass {@link Class} which instantiate the {@link Logger}
+	 */
 	public LoggerHelper(Class<?> loggingClass) {
 		if (logger == null) {
 			logger = Logger.getLogger(loggingClass.getCanonicalName());
@@ -27,10 +41,21 @@ public final class LoggerHelper implements Serializable {
 		}
 	}
 
+	/**
+	 * Returns the configured {@link Logger} instance
+	 * 
+	 * @return {@link Logger}
+	 */
 	public Logger getLogger() {
 		return logger;
 	}
 
+	/**
+	 * Logs any exception from the given method if {@link Level} FINEST is enabled
+	 * 
+	 * @param method {@link String} the method name logging the exception
+	 * @param t      {@link Throwable} standard object for exceptions
+	 */
 	public void logException(String method, Throwable t) {
 		logger.severe(LOG_EXCEPTION);
 		if (logger.isLoggable(Level.FINEST)) {

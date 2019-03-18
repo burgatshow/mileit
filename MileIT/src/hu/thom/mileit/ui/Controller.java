@@ -7,7 +7,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -16,9 +15,11 @@ import hu.thom.mileit.core.DBManager;
 import hu.thom.mileit.models.UserModel;
 
 /**
- * Servlet implementation class Controller
+ * Parent servlet class for child servlet classes
+ * 
+ * @author thom <tamas.bures@protonmail.com>
+ *
  */
-@WebServlet("/Controller")
 public class Controller extends HttpServlet {
 	private static final long serialVersionUID = 1849843955087394555L;
 
