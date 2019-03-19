@@ -1,8 +1,15 @@
 package hu.thom.mileit.models;
 
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * Model file representing all attributes of a maintenance
+ * 
+ * @author thom <tamas.bures@protonmail.com>
+ *
+ */
 public class MaintenanceModel extends Model {
 	private static final long serialVersionUID = 660856971074877480L;
 
@@ -54,6 +61,10 @@ public class MaintenanceModel extends Model {
 
 	public Date getMaintenanceDate() {
 		return maintenanceDate;
+	}
+	
+	public Timestamp getMaintenanceDateAsTimestamp() {
+		return new Timestamp(getMaintenanceDate() == null ? null : getMaintenanceDate().getTime());
 	}
 
 	public void setMaintenanceDate(Date maintenanceDate) {

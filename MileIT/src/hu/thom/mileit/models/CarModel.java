@@ -1,8 +1,15 @@
 package hu.thom.mileit.models;
 
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * Model file representing all attributes of a car
+ * 
+ * @author thom <tamas.bures@protonmail.com>
+ *
+ */
 public class CarModel extends Model {
 	private static final long serialVersionUID = -5197813796132584702L;
 
@@ -92,6 +99,10 @@ public class CarModel extends Model {
 		this.manufacturerDate = manufacturerDate;
 	}
 
+	public Timestamp getManufacturerDateAsTimestamp() {
+		return new Timestamp(getManufacturerDate() == null ? null : getManufacturerDate().getTime());
+	}
+
 	public void setManufacturerDate(String manufacturerDate) {
 		try {
 			this.manufacturerDate = sdfManufactureDate.parse(manufacturerDate);
@@ -148,6 +159,10 @@ public class CarModel extends Model {
 		return startDate;
 	}
 
+	public Timestamp getStartDateAsTimestamp() {
+		return new Timestamp(getStartDate() == null ? null : getStartDate().getTime());
+	}
+
 	public void setStartDate(Date startDate) {
 		this.startDate = startDate;
 	}
@@ -162,6 +177,10 @@ public class CarModel extends Model {
 
 	public Date getEndDate() {
 		return endDate;
+	}
+
+	public Timestamp getEndDateAsTimestamp() {
+		return new Timestamp(getEndDate() == null ? null : getEndDate().getTime());
 	}
 
 	public void setEndDate(Date endDate) {
@@ -319,10 +338,9 @@ public class CarModel extends Model {
 
 	@Override
 	public String toString() {
-		return "CarModel [sdfManufactureDate=" + sdfManufactureDate + ", sdfDates=" + sdfDates + ", manufacturer="
-				+ manufacturer + ", model=" + model + ", manufacturerDate=" + manufacturerDate + ", color=" + color
-				+ ", vin=" + vin + ", plateNumber=" + plateNumber + ", fuel=" + fuel + ", fuelCapacity=" + fuelCapacity
-				+ ", startDate=" + startDate + ", endDate=" + endDate + ", description=" + description
+		return "CarModel [sdfManufactureDate=" + sdfManufactureDate + ", sdfDates=" + sdfDates + ", manufacturer=" + manufacturer + ", model=" + model
+				+ ", manufacturerDate=" + manufacturerDate + ", color=" + color + ", vin=" + vin + ", plateNumber=" + plateNumber + ", fuel=" + fuel
+				+ ", fuelCapacity=" + fuelCapacity + ", startDate=" + startDate + ", endDate=" + endDate + ", description=" + description
 				+ ", friendlyName=" + friendlyName + ", active=" + active + ", user=" + user + "]";
 	}
 

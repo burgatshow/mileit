@@ -1,5 +1,11 @@
 package hu.thom.mileit.models;
 
+/**
+ * Model file representing all attributes of a place
+ * 
+ * @author thom <tamas.bures@protonmail.com>
+ *
+ */
 public class PlaceModel extends Model {
 	private static final long serialVersionUID = -7572511771682602027L;
 

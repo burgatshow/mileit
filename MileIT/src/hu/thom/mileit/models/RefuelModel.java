@@ -1,14 +1,21 @@
 package hu.thom.mileit.models;
 
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * Model file representing all attributes of a refuel
+ * 
+ * @author thom <tamas.bures@protonmail.com>
+ *
+ */
 public class RefuelModel extends Model {
 	private static final long serialVersionUID = -672842337477969286L;
 
 	private SimpleDateFormat sdfDates = new SimpleDateFormat("yyyy-MM-dd");
 
-	private Date refuelTimestamp;
+	private Date refuelDate;
 	private double odometer;
 	private double unitPrice;
 	private double fuelAmount;
@@ -30,8 +37,8 @@ public class RefuelModel extends Model {
 		setId(id);
 	}
 
-	public RefuelModel(Date refuelTimestamp, double odometer, double amount, double unitPrice) {
-		this.refuelTimestamp = refuelTimestamp;
+	public RefuelModel(Date refuelDate, double odometer, double amount, double unitPrice) {
+		this.refuelDate = refuelDate;
 		this.odometer = odometer;
 		this.amount = amount;
 		this.unitPrice = unitPrice;
@@ -45,19 +52,23 @@ public class RefuelModel extends Model {
 		this.user = user;
 	}
 
-	public Date getRefuelTimestamp() {
-		return refuelTimestamp;
+	public Date getRefuelDate() {
+		return refuelDate;
 	}
 
-	public void setRefuelTimestamp(Date refuelTimestamp) {
-		this.refuelTimestamp = refuelTimestamp;
+	public Timestamp getRefuelDateAsTimestamp() {
+		return new Timestamp(getRefuelDate() == null ? null : getRefuelDate().getTime());
 	}
 
-	public void setRefuelTimestamp(String refuelTimestamp) {
+	public void setRefuelDate(Date refuelDate) {
+		this.refuelDate = refuelDate;
+	}
+
+	public void setRefuelTimestamp(String refuelDate) {
 		try {
-			this.refuelTimestamp = sdfDates.parse(refuelTimestamp);
+			this.refuelDate = sdfDates.parse(refuelDate);
 		} catch (Exception e) {
-			this.refuelTimestamp = new Date();
+			this.refuelDate = new Date();
 		}
 	}
 
@@ -171,7 +182,7 @@ public class RefuelModel extends Model {
 		temp = Double.doubleToLongBits(odometer);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
 		result = prime * result + ((payment == null) ? 0 : payment.hashCode());
-		result = prime * result + ((refuelTimestamp == null) ? 0 : refuelTimestamp.hashCode());
+		result = prime * result + ((refuelDate == null) ? 0 : refuelDate.hashCode());
 		temp = Double.doubleToLongBits(unitPrice);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
 		result = prime * result + ((user == null) ? 0 : user.hashCode());
@@ -208,10 +219,10 @@ public class RefuelModel extends Model {
 				return false;
 		} else if (!payment.equals(other.payment))
 			return false;
-		if (refuelTimestamp == null) {
-			if (other.refuelTimestamp != null)
+		if (refuelDate == null) {
+			if (other.refuelDate != null)
 				return false;
-		} else if (!refuelTimestamp.equals(other.refuelTimestamp))
+		} else if (!refuelDate.equals(other.refuelDate))
 			return false;
 		if (Double.doubleToLongBits(unitPrice) != Double.doubleToLongBits(other.unitPrice))
 			return false;
@@ -225,10 +236,9 @@ public class RefuelModel extends Model {
 
 	@Override
 	public String toString() {
-		return "RefuelsModel [sdfDates=" + sdfDates + ", refuelTimestamp=" + refuelTimestamp + ", odometer=" + odometer
-				+ ", unitPrice=" + unitPrice + ", fuelAmount=" + fuelAmount + ", amount=" + amount + ", user=" + user
-				+ ", car=" + car + ", location=" + location + ", payment=" + payment + ", toString()="
-				+ super.toString() + "]";
+		return "RefuelsModel [sdfDates=" + sdfDates + ", refuelDate=" + refuelDate + ", odometer=" + odometer + ", unitPrice=" + unitPrice
+				+ ", fuelAmount=" + fuelAmount + ", amount=" + amount + ", user=" + user + ", car=" + car + ", location=" + location + ", payment="
+				+ payment + ", toString()=" + super.toString() + "]";
 	}
 
 }

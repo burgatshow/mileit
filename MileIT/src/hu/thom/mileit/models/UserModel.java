@@ -1,5 +1,11 @@
 package hu.thom.mileit.models;
 
+/**
+ * Model file representing all attributes of a user
+ * 
+ * @author thom <tamas.bures@protonmail.com>
+ *
+ */
 public class UserModel extends Model {
 	private static final long serialVersionUID = -8687951190661595457L;
 
@@ -9,11 +15,11 @@ public class UserModel extends Model {
 
 	public UserModel() {
 	}
-	
+
 	public UserModel(int id) {
 		setId(id);
 	}
-	
+
 	public String getUsername() {
 		return username;
 	}
@@ -32,7 +38,7 @@ public class UserModel extends Model {
 	}
 
 	public String getCurrency() {
-		return currency;
+		return (currency == null || "".equalsIgnoreCase(currency)) ? "Ft" : currency;
 	}
 
 	public void setCurrency(String currency) {
@@ -40,7 +46,7 @@ public class UserModel extends Model {
 	}
 
 	public String getLocale() {
-		return locale;
+		return (locale == null || "".equalsIgnoreCase(locale)) ? "hu" : locale;
 	}
 
 	public void setLocale(String locale) {
@@ -49,8 +55,7 @@ public class UserModel extends Model {
 
 	@Override
 	public String toString() {
-		return "UserModel [username=" + username + ", currency=" + currency + ", locale=" + locale + ", toString()="
-				+ super.toString() + "]";
+		return "UserModel [username=" + username + ", currency=" + currency + ", locale=" + locale + ", toString()=" + super.toString() + "]";
 	}
 
 }

@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,9 +13,9 @@ import javax.naming.InitialContext;
 import javax.sql.DataSource;
 
 import hu.thom.mileit.models.CarModel;
-import hu.thom.mileit.models.PlaceModel;
 import hu.thom.mileit.models.MaintenanceModel;
 import hu.thom.mileit.models.PaymentMethodModel;
+import hu.thom.mileit.models.PlaceModel;
 import hu.thom.mileit.models.RefuelModel;
 import hu.thom.mileit.models.UserModel;
 
@@ -128,14 +127,14 @@ public class DBManager implements Serializable {
 				ps.setInt(1, car.getManufacturer());
 				ps.setString(2, car.getModel());
 
-				ps.setTimestamp(3, car.getManufacturerDate() == null ? null : new Timestamp(car.getManufacturerDate().getTime()));
+				ps.setTimestamp(3, car.getManufacturerDateAsTimestamp());
 				ps.setString(4, car.getColor());
 				ps.setString(5, car.getVin());
 				ps.setString(6, car.getPlateNumber());
 				ps.setDouble(7, car.getFuelCapacity());
 				ps.setInt(8, car.getFuel());
-				ps.setTimestamp(9, car.getStartDate() == null ? null : new Timestamp(car.getStartDate().getTime()));
-				ps.setTimestamp(10, car.getEndDate() == null ? null : new Timestamp(car.getEndDate().getTime()));
+				ps.setTimestamp(9, car.getStartDateAsTimestamp());
+				ps.setTimestamp(10, car.getEndDateAsTimestamp());
 				ps.setString(11, car.getDescription());
 				ps.setString(12, car.getFriendlyName());
 
@@ -216,7 +215,7 @@ public class DBManager implements Serializable {
 				ps.setInt(1, m.getCar().getId());
 				ps.setInt(2, m.getPayment().getId());
 				ps.setDouble(3, m.getOdometer());
-				ps.setTimestamp(4, m.getMaintenanceDate() == null ? null : new Timestamp(m.getMaintenanceDate().getTime()));
+				ps.setTimestamp(4, m.getMaintenanceDateAsTimestamp());
 				ps.setString(5, m.getDescription());
 				ps.setDouble(6, m.getAmount());
 				ps.setInt(7, m.getUser().getId());
@@ -285,7 +284,7 @@ public class DBManager implements Serializable {
 
 				ps.setInt(1, rf.getCar().getId());
 				ps.setInt(2, rf.getLocation().getId());
-				ps.setTimestamp(3, new Timestamp(rf.getRefuelTimestamp().getTime()));
+				ps.setTimestamp(3, rf.getRefuelDateAsTimestamp());
 				ps.setDouble(4, rf.getOdometer());
 				ps.setDouble(5, rf.getUnitPrice());
 				ps.setDouble(6, rf.getAmount() / rf.getUnitPrice());
@@ -478,7 +477,7 @@ public class DBManager implements Serializable {
 				rf.setId(rs.getInt("refuel_id"));
 				rf.setLocation(new PlaceModel());
 				rf.getLocation().setId(rs.getInt("place_id"));
-				rf.setRefuelTimestamp(rs.getTimestamp("refuel_timestamp"));
+				rf.setRefuelDate(rs.getTimestamp("refuel_timestamp"));
 				rf.setOdometer(rs.getDouble("odometer"));
 				rf.setFuelAmount(rs.getDouble("fuel_amount"));
 				rf.setAmount(rs.getDouble("amount"));
@@ -717,7 +716,7 @@ public class DBManager implements Serializable {
 				rf.setCar(new CarModel(rs.getInt("car_id")));
 				rf.setId(rs.getInt("refuel_id"));
 				rf.setLocation(new PlaceModel(rs.getInt("place_id")));
-				rf.setRefuelTimestamp(rs.getTimestamp("refuel_timestamp"));
+				rf.setRefuelDate(rs.getTimestamp("refuel_timestamp"));
 				rf.setOdometer(rs.getDouble("odometer"));
 				rf.setFuelAmount(rs.getDouble("fuel_amount"));
 				rf.setAmount(rs.getDouble("amount"));
@@ -762,7 +761,7 @@ public class DBManager implements Serializable {
 				refuel.setLocation(new PlaceModel());
 				refuel.getLocation().setId(rs.getInt("place_id"));
 				refuel.getLocation().setName(rs.getString("location"));
-				refuel.setRefuelTimestamp(rs.getTimestamp("refuel_timestamp"));
+				refuel.setRefuelDate(rs.getTimestamp("refuel_timestamp"));
 				refuel.setOdometer(rs.getDouble("odometer"));
 				refuel.setFuelAmount(rs.getDouble("fuel_amount"));
 				refuel.setAmount(rs.getDouble("amount"));
@@ -871,8 +870,8 @@ public class DBManager implements Serializable {
 				con = ds.getConnection();
 				ps = con.prepareStatement(DBCommands.SQL_U_PROFILE);
 
-				ps.setString(1, (user.getCurrency() == null || "".equalsIgnoreCase(user.getCurrency())) ? "Ft" : user.getCurrency());
-				ps.setString(2, (user.getLocale() == null || "".equalsIgnoreCase(user.getLocale())) ? "hu" : user.getLocale());
+				ps.setString(1, user.getCurrency());
+				ps.setString(2, user.getLocale());
 				ps.setString(3, user.getUsername());
 
 				if (ps.executeUpdate() == 1) {
