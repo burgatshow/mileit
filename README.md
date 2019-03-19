@@ -14,7 +14,7 @@ MileIT is designed to be free forever, so if you have an applicable software env
 - [Locations list](https://github.com/burgatshow/mileit/blob/master/MileIT/MileIt_Screenshot_00006.png)
 - [Edit location](https://github.com/burgatshow/mileit/blob/master/MileIT/MileIt_Screenshot_00007.png)
 
-# Currentt features
+# Current features
 MileIT currently has the following features:
 - It can work with multiple accounts
 - It can work with multiple cars / account
