@@ -5,7 +5,16 @@ Mile IT can support a multi-user / multi-car purpose where every user has its ow
 
 MileIT is designed to be free forever, so if you have an applicable software environment to host, you are good to go.
 
-# Features it has
+# Screenshots
+[https://github.com/burgatshow/mileit/blob/master/MileIT/MileIt_Screenshot_00001.png]
+[https://github.com/burgatshow/mileit/blob/master/MileIT/MileIt_Screenshot_00002.png]
+[https://github.com/burgatshow/mileit/blob/master/MileIT/MileIt_Screenshot_00003.png]
+[https://github.com/burgatshow/mileit/blob/master/MileIT/MileIt_Screenshot_00004.png]
+[https://github.com/burgatshow/mileit/blob/master/MileIT/MileIt_Screenshot_00005.png]
+[https://github.com/burgatshow/mileit/blob/master/MileIT/MileIt_Screenshot_00006.png]
+[https://github.com/burgatshow/mileit/blob/master/MileIT/MileIt_Screenshot_00007.png]
+
+# Currentt features
 MileIT currently has the following features:
 - It can work with multiple accounts
 - It can work with multiple cars / account
@@ -15,7 +24,7 @@ MileIT currently has the following features:
 - It can display some nice graphs about your statistics
 - It can manage your cars' important data and it can manage your various types of maintenance events
 
-# Features it will have
+# Future features
 - A fully functional REST API for better integration (I'll provide Apple Shortcuts integration later)
 - E-mail / Pushover / Pushbullet integration for maintenances / reminders
 - More languages (I hope for some community help)
