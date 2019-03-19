@@ -6,13 +6,13 @@ Mile IT can support a multi-user / multi-car purpose where every user has its ow
 MileIT is designed to be free forever, so if you have an applicable software environment to host, you are good to go.
 
 # Screenshots
-[https://github.com/burgatshow/mileit/blob/master/MileIT/MileIt_Screenshot_00001.png]
-[https://github.com/burgatshow/mileit/blob/master/MileIT/MileIt_Screenshot_00002.png]
-[https://github.com/burgatshow/mileit/blob/master/MileIT/MileIt_Screenshot_00003.png]
-[https://github.com/burgatshow/mileit/blob/master/MileIT/MileIt_Screenshot_00004.png]
-[https://github.com/burgatshow/mileit/blob/master/MileIT/MileIt_Screenshot_00005.png]
-[https://github.com/burgatshow/mileit/blob/master/MileIT/MileIt_Screenshot_00006.png]
-[https://github.com/burgatshow/mileit/blob/master/MileIT/MileIt_Screenshot_00007.png]
+[Login screen](https://github.com/burgatshow/mileit/blob/master/MileIT/MileIt_Screenshot_00001.png)
+[Home page](https://github.com/burgatshow/mileit/blob/master/MileIT/MileIt_Screenshot_00002.png)
+[Cars list](https://github.com/burgatshow/mileit/blob/master/MileIT/MileIt_Screenshot_00003.png)
+[Edit car](https://github.com/burgatshow/mileit/blob/master/MileIT/MileIt_Screenshot_00004.png)
+[Refuels list](https://github.com/burgatshow/mileit/blob/master/MileIT/MileIt_Screenshot_00005.png)
+[Locations list](https://github.com/burgatshow/mileit/blob/master/MileIT/MileIt_Screenshot_00006.png)
+[Edit location](https://github.com/burgatshow/mileit/blob/master/MileIT/MileIt_Screenshot_00007.png)
 
 # Currentt features
 MileIT currently has the following features:
