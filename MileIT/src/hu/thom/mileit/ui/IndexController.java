@@ -46,7 +46,7 @@ public class IndexController extends Controller {
 		StringBuffer fuelPaidAmount = new StringBuffer();
 		int i = 1;
 		for (RefuelModel rm : fuelStats) {
-			fuelStatKeys.append("'").append(df.format(rm.getRefuelTimestamp())).append("'");
+			fuelStatKeys.append("'").append(df.format(rm.getRefuelDate())).append("'");
 			fuelStatValues.append(rm.getUnitPrice());
 			fuelPaidAmount.append(rm.getAmount());
 
