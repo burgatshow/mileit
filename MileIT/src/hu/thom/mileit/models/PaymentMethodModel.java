@@ -1,5 +1,11 @@
 package hu.thom.mileit.models;
 
+/**
+ * Model file representing all attributes of a payment method
+ * 
+ * @author thom <tamas.bures@protonmail.com>
+ *
+ */
 public class PaymentMethodModel extends Model {
 	private static final long serialVersionUID = -7938279588120027259L;
 
