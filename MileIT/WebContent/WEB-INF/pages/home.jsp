@@ -26,7 +26,7 @@
 			<div class="col-md-12">
 				<h1>
 					<fmt:message key="index.stat.title">
-						<fmt:formatDate type="both" value="${lr.refuelTimestamp}" pattern="yyyy. MM. dd." var="formatted_LR" />
+						<fmt:formatDate type="both" value="${lr.refuelDate}" pattern="yyyy. MM. dd." var="formatted_LR" />
 						<fmt:param value="${formatted_LR}" />
 					</fmt:message>
 				</h1>

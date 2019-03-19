@@ -30,7 +30,7 @@ public class DBCommands implements Serializable {
 	public static final String SQL_S_CAR_VENDORS = "SELECT manufacturer_id, IF(NAME = 'BMW', 'BMW', CONCAT(UPPER(SUBSTR(NAME, 1, 1)), LOWER(SUBSTR(NAME, 2, LENGTH(NAME)-1)))) AS name FROM sup_car_manufacturers WHERE active = 1 ORDER BY name ASC";
 	
 	// Maintenances
-	public static final String SQL_S_MAINTENANCES = "SELECT m.*, c.friendly_name, UPPER(c.plate_number), pm.name FROM maintenances m, cars c, payment_method pm WHERE c.car_id = m.car_id AND m.pm_id = pm.pm_id AND m.user_id = ? ORDER BY m.date DESC";
+	public static final String SQL_S_MAINTENANCES = "SELECT m.*, c.friendly_name, UPPER(c.plate_number) AS plate_number, pm.name FROM maintenances AS m, cars AS c, payment_method AS pm WHERE c.car_id = m.car_id AND m.pm_id = pm.pm_id AND m.user_id = ? ORDER BY m.date DESC";
 	public static final String SQL_I_MAINTENANCE = "INSERT INTO maintenances (car_id, pm_id, odometer, date, description, amount, user_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
 	public static final String SQL_U_MAINTENANCE = "UPDATE maintenances SET car_id = ?, pm_id = ?, odometer = ?, date = ?, description = ?, amount = ? WHERE user_id = ? AND mntnc_id = ?";
 	public static final String SQL_S_MAINTENANCE = "SELECT * FROM maintenances WHERE mntnc_id = ?";
