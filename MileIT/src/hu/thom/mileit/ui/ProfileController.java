@@ -22,45 +22,40 @@ public class ProfileController extends Controller {
 	 * Constructor
 	 */
 	public ProfileController() {
-		super();
+		validationMessages.clear();
+		assignedObjects.put("page", "profile");
 	}
 
 	/**
 	 * Method to manage HTTP GET method.
 	 * 
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+	 *      response)
 	 */
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		super.doGet(request, response);
-
-		request.setAttribute("page", "profile");
-		request.getRequestDispatcher(PROFILE_FORM).forward(request, response);
+		renderPage(PROFILE_FORM, request, response);
 	}
 
 	/**
 	 * Method to manage HTTP POST method.
 	 * 
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+	 *      response)
 	 */
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		super.doPost(request, response);
-		request.setAttribute("page", "profile");
 
 		parseMode(request);
 
 		user.setCurrency(request.getParameter("currency"));
 		user.setLocale(request.getParameter("locale"));
 
-		if (dbm.updateUserProfile(user)) {
-			request.setAttribute("status", 0);
-		} else {
-			request.setAttribute("status", -1);
-		}
-
-		request.getRequestDispatcher(PROFILE_FORM).forward(request, response);
+		assignedObjects.put("status", dbm.updateUserProfile(user) ? 0 : -1);
+		renderPage(PROFILE_FORM, request, response);
 	}
 }

@@ -24,6 +24,8 @@ public class TyreController extends Controller {
 	 * Constructor
 	 */
 	public TyreController() {
+		validationMessages.clear();
+		assignedObjects.put("page", "tyres");
 	}
 
 	/**
@@ -45,13 +47,13 @@ public class TyreController extends Controller {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		super.doGet(request, response);
-		request.setAttribute("page", "refuels");
+		
 
 		parseMode(request);
 
 		switch (m) {
 		case "new":
-			request.getRequestDispatcher(LOCATIONS_FORM).forward(request, response);
+			request.getRequestDispatcher(PLACES_FORM).forward(request, response);
 			break;
 
 		case "update":
@@ -60,18 +62,18 @@ public class TyreController extends Controller {
 			PlaceModel l = dbm.getPlace(id);
 			if (l != null) {
 				request.setAttribute("location", l);
-				request.getRequestDispatcher(LOCATIONS_FORM).forward(request, response);
+				request.getRequestDispatcher(PLACES_FORM).forward(request, response);
 			} else {
 				request.setAttribute("status", -1);
 				request.setAttribute("locations", dbm.getPlaces(user.getId()));
-				request.getRequestDispatcher(LOCATIONS).forward(request, response);
+				request.getRequestDispatcher(PLACES).forward(request, response);
 			}
 			break;
 		case "":
 		case "cancel":
 		default:
 			request.setAttribute("locations", dbm.getPlaces(user.getId()));
-			request.getRequestDispatcher(LOCATIONS).forward(request, response);
+			request.getRequestDispatcher(PLACES).forward(request, response);
 			break;
 		}
 	}
@@ -85,7 +87,6 @@ public class TyreController extends Controller {
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		super.doPost(request, response);
-		request.setAttribute("page", "refuels");
 
 		parseMode(request);
 
@@ -118,7 +119,7 @@ public class TyreController extends Controller {
 				}
 
 				request.setAttribute("locations", dbm.getPlaces(user.getId()));
-				request.getRequestDispatcher(LOCATIONS).forward(request, response);
+				request.getRequestDispatcher(PLACES).forward(request, response);
 
 				break;
 
@@ -135,7 +136,7 @@ public class TyreController extends Controller {
 				}
 
 				request.setAttribute("locations", dbm.getPlaces(user.getId()));
-				request.getRequestDispatcher(LOCATIONS).forward(request, response);
+				request.getRequestDispatcher(PLACES).forward(request, response);
 				break;
 
 			case "":
@@ -145,7 +146,7 @@ public class TyreController extends Controller {
 		} else {
 			request.setAttribute("status", -2);
 			request.setAttribute("validationMessages", validationMessages);
-			request.getRequestDispatcher(LOCATIONS_FORM).forward(request, response);
+			request.getRequestDispatcher(PLACES_FORM).forward(request, response);
 		}
 	}
 }

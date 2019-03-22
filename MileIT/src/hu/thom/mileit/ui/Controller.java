@@ -34,8 +34,8 @@ public class Controller extends HttpServlet {
 	public static final String REFUELS_FORM = "/WEB-INF/pages/refuels-form.jsp";
 	public static final String PAYMENT_METHODS = "/WEB-INF/pages/payment-methods.jsp";
 	public static final String PAYMENT_METHODS_FORM = "/WEB-INF/pages/payment-methods-form.jsp";
-	public static final String LOCATIONS = "/WEB-INF/pages/locations.jsp";
-	public static final String LOCATIONS_FORM = "/WEB-INF/pages/locations-form.jsp";
+	public static final String PLACES = "/WEB-INF/pages/locations.jsp";
+	public static final String PLACES_FORM = "/WEB-INF/pages/locations-form.jsp";
 	public static final String PROFILE_FORM = "/WEB-INF/pages/profile-form.jsp";
 	public static final String MAINTENANCES = "/WEB-INF/pages/maintenances.jsp";
 	public static final String MAINTENANCES_FORM = "/WEB-INF/pages/maintenances-form.jsp";
@@ -54,6 +54,9 @@ public class Controller extends HttpServlet {
 	public final Set<String> validationMessages = new HashSet<String>();
 	public final Map<String, Object> assignedObjects = new HashMap<String, Object>();
 
+	/**
+	 * Constructor
+	 */
 	public Controller() {
 		if (dbm == null) {
 			dbm = new DBManager();
@@ -63,7 +66,14 @@ public class Controller extends HttpServlet {
 		assignedObjects.put("page", "index");
 	}
 
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	/**
+	 * Method to manage HTTP GET method.
+	 * 
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+	 *      response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
 
 		if (request.getUserPrincipal() != null) {
@@ -73,7 +83,14 @@ public class Controller extends HttpServlet {
 
 	}
 
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	/**
+	 * Method to manage HTTP POST method.
+	 * 
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+	 *      response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
 
 		if (request.getUserPrincipal() != null) {
@@ -82,6 +99,12 @@ public class Controller extends HttpServlet {
 		}
 	}
 
+	/**
+	 * Parses the operation switcher received as a parameter
+	 * 
+	 * @param request {@link HttpServletRequest} the request where the parameter is
+	 *                coming from
+	 */
 	public void parseMode(HttpServletRequest request) {
 		if (request != null) {
 			if (request.getParameter("m") != null && !"".equalsIgnoreCase(request.getParameter("m"))) {
@@ -94,7 +117,23 @@ public class Controller extends HttpServlet {
 		}
 	}
 
-	public void renderPage(String targetJSP, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	/**
+	 * Renders the given page for the response
+	 * 
+	 * @param targetJSP {@link String} the target JSP page defined as static fields
+	 *                  in {@link Controller}
+	 * @param request   {@link HttpServletRequest} the HTTP request
+	 * @param response  {@link HttpServletResponse} the HTTP response
+	 * @throws ServletException
+	 * @throws IOException
+	 * 
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+	 *      response)
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+	 *      response)
+	 */
+	public void renderPage(String targetJSP, HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		if (assignedObjects != null && assignedObjects.size() > 0) {
 			for (Map.Entry<String, Object> entry : assignedObjects.entrySet()) {
 				request.setAttribute(entry.getKey(), entry.getValue());
@@ -107,6 +146,12 @@ public class Controller extends HttpServlet {
 		request.getRequestDispatcher(targetJSP).forward(request, response);
 	}
 
+	/**
+	 * Parses the given entity's ID value received as a parameter
+	 * 
+	 * @param request {@link HttpServletRequest} the request where the ID is coming
+	 *                from
+	 */
 	public void parseId(HttpServletRequest request) {
 		if (request != null) {
 			try {

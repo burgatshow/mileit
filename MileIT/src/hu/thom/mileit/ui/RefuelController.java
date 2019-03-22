@@ -28,6 +28,7 @@ public class RefuelController extends Controller {
 	 */
 	public RefuelController() {
 		validationMessages.clear();
+		assignedObjects.put("page", "refuels");
 	}
 
 	/**
@@ -43,21 +44,23 @@ public class RefuelController extends Controller {
 	/**
 	 * Method to manage HTTP GET method.
 	 * 
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+	 *      response)
 	 */
 	@Override
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		super.doGet(request, response);
-		request.setAttribute("page", "refuels");
-
 		parseMode(request);
+
+		assignedObjects.put("cars", dbm.getCars(user.getId()));
+		assignedObjects.put("locations", dbm.getPlaces(user.getId()));
+		assignedObjects.put("paymentMethods", dbm.getPaymentMethods(user.getId()));
+		assignedObjects.put("refuels", dbm.getRefuels(user.getId()));
 
 		switch (m) {
 		case "new":
-			request.setAttribute("cars", dbm.getCars(user.getId()));
-			request.setAttribute("locations", dbm.getPlaces(user.getId()));
-			request.setAttribute("paymentMethods", dbm.getPaymentMethods(user.getId()));
-			request.getRequestDispatcher(REFUELS_FORM).forward(request, response);
+			renderPage(REFUELS_FORM, request, response);
 			break;
 
 		case "update":
@@ -65,22 +68,17 @@ public class RefuelController extends Controller {
 
 			RefuelModel rf = dbm.getRefuel(id);
 			if (rf != null) {
-				request.setAttribute("refuel", rf);
-				request.setAttribute("cars", dbm.getCars(user.getId()));
-				request.setAttribute("locations", dbm.getPlaces(user.getId()));
-				request.setAttribute("paymentMethods", dbm.getPaymentMethods(user.getId()));
-				request.getRequestDispatcher(REFUELS_FORM).forward(request, response);
+				assignedObjects.put("refuel", rf);
+				renderPage(REFUELS_FORM, request, response);
 			} else {
-				request.setAttribute("status", -1);
-				request.setAttribute("refuels", dbm.getRefuels(user.getId()));
-				request.getRequestDispatcher(REFUELS).forward(request, response);
+				assignedObjects.put("status", -1);
+				renderPage(REFUELS, request, response);
 			}
 			break;
 		case "":
 		case "cancel":
 		default:
-			request.setAttribute("refuels", dbm.getRefuels(user.getId()));
-			request.getRequestDispatcher(REFUELS).forward(request, response);
+			renderPage(REFUELS, request, response);
 			break;
 		}
 	}
@@ -88,12 +86,13 @@ public class RefuelController extends Controller {
 	/**
 	 * Method to manage HTTP POST method.
 	 * 
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+	 *      response)
 	 */
 	@Override
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		super.doPost(request, response);
-		request.setAttribute("page", "refuels");
 
 		parseMode(request);
 
@@ -121,45 +120,26 @@ public class RefuelController extends Controller {
 			switch (m) {
 			case "new":
 				rf.setOperation(0);
-
-				if (dbm.createUpdateRefuel(rf)) {
-					request.setAttribute("status", 0);
-				} else {
-					request.setAttribute("status", -1);
-				}
-
-				request.setAttribute("refuels", dbm.getRefuels(user.getId()));
-				request.getRequestDispatcher(REFUELS).forward(request, response);
-
 				break;
-
 			case "update":
 				parseId(request);
-
 				rf.setOperation(1);
 				rf.setId(id);
-
-				if (dbm.createUpdateRefuel(rf)) {
-					request.setAttribute("status", 1);
-				} else {
-					request.setAttribute("status", -1);
-				}
-
-				request.setAttribute("refuels", dbm.getRefuels(user.getId()));
-				request.getRequestDispatcher(REFUELS).forward(request, response);
 				break;
-
 			case "":
 			default:
 				break;
 			}
+
+			assignedObjects.put("status", dbm.createUpdateRefuel(rf) ? 1 : -1);
+			assignedObjects.put("refuels", dbm.getRefuels(user.getId()));
+			renderPage(REFUELS, request, response);
 		} else {
-			request.setAttribute("status", -2);
-			request.setAttribute("validationMessages", validationMessages);
-			request.setAttribute("cars", dbm.getCars(user.getId()));
-			request.setAttribute("locations", dbm.getPlaces(user.getId()));
-			request.setAttribute("paymentMethods", dbm.getPaymentMethods(user.getId()));
-			request.getRequestDispatcher(REFUELS_FORM).forward(request, response);
+			assignedObjects.put("status", -2);
+			assignedObjects.put("cars", dbm.getCars(user.getId()));
+			assignedObjects.put("locations", dbm.getPlaces(user.getId()));
+			assignedObjects.put("paymentMethods", dbm.getPaymentMethods(user.getId()));
+			renderPage(REFUELS_FORM, request, response);
 		}
 	}
 }

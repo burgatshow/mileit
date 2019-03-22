@@ -27,6 +27,7 @@ public class MaintenanceController extends Controller {
 	 */
 	public MaintenanceController() {
 		validationMessages.clear();
+		assignedObjects.put("page", "maintenance");
 	}
 
 	/**
@@ -46,17 +47,19 @@ public class MaintenanceController extends Controller {
 	 *      response)
 	 */
 	@Override
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		super.doGet(request, response);
-		request.setAttribute("page", "maintenance");
 
 		parseMode(request);
 
+		assignedObjects.put("paymentMethods", dbm.getPaymentMethods(user.getId()));
+		assignedObjects.put("cars", dbm.getCars(user.getId()));
+		assignedObjects.put("maintenances", dbm.getMaintenances(user.getId()));
+
 		switch (m) {
 		case "new":
-			request.setAttribute("cars", dbm.getCars(user.getId()));
-			request.setAttribute("paymentMethods", dbm.getPaymentMethods(user.getId()));
-			request.getRequestDispatcher(MAINTENANCES_FORM).forward(request, response);
+			renderPage(MAINTENANCES_FORM, request, response);
 			break;
 
 		case "update":
@@ -64,20 +67,17 @@ public class MaintenanceController extends Controller {
 
 			MaintenanceModel mm = dbm.getMaintenance(id);
 			if (mm != null) {
-				request.setAttribute("maintenance", mm);
-				request.setAttribute("cars", dbm.getCars(user.getId()));
-				request.setAttribute("paymentMethods", dbm.getPaymentMethods(user.getId()));
-				request.getRequestDispatcher(MAINTENANCES_FORM).forward(request, response);
+				assignedObjects.put("maintenance", mm);
+				renderPage(MAINTENANCES_FORM, request, response);
 			} else {
-				request.setAttribute("status", -1);
-				request.getRequestDispatcher(MAINTENANCES).forward(request, response);
+				assignedObjects.put("status", -1);
+				renderPage(MAINTENANCES, request, response);
 			}
 			break;
 		case "":
 		case "cancel":
 		default:
-			request.setAttribute("maintenances", dbm.getMaintenances(user.getId()));
-			request.getRequestDispatcher(MAINTENANCES).forward(request, response);
+			renderPage(MAINTENANCES, request, response);
 			break;
 		}
 	}
@@ -88,9 +88,10 @@ public class MaintenanceController extends Controller {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
 	 *      response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	@Override
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		super.doPost(request, response);
-		request.setAttribute("page", "maintenance");
 
 		parseMode(request);
 
@@ -102,6 +103,9 @@ public class MaintenanceController extends Controller {
 				validationMessages.remove(key);
 			}
 		}
+
+		assignedObjects.put("cars", dbm.getCars(user.getId()));
+		assignedObjects.put("paymentMethods", dbm.getPaymentMethods(user.getId()));
 
 		if (validationMessages.isEmpty()) {
 			MaintenanceModel mm = new MaintenanceModel();
@@ -116,44 +120,24 @@ public class MaintenanceController extends Controller {
 			switch (m) {
 			case "new":
 				mm.setOperation(0);
-
-				if (dbm.createUpdateMaintenance(mm)) {
-					request.setAttribute("status", 0);
-				} else {
-					request.setAttribute("status", -1);
-				}
-
-				request.setAttribute("maintenances", dbm.getMaintenances(user.getId()));
-				request.getRequestDispatcher(MAINTENANCES).forward(request, response);
-
 				break;
-
 			case "update":
 				parseId(request);
-
 				mm.setOperation(1);
 				mm.setId(id);
-
-				if (dbm.createUpdateMaintenance(mm)) {
-					request.setAttribute("status", 1);
-				} else {
-					request.setAttribute("status", -1);
-				}
-
-				request.setAttribute("maintenances", dbm.getMaintenances(user.getId()));
-				request.getRequestDispatcher(MAINTENANCES).forward(request, response);
 				break;
-
 			case "":
 			default:
 				break;
 			}
+
+			assignedObjects.put("status", dbm.createUpdateMaintenance(mm) ? 1 : -1);
+			assignedObjects.put("maintenances", dbm.getMaintenances(user.getId()));
+			renderPage(MAINTENANCES, request, response);
+
 		} else {
-			request.setAttribute("status", -2);
-			request.setAttribute("validationMessages", validationMessages);
-			request.setAttribute("cars", dbm.getCars(user.getId()));
-			request.setAttribute("paymentMethods", dbm.getPaymentMethods(user.getId()));
-			request.getRequestDispatcher(MAINTENANCES_FORM).forward(request, response);
+			assignedObjects.put("status", -2);
+			renderPage(MAINTENANCES_FORM, request, response);
 		}
 	}
 

@@ -25,6 +25,7 @@ public class PlaceController extends Controller {
 	 */
 	public PlaceController() {
 		validationMessages.clear();
+		assignedObjects.put("page", "locations");
 	}
 
 	/**
@@ -40,18 +41,21 @@ public class PlaceController extends Controller {
 	/**
 	 * Method to manage HTTP GET method.
 	 * 
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+	 *      response)
 	 */
 	@Override
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		super.doGet(request, response);
-		request.setAttribute("page", "refuels");
 
 		parseMode(request);
 
+		assignedObjects.put("locations", dbm.getPlaces(user.getId()));
+
 		switch (m) {
 		case "new":
-			request.getRequestDispatcher(LOCATIONS_FORM).forward(request, response);
+			renderPage(PLACES_FORM, request, response);
 			break;
 
 		case "update":
@@ -59,19 +63,17 @@ public class PlaceController extends Controller {
 
 			PlaceModel l = dbm.getPlace(id);
 			if (l != null) {
-				request.setAttribute("location", l);
-				request.getRequestDispatcher(LOCATIONS_FORM).forward(request, response);
+				assignedObjects.put("location", l);
+				renderPage(PLACES_FORM, request, response);
 			} else {
-				request.setAttribute("status", -1);
-				request.setAttribute("locations", dbm.getPlaces(user.getId()));
-				request.getRequestDispatcher(LOCATIONS).forward(request, response);
+				assignedObjects.put("status", -1);
+				renderPage(PLACES, request, response);
 			}
 			break;
 		case "":
 		case "cancel":
 		default:
-			request.setAttribute("locations", dbm.getPlaces(user.getId()));
-			request.getRequestDispatcher(LOCATIONS).forward(request, response);
+			renderPage(PLACES, request, response);
 			break;
 		}
 	}
@@ -79,12 +81,13 @@ public class PlaceController extends Controller {
 	/**
 	 * Method to manage HTTP POST method.
 	 * 
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+	 *      response)
 	 */
 	@Override
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		super.doPost(request, response);
-		request.setAttribute("page", "refuels");
 
 		parseMode(request);
 
@@ -109,42 +112,23 @@ public class PlaceController extends Controller {
 			switch (m) {
 			case "new":
 				l.setOperation(0);
-
-				if (dbm.createUpdatePlace(l)) {
-					request.setAttribute("status", 0);
-				} else {
-					request.setAttribute("status", -1);
-				}
-
-				request.setAttribute("locations", dbm.getPlaces(user.getId()));
-				request.getRequestDispatcher(LOCATIONS).forward(request, response);
-
 				break;
-
 			case "update":
 				parseId(request);
-
 				l.setOperation(1);
 				l.setId(id);
-
-				if (dbm.createUpdatePlace(l)) {
-					request.setAttribute("status", 1);
-				} else {
-					request.setAttribute("status", -1);
-				}
-
-				request.setAttribute("locations", dbm.getPlaces(user.getId()));
-				request.getRequestDispatcher(LOCATIONS).forward(request, response);
 				break;
-
 			case "":
 			default:
 				break;
 			}
+			
+			assignedObjects.put("status", dbm.createUpdatePlace(l) ? 1 : -1);
+			assignedObjects.put("locations", dbm.getPlaces(user.getId()));
+			renderPage(PLACES, request, response);
 		} else {
-			request.setAttribute("status", -2);
-			request.setAttribute("validationMessages", validationMessages);
-			request.getRequestDispatcher(LOCATIONS_FORM).forward(request, response);
+			assignedObjects.put("status", -2);
+			renderPage(PLACES_FORM, request, response);
 		}
 	}
 }

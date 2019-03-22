@@ -45,7 +45,8 @@ public class CarController extends Controller {
 	 *      response)
 	 */
 	@Override
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		super.doGet(request, response);
 
 		parseMode(request);
@@ -55,13 +56,13 @@ public class CarController extends Controller {
 
 		switch (m) {
 		case "new":
-			request.getRequestDispatcher(CARS_FORM).forward(request, response);
+			renderPage(CARS_FORM, request, response);
 			break;
 
 		case "archive":
 			parseId(request);
 
-			assignedObjects.put("status", dbm.archiveCar(id) ? 2 : -1);
+			assignedObjects.put("status", dbm.archiveCar(id) ? 1 : -1);
 			renderPage(CARS, request, response);
 
 			break;
@@ -74,7 +75,7 @@ public class CarController extends Controller {
 				assignedObjects.put("car", car);
 				renderPage(CARS_FORM, request, response);
 			} else {
-				request.setAttribute("status", -1);
+				assignedObjects.put("status", -1);
 				renderPage(CARS, request, response);
 			}
 
@@ -95,7 +96,8 @@ public class CarController extends Controller {
 	 *      response)
 	 */
 	@Override
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		super.doPost(request, response);
 
 		parseMode(request);
@@ -108,8 +110,6 @@ public class CarController extends Controller {
 				validationMessages.remove(key);
 			}
 		}
-
-		assignedObjects.put("cars", dbm.getCars(user.getId()));
 
 		if (validationMessages.isEmpty()) {
 			CarModel car = new CarModel();
@@ -131,15 +131,11 @@ public class CarController extends Controller {
 			switch (m) {
 			case "new":
 				car.setOperation(0);
-
 				break;
-
 			case "update":
 				parseId(request);
-
 				car.setId(id);
 				car.setOperation(1);
-
 				break;
 
 			case "":
@@ -147,11 +143,9 @@ public class CarController extends Controller {
 				break;
 			}
 
-			assignedObjects.put("cars", dbm.getCars(user.getId()));
-			System.out.println(assignedObjects.get("cars"));
 			assignedObjects.put("status", dbm.createUpdateCar(car) ? 1 : -1);
+			assignedObjects.put("cars", dbm.getCars(user.getId()));
 			renderPage(CARS, request, response);
-
 		} else {
 			assignedObjects.put("status", -2);
 			renderPage(CARS_FORM, request, response);
