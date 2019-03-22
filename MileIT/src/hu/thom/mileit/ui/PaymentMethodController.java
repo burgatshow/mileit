@@ -25,6 +25,7 @@ public class PaymentMethodController extends Controller {
 	 */
 	public PaymentMethodController() {
 		validationMessages.clear();
+		assignedObjects.put("page", "payment");
 	}
 
 	/**
@@ -40,18 +41,21 @@ public class PaymentMethodController extends Controller {
 	/**
 	 * Method to manage HTTP GET method.
 	 * 
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+	 *      response)
 	 */
 	@Override
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		super.doGet(request, response);
-		request.setAttribute("page", "refuels");
 
 		parseMode(request);
 
+		assignedObjects.put("paymentMethods", dbm.getPaymentMethods(user.getId()));
+
 		switch (m) {
 		case "new":
-			request.getRequestDispatcher(PAYMENT_METHODS_FORM).forward(request, response);
+			renderPage(PAYMENT_METHODS_FORM, request, response);
 			break;
 
 		case "update":
@@ -59,19 +63,17 @@ public class PaymentMethodController extends Controller {
 
 			PaymentMethodModel pm = dbm.getPaymentMethod(id);
 			if (pm != null) {
-				request.setAttribute("pm", pm);
-				request.getRequestDispatcher(PAYMENT_METHODS_FORM).forward(request, response);
+				assignedObjects.put("pm", pm);
+				renderPage(PAYMENT_METHODS_FORM, request, response);
 			} else {
-				request.setAttribute("status", -1);
-				request.setAttribute("paymentMethods", dbm.getPaymentMethods(user.getId()));
-				request.getRequestDispatcher(PAYMENT_METHODS).forward(request, response);
+				assignedObjects.put("status", -1);
+				renderPage(PAYMENT_METHODS, request, response);
 			}
 			break;
 		case "":
 		case "cancel":
 		default:
-			request.setAttribute("paymentMethods", dbm.getPaymentMethods(user.getId()));
-			request.getRequestDispatcher(PAYMENT_METHODS).forward(request, response);
+			renderPage(PAYMENT_METHODS, request, response);
 			break;
 		}
 	}
@@ -79,12 +81,13 @@ public class PaymentMethodController extends Controller {
 	/**
 	 * Method to manage HTTP POST method.
 	 * 
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+	 *      response)
 	 */
 	@Override
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		super.doPost(request, response);
-		request.setAttribute("page", "refuels");
 
 		parseMode(request);
 
@@ -106,42 +109,24 @@ public class PaymentMethodController extends Controller {
 			switch (m) {
 			case "new":
 				pm.setOperation(0);
-
-				if (dbm.createUpdatePaymentMethod(pm)) {
-					request.setAttribute("status", 0);
-				} else {
-					request.setAttribute("status", -1);
-				}
-
-				request.setAttribute("paymentMethods", dbm.getPaymentMethods(user.getId()));
-				request.getRequestDispatcher(PAYMENT_METHODS).forward(request, response);
-
 				break;
-
 			case "update":
 				parseId(request);
-
 				pm.setOperation(1);
 				pm.setId(id);
-
-				if (dbm.createUpdatePaymentMethod(pm)) {
-					request.setAttribute("status", 1);
-				} else {
-					request.setAttribute("status", -1);
-				}
-
-				request.setAttribute("paymentMethods", dbm.getPaymentMethods(user.getId()));
-				request.getRequestDispatcher(PAYMENT_METHODS).forward(request, response);
 				break;
 
 			case "":
 			default:
 				break;
 			}
+
+			assignedObjects.put("status", dbm.createUpdatePaymentMethod(pm) ? 1 : -1);
+			assignedObjects.put("paymentMethods", dbm.getPaymentMethods(user.getId()));
+			renderPage(PAYMENT_METHODS, request, response);
 		} else {
-			request.setAttribute("status", -2);
-			request.setAttribute("validationMessages", validationMessages);
-			request.getRequestDispatcher(PAYMENT_METHODS_FORM).forward(request, response);
+			assignedObjects.put("status", -2);
+			renderPage(PAYMENT_METHODS_FORM, request, response);
 		}
 	}
 }
