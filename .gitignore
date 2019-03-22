@@ -10,6 +10,6 @@ MileIT/.settings/org.eclipse.wst.common.component
 MileIT/.settings/org.eclipse.wst.common.project.facet.core.xml
 MileIT/.settings/org.eclipse.wst.jsdt.ui.superType.container
 MileIT/.settings/org.eclipse.wst.jsdt.ui.superType.name
-
-*.class
+MileIT/WebContent/WEB-INF/classes/*
 *.prefs
+.DS_Store

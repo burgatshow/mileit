@@ -25,6 +25,7 @@ public class CarController extends Controller {
 	 */
 	public CarController() {
 		validationMessages.clear();
+		assignedObjects.put("page", "cars");
 	}
 
 	/**
@@ -40,68 +41,62 @@ public class CarController extends Controller {
 	/**
 	 * Method to manage HTTP GET method.
 	 * 
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+	 *      response)
 	 */
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		super.doGet(request, response);
-		request.setAttribute("page", "cars");
 
 		parseMode(request);
 
+		assignedObjects.put("carVendors", dbm.getCarVendors());
+		assignedObjects.put("cars", dbm.getCars(user.getId()));
+
 		switch (m) {
 		case "new":
-			request.setAttribute("carVendors", dbm.getCarVendors());
 			request.getRequestDispatcher(CARS_FORM).forward(request, response);
 			break;
 
 		case "archive":
 			parseId(request);
 
-			if (dbm.archiveCar(id)) {
-				request.setAttribute("status", 2);
-			} else {
-				request.setAttribute("status", -1);
-			}
-
-			request.setAttribute("cars", dbm.getCars(user.getId()));
-			request.getRequestDispatcher(CARS).forward(request, response);
+			assignedObjects.put("status", dbm.archiveCar(id) ? 2 : -1);
+			renderPage(CARS, request, response);
 
 			break;
 
 		case "update":
-			request.setAttribute("carVendors", dbm.getCarVendors());
 			parseId(request);
 
 			CarModel car = dbm.getCar(id);
 			if (car != null) {
-				request.setAttribute("car", car);
-				request.getRequestDispatcher(CARS_FORM).forward(request, response);
+				assignedObjects.put("car", car);
+				renderPage(CARS_FORM, request, response);
 			} else {
 				request.setAttribute("status", -1);
-				request.setAttribute("cars", dbm.getCars(user.getId()));
-				request.getRequestDispatcher(CARS).forward(request, response);
+				renderPage(CARS, request, response);
 			}
 
 			break;
 		case "":
 		case "cancel":
 		default:
-			request.setAttribute("cars", dbm.getCars(user.getId()));
-			request.getRequestDispatcher(CARS).forward(request, response);
+			renderPage(CARS, request, response);
 			break;
 		}
+
 	}
 
 	/**
 	 * Method to manage HTTP POST method.
 	 * 
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+	 *      response)
 	 */
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		super.doPost(request, response);
-		request.setAttribute("page", "cars");
 
 		parseMode(request);
 
@@ -114,77 +109,52 @@ public class CarController extends Controller {
 			}
 		}
 
+		assignedObjects.put("cars", dbm.getCars(user.getId()));
+
 		if (validationMessages.isEmpty()) {
-			CarModel car = null;
+			CarModel car = new CarModel();
+			car.setManufacturer(request.getParameter("manufacturer"));
+			car.setModel(request.getParameter("model"));
+			car.setManufacturerDate(request.getParameter("manufactureDate"));
+			car.setStartDate(request.getParameter("startDate"));
+			car.setEndDate(request.getParameter("endDate"));
+			car.setColor(request.getParameter("color"));
+			car.setVin(request.getParameter("vin"));
+			car.setPlateNumber(request.getParameter("plateNumber"));
+			car.setFuelCapacity(request.getParameter("fuelCapacity"));
+			car.setFuel(request.getParameter("fuel"));
+			car.setDescription(request.getParameter("description"));
+			car.setFriendlyName(request.getParameter("friendlyName"));
+			car.setActive(request.getParameter("status"));
+			car.setUser(user);
+
 			switch (m) {
 			case "new":
-				car = new CarModel();
 				car.setOperation(0);
-				car.setManufacturer(request.getParameter("manufacturer"));
-				car.setModel(request.getParameter("model"));
-				car.setManufacturerDate(request.getParameter("manufactureDate"));
-				car.setStartDate(request.getParameter("startDate"));
-				car.setEndDate(request.getParameter("endDate"));
-				car.setColor(request.getParameter("color"));
-				car.setVin(request.getParameter("vin"));
-				car.setPlateNumber(request.getParameter("plateNumber"));
-				car.setFuelCapacity(request.getParameter("fuelCapacity"));
-				car.setFuel(request.getParameter("fuel"));
-				car.setDescription(request.getParameter("description"));
-				car.setFriendlyName(request.getParameter("friendlyName"));
-
-				car.setActive(request.getParameter("status"));
-
-				if (dbm.createUpdateCar(car)) {
-					request.setAttribute("status", 0);
-				} else {
-					request.setAttribute("status", -1);
-				}
-
-				request.setAttribute("cars", dbm.getCars(user.getId()));
-				request.getRequestDispatcher(CARS).forward(request, response);
 
 				break;
 
 			case "update":
 				parseId(request);
 
-				car = new CarModel();
 				car.setId(id);
 				car.setOperation(1);
-				car.setManufacturer(request.getParameter("manufacturer"));
-				car.setModel(request.getParameter("model"));
-				car.setManufacturerDate(request.getParameter("manufactureDate"));
-				car.setStartDate(request.getParameter("startDate"));
-				car.setEndDate(request.getParameter("endDate"));
-				car.setColor(request.getParameter("color"));
-				car.setVin(request.getParameter("vin"));
-				car.setPlateNumber(request.getParameter("plateNumber"));
-				car.setFuelCapacity(request.getParameter("fuelCapacity"));
-				car.setFuel(request.getParameter("fuel"));
-				car.setDescription(request.getParameter("description"));
-				car.setFriendlyName(request.getParameter("friendlyName"));
-				car.setActive(request.getParameter("status"));
-				car.setUser(user);
 
-				if (dbm.createUpdateCar(car)) {
-					request.setAttribute("status", 1);
-				} else {
-					request.setAttribute("status", -1);
-				}
-
-				request.setAttribute("cars", dbm.getCars(user.getId()));
-				request.getRequestDispatcher(CARS).forward(request, response);
 				break;
 
 			case "":
 			default:
 				break;
 			}
+
+			assignedObjects.put("cars", dbm.getCars(user.getId()));
+			System.out.println(assignedObjects.get("cars"));
+			assignedObjects.put("status", dbm.createUpdateCar(car) ? 1 : -1);
+			renderPage(CARS, request, response);
+
 		} else {
-			request.setAttribute("status", -2);
-			request.setAttribute("validationMessages", validationMessages);
-			request.getRequestDispatcher(CARS_FORM).forward(request, response);
+			assignedObjects.put("status", -2);
+			renderPage(CARS_FORM, request, response);
 		}
 	}
 }

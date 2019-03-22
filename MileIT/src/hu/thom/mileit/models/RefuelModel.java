@@ -108,7 +108,7 @@ public class RefuelModel extends Model {
 		try {
 			this.odometer = Double.parseDouble(odometer);
 		} catch (Exception e) {
-			this.odometer = 0.0;
+			this.odometer = 0;
 		}
 	}
 
@@ -124,7 +124,7 @@ public class RefuelModel extends Model {
 		try {
 			this.unitPrice = Double.parseDouble(unitPrice);
 		} catch (Exception e) {
-			this.unitPrice = 0.0;
+			this.unitPrice = 0;
 		}
 	}
 
@@ -140,7 +140,7 @@ public class RefuelModel extends Model {
 		try {
 			this.fuelAmount = Double.parseDouble(fuelAmount);
 		} catch (Exception e) {
-			this.fuelAmount = 0.0;
+			this.fuelAmount = 0;
 		}
 	}
 
@@ -164,7 +164,7 @@ public class RefuelModel extends Model {
 		try {
 			this.amount = Double.parseDouble(amount);
 		} catch (Exception e) {
-			this.amount = 0.0;
+			this.amount = 0;
 		}
 	}
 
@@ -176,6 +176,8 @@ public class RefuelModel extends Model {
 		temp = Double.doubleToLongBits(amount);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
 		result = prime * result + ((car == null) ? 0 : car.hashCode());
+		temp = Double.doubleToLongBits(distance);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
 		temp = Double.doubleToLongBits(fuelAmount);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
 		result = prime * result + ((location == null) ? 0 : location.hashCode());
@@ -183,6 +185,7 @@ public class RefuelModel extends Model {
 		result = prime * result + (int) (temp ^ (temp >>> 32));
 		result = prime * result + ((payment == null) ? 0 : payment.hashCode());
 		result = prime * result + ((refuelDate == null) ? 0 : refuelDate.hashCode());
+		result = prime * result + ((sdfDates == null) ? 0 : sdfDates.hashCode());
 		temp = Double.doubleToLongBits(unitPrice);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
 		result = prime * result + ((user == null) ? 0 : user.hashCode());
@@ -205,6 +208,8 @@ public class RefuelModel extends Model {
 				return false;
 		} else if (!car.equals(other.car))
 			return false;
+		if (Double.doubleToLongBits(distance) != Double.doubleToLongBits(other.distance))
+			return false;
 		if (Double.doubleToLongBits(fuelAmount) != Double.doubleToLongBits(other.fuelAmount))
 			return false;
 		if (location == null) {
@@ -223,6 +228,11 @@ public class RefuelModel extends Model {
 			if (other.refuelDate != null)
 				return false;
 		} else if (!refuelDate.equals(other.refuelDate))
+			return false;
+		if (sdfDates == null) {
+			if (other.sdfDates != null)
+				return false;
+		} else if (!sdfDates.equals(other.sdfDates))
 			return false;
 		if (Double.doubleToLongBits(unitPrice) != Double.doubleToLongBits(other.unitPrice))
 			return false;

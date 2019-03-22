@@ -62,7 +62,7 @@ public class MaintenanceModel extends Model {
 	public Date getMaintenanceDate() {
 		return maintenanceDate;
 	}
-	
+
 	public Timestamp getMaintenanceDateAsTimestamp() {
 		return new Timestamp(getMaintenanceDate() == null ? null : getMaintenanceDate().getTime());
 	}
@@ -132,6 +132,7 @@ public class MaintenanceModel extends Model {
 		temp = Double.doubleToLongBits(odometer);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
 		result = prime * result + ((payment == null) ? 0 : payment.hashCode());
+		result = prime * result + ((sdfDates == null) ? 0 : sdfDates.hashCode());
 		result = prime * result + ((user == null) ? 0 : user.hashCode());
 		return result;
 	}
@@ -168,6 +169,11 @@ public class MaintenanceModel extends Model {
 			if (other.payment != null)
 				return false;
 		} else if (!payment.equals(other.payment))
+			return false;
+		if (sdfDates == null) {
+			if (other.sdfDates != null)
+				return false;
+		} else if (!sdfDates.equals(other.sdfDates))
 			return false;
 		if (user == null) {
 			if (other.user != null)

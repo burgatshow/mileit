@@ -16,6 +16,52 @@ public class CarModel extends Model {
 	private SimpleDateFormat sdfManufactureDate = new SimpleDateFormat("yyyy");
 	private SimpleDateFormat sdfDates = new SimpleDateFormat("yyyy-MM-dd");
 
+	public static enum Fuel {
+		PETROL((byte) 1), DIESEL((byte) 2), ELECTRIC((byte) 3), BIOETHANOL((byte) 4), OTHER((byte) 5);
+
+		private final byte code;
+
+		private Fuel(byte code) {
+			this.code = code;
+		}
+
+		public byte getCode() {
+			return code;
+		}
+
+		public static Fuel fromCode(byte code) {
+			switch (code) {
+			case 1:
+				return PETROL;
+			case 2:
+				return DIESEL;
+			case 3:
+				return ELECTRIC;
+			case 4:
+				return BIOETHANOL;
+			case 5:
+			default:
+				return OTHER;
+			}
+		}
+
+		public static int toCode(Fuel fuel) {
+			switch (fuel) {
+			case PETROL:
+				return 1;
+			case DIESEL:
+				return 2;
+			case ELECTRIC:
+				return 3;
+			case BIOETHANOL:
+				return 4;
+			case OTHER:
+			default:
+				return 5;
+			}
+		}
+	}
+
 	private int manufacturer;
 	private String manufacturerName;
 	private String model;
@@ -23,7 +69,7 @@ public class CarModel extends Model {
 	private String color;
 	private String vin;
 	private String plateNumber;
-	private int fuel;
+	private Fuel fuel;
 	private Double fuelCapacity;
 	private Date startDate;
 	private Date endDate;
@@ -75,19 +121,40 @@ public class CarModel extends Model {
 		this.model = model;
 	}
 
-	public int getFuel() {
+	public Fuel getFuel() {
 		return fuel;
 	}
 
-	public void setFuel(int fuel) {
+	public void setFuel(Fuel fuel) {
 		this.fuel = fuel;
 	}
 
+	public void setFuel(int fuel) {
+		setFuel(String.valueOf(fuel));
+	}
+
 	public void setFuel(String fuel) {
-		try {
-			this.fuel = Integer.parseInt(fuel);
-		} catch (Exception e) {
-			this.fuel = 0;
+		switch (fuel) {
+		case "1":
+			this.fuel = Fuel.PETROL;
+			break;
+
+		case "2":
+			this.fuel = Fuel.DIESEL;
+			break;
+
+		case "3":
+			this.fuel = Fuel.ELECTRIC;
+			break;
+
+		case "4":
+			this.fuel = Fuel.BIOETHANOL;
+			break;
+
+		case "5":
+		default:
+			this.fuel = Fuel.OTHER;
+			break;
 		}
 	}
 
@@ -160,7 +227,11 @@ public class CarModel extends Model {
 	}
 
 	public Timestamp getStartDateAsTimestamp() {
-		return new Timestamp(getStartDate() == null ? null : getStartDate().getTime());
+		if (getStartDate() == null) {
+			return null;
+		} else {
+			return new Timestamp(getStartDate().getTime());
+		}
 	}
 
 	public void setStartDate(Date startDate) {
@@ -180,7 +251,11 @@ public class CarModel extends Model {
 	}
 
 	public Timestamp getEndDateAsTimestamp() {
-		return new Timestamp(getEndDate() == null ? null : getEndDate().getTime());
+		if (getEndDate() == null) {
+			return null;
+		} else {
+			return new Timestamp(getEndDate().getTime());
+		}
 	}
 
 	public void setEndDate(Date endDate) {
@@ -251,12 +326,15 @@ public class CarModel extends Model {
 		result = prime * result + ((description == null) ? 0 : description.hashCode());
 		result = prime * result + ((endDate == null) ? 0 : endDate.hashCode());
 		result = prime * result + ((friendlyName == null) ? 0 : friendlyName.hashCode());
-		result = prime * result + fuel;
+		result = prime * result + ((fuel == null) ? 0 : fuel.hashCode());
 		result = prime * result + ((fuelCapacity == null) ? 0 : fuelCapacity.hashCode());
 		result = prime * result + manufacturer;
 		result = prime * result + ((manufacturerDate == null) ? 0 : manufacturerDate.hashCode());
+		result = prime * result + ((manufacturerName == null) ? 0 : manufacturerName.hashCode());
 		result = prime * result + ((model == null) ? 0 : model.hashCode());
 		result = prime * result + ((plateNumber == null) ? 0 : plateNumber.hashCode());
+		result = prime * result + ((sdfDates == null) ? 0 : sdfDates.hashCode());
+		result = prime * result + ((sdfManufactureDate == null) ? 0 : sdfManufactureDate.hashCode());
 		result = prime * result + ((startDate == null) ? 0 : startDate.hashCode());
 		result = prime * result + ((user == null) ? 0 : user.hashCode());
 		result = prime * result + ((vin == null) ? 0 : vin.hashCode());
@@ -308,6 +386,11 @@ public class CarModel extends Model {
 				return false;
 		} else if (!manufacturerDate.equals(other.manufacturerDate))
 			return false;
+		if (manufacturerName == null) {
+			if (other.manufacturerName != null)
+				return false;
+		} else if (!manufacturerName.equals(other.manufacturerName))
+			return false;
 		if (model == null) {
 			if (other.model != null)
 				return false;
@@ -317,6 +400,16 @@ public class CarModel extends Model {
 			if (other.plateNumber != null)
 				return false;
 		} else if (!plateNumber.equals(other.plateNumber))
+			return false;
+		if (sdfDates == null) {
+			if (other.sdfDates != null)
+				return false;
+		} else if (!sdfDates.equals(other.sdfDates))
+			return false;
+		if (sdfManufactureDate == null) {
+			if (other.sdfManufactureDate != null)
+				return false;
+		} else if (!sdfManufactureDate.equals(other.sdfManufactureDate))
 			return false;
 		if (startDate == null) {
 			if (other.startDate != null)

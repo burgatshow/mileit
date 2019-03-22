@@ -26,6 +26,7 @@ public class IndexController extends Controller {
 	 */
 	public IndexController() {
 		super();
+		assignedObjects.put("page", "index");
 	}
 
 	/**
@@ -37,8 +38,7 @@ public class IndexController extends Controller {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		super.doGet(request, response);
 
-		request.setAttribute("page", "index");
-		request.setAttribute("lr", dbm.getLastRefuel(user.getId()));
+		assignedObjects.put("lr", dbm.getLastRefuel(user.getId()));
 
 		List<RefuelModel> fuelStats = dbm.getFuelPriceStats(user.getId());
 		StringBuffer fuelStatKeys = new StringBuffer();
@@ -58,11 +58,11 @@ public class IndexController extends Controller {
 			i++;
 		}
 
-		request.setAttribute("fuelStatsKey", fuelStatKeys);
-		request.setAttribute("fuelStatsVal", fuelStatValues);
-		request.setAttribute("fuelPaidAmount", fuelPaidAmount);
+		assignedObjects.put("fuelStatsKey", fuelStatKeys);
+		assignedObjects.put("fuelStatsVal", fuelStatValues);
+		assignedObjects.put("fuelPaidAmount", fuelPaidAmount);
 
-		request.getRequestDispatcher(HOME).forward(request, response);
+		renderPage(HOME, request, response);
 	}
 
 }
