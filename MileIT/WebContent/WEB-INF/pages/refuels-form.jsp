@@ -118,15 +118,15 @@
 			<div class="row">
 				<div class="col-md-12">
 					<div class="form-group">
-						<c:if test="${not empty param.refuelTimestamp }">
-							<fmt:parseDate value="${param.refuelTimestamp}" var="refuelTimestamp" pattern="yyyy-MM-dd" />
+						<c:if test="${not empty param.refuelDate}">
+							<fmt:parseDate value="${param.refuelDate}" var="refuelDate" pattern="yyyy-MM-dd" />
 						</c:if>
 						<c:if test="${not empty refuel}">
-							<c:set var="refuelTimestamp" value="${refuel.refuelTimestamp }" />
+							<c:set var="refuelDate" value="${refuel.refuelDate}" />
 						</c:if>
-						<label for="refuelTimestamp"><fmt:message key="refuels.form.date" /></label> <input type="text" id="refuelTimestamp" name="refuelTimestamp"
+						<label for="refuelTimestamp"><fmt:message key="refuels.form.date" /></label> <input type="text" id="refuelDate" name="refuelTimestamp"
 							class="form-control" placeholder="<fmt:message key="refuels.form.date" />"
-							value="<fmt:formatDate value="${refuelTimestamp}" pattern="yyyy-MM-dd"/>">
+							value="<fmt:formatDate value="${refuelDate}" pattern="yyyy-MM-dd"/>">
 					</div>
 				</div>
 			</div>

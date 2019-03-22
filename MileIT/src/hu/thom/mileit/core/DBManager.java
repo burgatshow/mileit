@@ -132,7 +132,7 @@ public class DBManager implements Serializable {
 				ps.setString(5, car.getVin());
 				ps.setString(6, car.getPlateNumber());
 				ps.setDouble(7, car.getFuelCapacity());
-				ps.setInt(8, car.getFuel());
+				ps.setInt(8, car.getFuel().getCode());
 				ps.setTimestamp(9, car.getStartDateAsTimestamp());
 				ps.setTimestamp(10, car.getEndDateAsTimestamp());
 				ps.setString(11, car.getDescription());

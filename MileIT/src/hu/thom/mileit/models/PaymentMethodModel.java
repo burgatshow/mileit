@@ -15,11 +15,11 @@ public class PaymentMethodModel extends Model {
 
 	public PaymentMethodModel() {
 	}
-	
+
 	public PaymentMethodModel(int id) {
 		setId(id);
 	}
-	
+
 	public PaymentMethodModel(String id) {
 		setId(id);
 	}
@@ -60,6 +60,7 @@ public class PaymentMethodModel extends Model {
 		int result = super.hashCode();
 		result = prime * result + ((description == null) ? 0 : description.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((user == null) ? 0 : user.hashCode());
 		return result;
 	}
 
@@ -82,13 +83,17 @@ public class PaymentMethodModel extends Model {
 				return false;
 		} else if (!name.equals(other.name))
 			return false;
+		if (user == null) {
+			if (other.user != null)
+				return false;
+		} else if (!user.equals(other.user))
+			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "PaymentMethodModel [name=" + name + ", description=" + description + ", user=" + user + ", toString()="
-				+ super.toString() + "]";
+		return "PaymentMethodModel [name=" + name + ", description=" + description + ", user=" + user + ", toString()=" + super.toString() + "]";
 	}
 
 }

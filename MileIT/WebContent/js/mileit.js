@@ -20,7 +20,7 @@ $(document).ready(
 				weekStart: 1
 			});
 
-			$('#refuelTimestamp').datepicker({
+			$('#refuelDate').datepicker({
 				format : "yyyy-mm-dd",
 				todayHighlight : true,
 				endDate: new Date(),
