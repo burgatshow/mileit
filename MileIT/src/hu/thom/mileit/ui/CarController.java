@@ -112,21 +112,7 @@ public class CarController extends Controller {
 		}
 
 		if (validationMessages.isEmpty()) {
-			CarModel car = new CarModel();
-			car.setManufacturer(request.getParameter("manufacturer"));
-			car.setModel(request.getParameter("model"));
-			car.setManufacturerDate(request.getParameter("manufactureDate"));
-			car.setStartDate(request.getParameter("startDate"));
-			car.setEndDate(request.getParameter("endDate"));
-			car.setColor(request.getParameter("color"));
-			car.setVin(request.getParameter("vin"));
-			car.setPlateNumber(request.getParameter("plateNumber"));
-			car.setFuelCapacity(request.getParameter("fuelCapacity"));
-			car.setFuel(request.getParameter("fuel"));
-			car.setDescription(request.getParameter("description"));
-			car.setFriendlyName(request.getParameter("friendlyName"));
-			car.setActive(request.getParameter("status"));
-			car.setUser(user);
+			CarModel car = new CarModel(request.getParameterMap(), user);
 
 			switch (m) {
 			case UIKeys.MODE_NEW:

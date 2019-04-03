@@ -9,9 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import hu.thom.mileit.core.UIKeys;
-import hu.thom.mileit.models.CarModel;
 import hu.thom.mileit.models.MaintenanceModel;
-import hu.thom.mileit.models.PaymentMethodModel;
 
 /**
  * Servlet class to manage maintenance related operations
@@ -108,14 +106,7 @@ public class MaintenanceController extends Controller {
 		assignedObjects.put(UIKeys.PMS, dbm.getPaymentMethods(user.getId()));
 
 		if (validationMessages.isEmpty()) {
-			MaintenanceModel mm = new MaintenanceModel();
-			mm.setCar(new CarModel(request.getParameter("car")));
-			mm.setPayment(new PaymentMethodModel(request.getParameter("paymentMethod")));
-			mm.setUser(user);
-			mm.setMaintenanceDate(request.getParameter("maintenanceDate"));
-			mm.setOdometer(request.getParameter("odometer"));
-			mm.setAmount(request.getParameter("amount"));
-			mm.setDescription(request.getParameter("description"));
+			MaintenanceModel mm = new MaintenanceModel(request.getParameterMap(), user);
 
 			switch (m) {
 			case UIKeys.MODE_NEW:

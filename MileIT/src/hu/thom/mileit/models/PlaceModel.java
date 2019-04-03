@@ -26,24 +26,6 @@ public class PlaceModel extends Model {
 		setId(id);
 	}
 
-	public PlaceModel(int id, String name) {
-		setId(id);
-		this.name = name;
-	}
-
-	public PlaceModel(int id, String name, String address) {
-		setId(id);
-		this.name = name;
-		this.address = address;
-	}
-
-	public PlaceModel(int id, String name, String address, int userId) {
-		setId(id);
-		this.name = name;
-		this.address = address;
-		setId(userId);
-	}
-
 	public PlaceModel(int id, String name, String address, int userId, double longitude, double latitude) {
 		setId(id);
 		this.name = name;
@@ -52,6 +34,14 @@ public class PlaceModel extends Model {
 		getUser().setId(userId);
 		this.latitude = latitude;
 		this.longitude = longitude;
+	}
+
+	public PlaceModel(UserModel user, String name, String address, String longitude, String latitude) {
+		this.user = user;
+		this.name = name;
+		this.address = address;
+		setLongitude(longitude);
+		setLatitude(latitude);
 	}
 
 	public String getName() {

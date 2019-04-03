@@ -3,6 +3,7 @@ package hu.thom.mileit.models;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Map;
 
 /**
  * Model file representing all attributes of a car
@@ -87,6 +88,24 @@ public class CarModel extends Model {
 
 	public CarModel(String id) {
 		setId(id);
+	}
+
+	public CarModel(Map<String, String[]> params, UserModel user) {
+		setManufacturer(params.get("manufacturer")[0]);
+		this.model = params.get("model")[0];
+		setManufacturerDate(params.get("manufactureDate")[0]);
+		setStartDate(params.get("startDate")[0]);
+		setEndDate(params.get("endDate")[0]);
+		this.color = params.get("color")[0];
+		this.vin = params.get("vin")[0];
+		this.plateNumber = params.get("plateNumber")[0];
+		setFuelCapacity(params.get("fuelCapacity")[0]);
+		setFuel(params.get("fuel")[0]);
+		this.description = params.get("description")[0];
+		this.friendlyName = params.get("friendlyName")[0];
+		setActive(params.get("status")[0]);
+
+		this.user = user;
 	}
 
 	public String getManufacturerName() {

@@ -3,6 +3,7 @@ package hu.thom.mileit.models;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Map;
 
 /**
  * Model file representing all attributes of a maintenance
@@ -33,6 +34,16 @@ public class MaintenanceModel extends Model {
 
 	public MaintenanceModel(String id) {
 		setId(id);
+	}
+
+	public MaintenanceModel(Map<String, String[]> params, UserModel user) {
+		this.car = new CarModel(params.get("car")[0]);
+		this.user = user;
+		this.payment = new PaymentMethodModel(params.get("paymentMethod")[0]);
+		setMaintenanceDate(params.get("maintenanceDate")[0]);
+		setOdometer(params.get("odometer")[0]);
+		setAmount(params.get("amount")[0]);
+		this.description = params.get("description")[0];
 	}
 
 	public CarModel getCar() {
