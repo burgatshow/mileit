@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import hu.thom.mileit.core.UIKeys;
 import hu.thom.mileit.models.CarModel;
 import hu.thom.mileit.models.MaintenanceModel;
 import hu.thom.mileit.models.PaymentMethodModel;
@@ -27,7 +28,7 @@ public class MaintenanceController extends Controller {
 	 */
 	public MaintenanceController() {
 		super();
-		assignedObjects.put("page", "maintenance");
+		assignedObjects.put(UIKeys.PAGE, "maintenance");
 	}
 
 	/**
@@ -47,35 +48,35 @@ public class MaintenanceController extends Controller {
 	 *      response)
 	 */
 	@Override
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		super.doGet(request, response);
 
 		parseMode(request);
 
-		assignedObjects.put("paymentMethods", dbm.getPaymentMethods(user.getId()));
-		assignedObjects.put("cars", dbm.getCars(user.getId()));
-		assignedObjects.put("maintenances", dbm.getMaintenances(user.getId()));
+		assignedObjects.put(UIKeys.PMS, dbm.getPaymentMethods(user.getId()));
+		assignedObjects.put(UIKeys.CARS, dbm.getCars(user.getId()));
+		assignedObjects.put(UIKeys.MAINTENANCES, dbm.getMaintenances(user.getId()));
 
 		switch (m) {
-		case "new":
+		case UIKeys.MODE_NEW:
+			assignedObjects.remove(UIKeys.MAINTENANCES);
 			renderPage(MAINTENANCES_FORM, request, response);
 			break;
 
-		case "update":
+		case UIKeys.MODE_UPDATE:
 			parseId(request);
 
 			MaintenanceModel mm = dbm.getMaintenance(id);
 			if (mm != null) {
-				assignedObjects.put("maintenance", mm);
+				assignedObjects.put(UIKeys.MAINTENANCES, mm);
 				renderPage(MAINTENANCES_FORM, request, response);
 			} else {
-				assignedObjects.put("status", -1);
+				assignedObjects.put(UIKeys.STATUS, -1);
 				renderPage(MAINTENANCES, request, response);
 			}
 			break;
-		case "":
-		case "cancel":
+		case UIKeys.MODE_:
+		case UIKeys.MODE_CANCEL:
 		default:
 			renderPage(MAINTENANCES, request, response);
 			break;
@@ -89,8 +90,7 @@ public class MaintenanceController extends Controller {
 	 *      response)
 	 */
 	@Override
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		super.doPost(request, response);
 
 		parseMode(request);
@@ -104,8 +104,8 @@ public class MaintenanceController extends Controller {
 			}
 		}
 
-		assignedObjects.put("cars", dbm.getCars(user.getId()));
-		assignedObjects.put("paymentMethods", dbm.getPaymentMethods(user.getId()));
+		assignedObjects.put(UIKeys.CARS, dbm.getCars(user.getId()));
+		assignedObjects.put(UIKeys.PMS, dbm.getPaymentMethods(user.getId()));
 
 		if (validationMessages.isEmpty()) {
 			MaintenanceModel mm = new MaintenanceModel();
@@ -118,25 +118,26 @@ public class MaintenanceController extends Controller {
 			mm.setDescription(request.getParameter("description"));
 
 			switch (m) {
-			case "new":
+			case UIKeys.MODE_NEW:
 				mm.setOperation(0);
 				break;
-			case "update":
+			case UIKeys.MODE_UPDATE:
 				parseId(request);
 				mm.setOperation(1);
 				mm.setId(id);
 				break;
-			case "":
+			case UIKeys.MODE_:
+			case UIKeys.MODE_CANCEL:
 			default:
 				break;
 			}
 
-			assignedObjects.put("status", dbm.createUpdateMaintenance(mm) ? 1 : -1);
-			assignedObjects.put("maintenances", dbm.getMaintenances(user.getId()));
+			assignedObjects.put(UIKeys.STATUS, dbm.createUpdateMaintenance(mm) ? 1 : -1);
+			assignedObjects.put(UIKeys.MAINTENANCES, dbm.getMaintenances(user.getId()));
 			renderPage(MAINTENANCES, request, response);
 
 		} else {
-			assignedObjects.put("status", -2);
+			assignedObjects.put(UIKeys.STATUS, -2);
 			renderPage(MAINTENANCES_FORM, request, response);
 		}
 	}

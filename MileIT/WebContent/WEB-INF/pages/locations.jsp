@@ -67,8 +67,8 @@
 						</tr>
 					</thead>
 					<tbody>
-						<c:if test="${not empty locations}">
-							<c:forEach items="${locations}" var="l">
+						<c:if test="${not empty places}">
+							<c:forEach items="${places}" var="l">
 								<tr>
 									<td class="align-middle"><c:out value="${l.name}" /><br> <span class="badge badge-dark"><c:out value="${l.address}" /></span></td>
 									<td class="align-middle text-center"><a href="?m=update&amp;id=<c:out value="${l.id}" />" class="btn btn-primary" role="button"><fmt:message

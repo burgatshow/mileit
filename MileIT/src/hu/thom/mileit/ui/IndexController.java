@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import hu.thom.mileit.core.UIKeys;
 import hu.thom.mileit.models.RefuelModel;
 
 /**
@@ -26,7 +27,7 @@ public class IndexController extends Controller {
 	 */
 	public IndexController() {
 		super();
-		assignedObjects.put("page", "index");
+		assignedObjects.put(UIKeys.PAGE, "index");
 	}
 
 	/**
@@ -38,7 +39,7 @@ public class IndexController extends Controller {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		super.doGet(request, response);
 
-		assignedObjects.put("lr", dbm.getLastRefuel(user.getId()));
+		assignedObjects.put(UIKeys.LAST_REFUEL, dbm.getLastRefuel(user.getId()));
 
 		List<RefuelModel> fuelStats = dbm.getFuelPriceStats(user.getId());
 		StringBuffer fuelStatKeys = new StringBuffer();
@@ -58,9 +59,9 @@ public class IndexController extends Controller {
 			i++;
 		}
 
-		assignedObjects.put("fuelStatsKey", fuelStatKeys);
-		assignedObjects.put("fuelStatsVal", fuelStatValues);
-		assignedObjects.put("fuelPaidAmount", fuelPaidAmount);
+		assignedObjects.put(UIKeys.STAT_KEY, fuelStatKeys);
+		assignedObjects.put(UIKeys.STAT_VAL, fuelStatValues);
+		assignedObjects.put(UIKeys.STAT_PAID_AMOUNT, fuelPaidAmount);
 
 		renderPage(HOME, request, response);
 	}

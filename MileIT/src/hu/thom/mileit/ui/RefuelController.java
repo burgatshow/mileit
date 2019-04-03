@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import hu.thom.mileit.core.UIKeys;
 import hu.thom.mileit.models.CarModel;
 import hu.thom.mileit.models.PlaceModel;
 import hu.thom.mileit.models.PaymentMethodModel;
@@ -28,7 +29,7 @@ public class RefuelController extends Controller {
 	 */
 	public RefuelController() {
 		super();
-		assignedObjects.put("page", "refuels");
+		assignedObjects.put(UIKeys.PAGE, "refuels");
 	}
 
 	/**
@@ -48,35 +49,35 @@ public class RefuelController extends Controller {
 	 *      response)
 	 */
 	@Override
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		super.doGet(request, response);
 		parseMode(request);
 
-		assignedObjects.put("cars", dbm.getCars(user.getId()));
-		assignedObjects.put("locations", dbm.getPlaces(user.getId()));
-		assignedObjects.put("paymentMethods", dbm.getPaymentMethods(user.getId()));
-		assignedObjects.put("refuels", dbm.getRefuels(user.getId()));
-
+		assignedObjects.put(UIKeys.CARS, dbm.getCars(user.getId()));
+		assignedObjects.put(UIKeys.PLACES, dbm.getPlaces(user.getId()));
+		assignedObjects.put(UIKeys.PMS, dbm.getPaymentMethods(user.getId()));
+		assignedObjects.put(UIKeys.REFUELS, dbm.getRefuels(user.getId()));
+		
 		switch (m) {
-		case "new":
+		case UIKeys.MODE_NEW:
+			assignedObjects.remove(UIKeys.REFUELS);
 			renderPage(REFUELS_FORM, request, response);
 			break;
 
-		case "update":
+		case UIKeys.MODE_UPDATE:
 			parseId(request);
 
 			RefuelModel rf = dbm.getRefuel(id);
 			if (rf != null) {
-				assignedObjects.put("refuel", rf);
+				assignedObjects.put(UIKeys.REFUELS, rf);
 				renderPage(REFUELS_FORM, request, response);
 			} else {
-				assignedObjects.put("status", -1);
+				assignedObjects.put(UIKeys.STATUS, -1);
 				renderPage(REFUELS, request, response);
 			}
 			break;
-		case "":
-		case "cancel":
+		case UIKeys.MODE_:
+		case UIKeys.MODE_CANCEL:
 		default:
 			renderPage(REFUELS, request, response);
 			break;
@@ -90,8 +91,7 @@ public class RefuelController extends Controller {
 	 *      response)
 	 */
 	@Override
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		super.doPost(request, response);
 
 		parseMode(request);
@@ -118,27 +118,28 @@ public class RefuelController extends Controller {
 			rf.setAmount(request.getParameter("amount"));
 
 			switch (m) {
-			case "new":
+			case UIKeys.MODE_NEW:
 				rf.setOperation(0);
 				break;
-			case "update":
+			case UIKeys.MODE_UPDATE:
 				parseId(request);
 				rf.setOperation(1);
 				rf.setId(id);
 				break;
-			case "":
+			case UIKeys.MODE_:
+			case UIKeys.MODE_CANCEL:
 			default:
 				break;
 			}
 
-			assignedObjects.put("status", dbm.createUpdateRefuel(rf) ? 1 : -1);
-			assignedObjects.put("refuels", dbm.getRefuels(user.getId()));
+			assignedObjects.put(UIKeys.STATUS, dbm.createUpdateRefuel(rf) ? 1 : -1);
+			assignedObjects.put(UIKeys.REFUELS, dbm.getRefuels(user.getId()));
 			renderPage(REFUELS, request, response);
 		} else {
-			assignedObjects.put("status", -2);
-			assignedObjects.put("cars", dbm.getCars(user.getId()));
-			assignedObjects.put("locations", dbm.getPlaces(user.getId()));
-			assignedObjects.put("paymentMethods", dbm.getPaymentMethods(user.getId()));
+			assignedObjects.put(UIKeys.STATUS, -2);
+			assignedObjects.put(UIKeys.CARS, dbm.getCars(user.getId()));
+			assignedObjects.put(UIKeys.PLACES, dbm.getPlaces(user.getId()));
+			assignedObjects.put(UIKeys.PMS, dbm.getPaymentMethods(user.getId()));
 			renderPage(REFUELS_FORM, request, response);
 		}
 	}

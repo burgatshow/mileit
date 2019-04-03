@@ -64,7 +64,11 @@ public class MaintenanceModel extends Model {
 	}
 
 	public Timestamp getMaintenanceDateAsTimestamp() {
-		return new Timestamp(getMaintenanceDate() == null ? null : getMaintenanceDate().getTime());
+		if (maintenanceDate == null) {
+			return null;
+		}
+
+		return new Timestamp(maintenanceDate.getTime());
 	}
 
 	public void setMaintenanceDate(Date maintenanceDate) {
@@ -91,7 +95,7 @@ public class MaintenanceModel extends Model {
 		try {
 			this.odometer = Double.parseDouble(odometer);
 		} catch (Exception e) {
-			this.odometer = 0.0;
+			this.odometer = 0;
 		}
 	}
 
@@ -115,7 +119,7 @@ public class MaintenanceModel extends Model {
 		try {
 			this.amount = Double.parseDouble(amount);
 		} catch (Exception e) {
-			this.amount = 0.0;
+			this.amount = 0;
 		}
 	}
 

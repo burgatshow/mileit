@@ -39,7 +39,8 @@
 						<fmt:message key="refuels.form.fuel_amount" />
 					</p>
 					<p class="text-right display-4">
-						<strong><fmt:formatNumber type="number" pattern="###,##" minFractionDigits="0" maxFractionDigits="2" value="${lr.fuelAmount}" /></strong>
+						<strong><fmt:formatNumber type="number" pattern="###,##" minFractionDigits="0" maxFractionDigits="${user.rounded eq 1 ? '0' : '2'}"
+								value="${lr.fuelAmount}" /></strong>
 					</p>
 				</div>
 			</div>
@@ -51,7 +52,8 @@
 						</fmt:message>
 					</p>
 					<p class="text-right display-4">
-						<strong><fmt:formatNumber value="${lr.unitPrice}" type="number" pattern="###.###" minFractionDigits="1" maxFractionDigits="2" currencySymbol="" /></strong>
+						<strong><fmt:formatNumber value="${lr.unitPrice}" type="number" pattern="###.###" minFractionDigits="0"
+								maxFractionDigits="${user.rounded eq 1 ? '0' : '2'}" currencySymbol="" /></strong>
 					</p>
 				</div>
 			</div>
@@ -63,7 +65,7 @@
 						</fmt:message>
 					</p>
 					<p class="text-right display-4">
-						<strong><fmt:formatNumber value="${lr.amount}" type="number" minFractionDigits="0" maxFractionDigits="0" /></strong>
+						<strong><fmt:formatNumber value="${lr.amount}" type="number" minFractionDigits="0" maxFractionDigits="${user.rounded eq 1 ? '0' : '2'}" /></strong>
 					</p>
 				</div>
 			</div>

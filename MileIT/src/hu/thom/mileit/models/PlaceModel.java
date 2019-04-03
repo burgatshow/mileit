@@ -90,7 +90,7 @@ public class PlaceModel extends Model {
 		try {
 			this.longitude = Double.parseDouble(longitude);
 		} catch (Exception e) {
-			this.longitude = 0.0;
+			this.longitude = 0;
 		}
 	}
 
@@ -106,7 +106,7 @@ public class PlaceModel extends Model {
 		try {
 			this.latitude = Double.parseDouble(latitude);
 		} catch (Exception e) {
-			this.latitude = 0.0;
+			this.latitude = 0;
 		}
 	}
 

@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import hu.thom.mileit.core.UIKeys;
 import hu.thom.mileit.models.PlaceModel;
 
 /**
@@ -25,7 +26,7 @@ public class TyreController extends Controller {
 	 */
 	public TyreController() {
 		super();
-		assignedObjects.put("page", "tyres");
+		assignedObjects.put(UIKeys.PAGE, "tyres");
 	}
 
 	/**
@@ -128,11 +129,14 @@ public class TyreController extends Controller {
 
 				l.setOperation(1);
 				l.setId(id);
+				
+//				assignedObjects.put(UIKeys.STATUS, dbm.create);
+//				dbm.createUpdatePlace(l) ? 
 
 				if (dbm.createUpdatePlace(l)) {
-					request.setAttribute("status", 1);
+					request.setAttribute(UIKeys.STATUS, 1);
 				} else {
-					request.setAttribute("status", -1);
+					request.setAttribute(UIKeys.STATUS, -1);
 				}
 
 				request.setAttribute("locations", dbm.getPlaces(user.getId()));
@@ -144,8 +148,7 @@ public class TyreController extends Controller {
 				break;
 			}
 		} else {
-			request.setAttribute("status", -2);
-			request.setAttribute("validationMessages", validationMessages);
+			request.setAttribute(UIKeys.STATUS, -2);
 			request.getRequestDispatcher(PLACES_FORM).forward(request, response);
 		}
 	}

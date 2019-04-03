@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import hu.thom.mileit.core.UIKeys;
 import hu.thom.mileit.models.PaymentMethodModel;
 
 /**
@@ -25,7 +26,7 @@ public class PaymentMethodController extends Controller {
 	 */
 	public PaymentMethodController() {
 		super();
-		assignedObjects.put("page", "payment");
+		assignedObjects.put(UIKeys.PAGE, "payment");
 	}
 
 	/**
@@ -45,33 +46,33 @@ public class PaymentMethodController extends Controller {
 	 *      response)
 	 */
 	@Override
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		super.doGet(request, response);
 
 		parseMode(request);
 
-		assignedObjects.put("paymentMethods", dbm.getPaymentMethods(user.getId()));
+		assignedObjects.put(UIKeys.PMS, dbm.getPaymentMethods(user.getId()));
 
 		switch (m) {
-		case "new":
+		case UIKeys.MODE_NEW:
+			assignedObjects.remove(UIKeys.PMS);
 			renderPage(PAYMENT_METHODS_FORM, request, response);
 			break;
 
-		case "update":
+		case UIKeys.MODE_UPDATE:
 			parseId(request);
 
 			PaymentMethodModel pm = dbm.getPaymentMethod(id);
 			if (pm != null) {
-				assignedObjects.put("pm", pm);
+				assignedObjects.put(UIKeys.PMS, pm);
 				renderPage(PAYMENT_METHODS_FORM, request, response);
 			} else {
-				assignedObjects.put("status", -1);
+				assignedObjects.put(UIKeys.STATUS, -1);
 				renderPage(PAYMENT_METHODS, request, response);
 			}
 			break;
-		case "":
-		case "cancel":
+		case UIKeys.MODE_:
+		case UIKeys.MODE_CANCEL:
 		default:
 			renderPage(PAYMENT_METHODS, request, response);
 			break;
@@ -85,8 +86,7 @@ public class PaymentMethodController extends Controller {
 	 *      response)
 	 */
 	@Override
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		super.doPost(request, response);
 
 		parseMode(request);
@@ -107,25 +107,26 @@ public class PaymentMethodController extends Controller {
 			pm.setDescription(request.getParameter("description"));
 
 			switch (m) {
-			case "new":
+			case UIKeys.MODE_NEW:
 				pm.setOperation(0);
 				break;
-			case "update":
+			case UIKeys.MODE_UPDATE:
 				parseId(request);
 				pm.setOperation(1);
 				pm.setId(id);
 				break;
 
-			case "":
+			case UIKeys.MODE_:
+			case UIKeys.MODE_CANCEL:
 			default:
 				break;
 			}
 
-			assignedObjects.put("status", dbm.createUpdatePaymentMethod(pm) ? 1 : -1);
-			assignedObjects.put("paymentMethods", dbm.getPaymentMethods(user.getId()));
+			assignedObjects.put(UIKeys.STATUS, dbm.createUpdatePaymentMethod(pm) ? 1 : -1);
+			assignedObjects.put(UIKeys.PMS, dbm.getPaymentMethods(user.getId()));
 			renderPage(PAYMENT_METHODS, request, response);
 		} else {
-			assignedObjects.put("status", -2);
+			assignedObjects.put(UIKeys.STATUS, -2);
 			renderPage(PAYMENT_METHODS_FORM, request, response);
 		}
 	}

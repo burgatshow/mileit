@@ -34,18 +34,18 @@
 		<div class="row">
 			<div class="col-md-12">
 				<h1>
-					<c:if test="${not empty pm}">
+					<c:if test="${not empty pms}">
 						<fmt:message key="pm.title.edit" />
 					</c:if>
-					<c:if test="${empty pm}">
+					<c:if test="${empty pms}">
 						<fmt:message key="pm.title.new" />
 					</c:if>
 				</h1>
 			</div>
 		</div>
 		<form method="post">
-			<c:if test="${not empty pm}">
-				<input type="hidden" name="id" value="<c:out value="${pm.id}" />">
+			<c:if test="${not empty pms}">
+				<input type="hidden" name="id" value="<c:out value="${pms.id}" />">
 			</c:if>
 			<div class="row">
 				<div class="col-md-12">
@@ -53,14 +53,14 @@
 						<label for="name"><fmt:message key="pm.form.name" /><span class="ml-1 badge badge-pill badge-primary"> <fmt:message
 									key="form.mandatory" /></span></label> <input name="name" type="text"
 							class="form-control <c:if test="${validationMessages.contains('name') }">is-invalid</c:if>" id="name"
-							placeholder="<fmt:message key="pm.form.name" />" value="<c:out value="${not empty param.name ? param.name : not empty pm ? pm.name : ''}" />">
+							placeholder="<fmt:message key="pm.form.name" />" value="<c:out value="${not empty param.name ? param.name : not empty pms ? pms.name : ''}" />">
 					</div>
 				</div>
 				<div class="col-md-12">
 					<div class="form-group">
 						<label for="description"><fmt:message key="pm.form.description" /></label> <input name="description" type="text" class="form-control"
 							id="description" placeholder="<fmt:message key="pm.form.description" />"
-							value="<c:out value="${not empty param.description ? param.description : not empty pm ? pm.description : ''}" />">
+							value="<c:out value="${not empty param.description ? param.description : not empty pms ? pms.description : ''}" />">
 					</div>
 				</div>
 			</div>

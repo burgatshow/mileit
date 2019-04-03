@@ -34,18 +34,18 @@
 		<div class="row">
 			<div class="col-md-12">
 				<h1>
-					<c:if test="${not empty maintenance}">
+					<c:if test="${not empty maintenances}">
 						<fmt:message key="mntnc.title.edit" />
 					</c:if>
-					<c:if test="${empty maintenance}">
+					<c:if test="${empty maintenances}">
 						<fmt:message key="mntnc.title.new" />
 					</c:if>
 				</h1>
 			</div>
 		</div>
 		<form method="post">
-			<c:if test="${not empty maintenance}">
-				<input type="hidden" name="id" value="<c:out value="${maintenance.id}" />">
+			<c:if test="${not empty maintenances}">
+				<input type="hidden" name="id" value="<c:out value="${maintenances.id}" />">
 			</c:if>
 			<div class="row">
 				<div class="col-md-6">
@@ -64,11 +64,12 @@
 				</div>
 				<div class="col-md-6">
 					<div class="form-group">
-						<label for="odometer"><fmt:message key="mntnc.form.odometer" /><span class="ml-1 badge badge-pill badge-primary"> <fmt:message
-									key="form.mandatory" /></span></label> <input name="odometer" type="text"
+						<label for="odometer"><fmt:message key="mntnc.form.odometer">
+								<fmt:param value="${user.distance eq 1 ? 'km' : 'mi'}" />
+							</fmt:message> <span class="ml-1 badge badge-pill badge-primary"> <fmt:message key="form.mandatory" /></span></label> <input name="odometer" type="text"
 							class="form-control <c:if test="${validationMessages.contains('odometer') }">is-invalid</c:if>" id="odometer"
-							placeholder="<fmt:message key="mntnc.form.odometer" />"
-							value="<c:out value="${not empty param.odometer ? param.odometer : not empty maintenance ? maintenance.odometer : ''}"/>">
+							placeholder="<fmt:message key="mntnc.form.odometer"><fmt:param value="${user.distance eq 1 ? 'km' : 'mi'}" /></fmt:message>"
+							value="<fmt:formatNumber value="${not empty param.odometer ? param.odometer : not empty maintenances ? maintenances.odometer : ''}" type="number" pattern="#" minFractionDigits="0" maxFractionDigits="${user.rounded eq 1 ? '0' : '2'}" />">
 					</div>
 				</div>
 			</div>
@@ -79,8 +80,8 @@
 						<label for="paymentMethod"><fmt:message key="mntnc.form.payment" /><span class="ml-1 badge badge-pill badge-primary"> <fmt:message
 									key="form.mandatory" /></span></label> <select id="paymentMethod"
 							class="form-control <c:if test="${validationMessages.contains('paymentMethod') }">is-invalid</c:if>" name="paymentMethod">
-							<c:forEach items="${paymentMethods}" var="pm">
-								<option <c:if test="${maintenance.payment.id eq pm.id}">selected="selected"</c:if> value="<c:out value="${pm.id}" />"><c:out
+							<c:forEach items="${pms}" var="pm">
+								<option <c:if test="${maintenances.payment.id eq pm.id}">selected="selected"</c:if> value="<c:out value="${pm.id}" />"><c:out
 										value="${pm.name}" /></option>
 							</c:forEach>
 						</select>
@@ -93,18 +94,18 @@
 							</fmt:message><span class="ml-1 badge badge-pill badge-primary"> <fmt:message key="form.mandatory" /></span></label> <input name="amount" type="text"
 							class="form-control <c:if test="${validationMessages.contains('amount') }">is-invalid</c:if>" id="amount"
 							placeholder="<fmt:message key="mntnc.form.amount"><fmt:param value="${user.currency}" /></fmt:message>"
-							value="<c:out value="${not empty param.amount ? param.amount : not empty maintenance ? maintenance.amount : ''}" />">
+							value="<fmt:formatNumber value="${not empty param.amount ? param.amount : not empty maintenances ? maintenances.amount : ''}" type="number" pattern="#" minFractionDigits="0" maxFractionDigits="${user.rounded eq 1 ? '0' : '2'}" />">
 					</div>
 				</div>
 			</div>
 			<div class="row">
 				<div class="col-md-12">
 					<div class="form-group">
-						<c:if test="${not empty param.maintenanceDate }">
+						<c:if test="${not empty param.maintenanceDate}">
 							<fmt:parseDate value="${param.maintenanceDate}" var="maintenanceDate" pattern="yyyy-MM-dd" />
 						</c:if>
-						<c:if test="${not empty maintenance}">
-							<c:set var="maintenanceDate" value="${maintenance.maintenanceDate }" />
+						<c:if test="${not empty maintenances}">
+							<c:set var="maintenanceDate" value="${maintenances.maintenanceDate }" />
 						</c:if>
 						<label for="maintenanceDate"><fmt:message key="mntnc.form.date" /><span class="ml-1 badge badge-pill badge-primary"> <fmt:message
 									key="form.mandatory" /></span></label> <input type="text" id="maintenanceDate" name="maintenanceDate"
@@ -119,7 +120,7 @@
 						<div class="form-group">
 							<label for="description"><fmt:message key="mntnc.form.desc" /></label> <input name="description" type="text" class="form-control"
 								id="description" placeholder="<fmt:message key="mntnc.form.desc" />"
-								value="<c:out value="${not empty param.description ? param.description : not empty maintenance ? maintenance.description : ''}"/>">
+								value="<c:out value="${not empty param.description ? param.description : not empty maintenances ? maintenances.description : ''}"/>">
 						</div>
 					</div>
 				</div>

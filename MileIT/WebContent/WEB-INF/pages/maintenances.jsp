@@ -68,7 +68,9 @@
 									<fmt:param value="${user.currency}" />
 								</fmt:message></th>
 							<th class="text-center"><fmt:message key="mntnc.form.payment" /></th>
-							<th class="text-right"><fmt:message key="mntnc.form.odometer" /></th>
+							<th class="text-right"><fmt:message key="mntnc.form.odometer">
+									<fmt:param value="${user.distance eq '1' ? 'km' : 'mi'}" />
+								</fmt:message></th>
 							<th class="text-center"><fmt:message key="table.actions" /></th>
 						</tr>
 					</thead>
@@ -80,9 +82,11 @@
 												value="${m.car.plateNumber}" /></span></td>
 									<td class="align-middle"><fmt:formatDate type="both" value="${m.maintenanceDate}" pattern="yyyy. MM. dd." /><br> <span
 										class="badge badge-dark"><c:out value="${m.description}" /></span></td>
-									<td class="text-right align-middle"><fmt:formatNumber value="${m.amount}" type="currency" maxFractionDigits="0" currencySymbol="" /></td>
+									<td class="text-right align-middle"><fmt:formatNumber value="${m.amount}" type="number"
+											maxFractionDigits="${user.rounded eq 1 ? '0' : '2'}" pattern="#,##0.00" /></td>
 									<td class="text-center align-middle"><c:out value="${m.payment.name}" /></td>
-									<td class="text-right align-middle"><fmt:formatNumber value="${m.odometer}" type="number"  minFractionDigits="0" maxFractionDigits="0" /></td>
+									<td class="text-right align-middle"><fmt:formatNumber value="${m.odometer}" pattern="#,##0.00" type="number" minFractionDigits="0"
+											maxFractionDigits="${user.rounded eq 1 ? '0' : '2'}" /></td>
 									<td class="align-middle text-center"><a href="?m=update&amp;id=<c:out value="${m.id}" />" class="btn btn-primary" role="button"><fmt:message
 												key="button.edit" /></a></td>
 								</tr>
