@@ -17,6 +17,10 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet(value = "logout")
 public class LogoutController extends Controller {
 	private static final long serialVersionUID = -1161650807822947664L;
+	
+	public LogoutController() {
+		super();
+	}
 
 	/**
 	 * Method to manage HTTP GET method.

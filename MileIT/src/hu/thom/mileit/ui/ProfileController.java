@@ -22,7 +22,7 @@ public class ProfileController extends Controller {
 	 * Constructor
 	 */
 	public ProfileController() {
-		validationMessages.clear();
+		super();
 		assignedObjects.put("page", "profile");
 	}
 

@@ -24,7 +24,7 @@ public class PlaceController extends Controller {
 	 * Constructor
 	 */
 	public PlaceController() {
-		validationMessages.clear();
+		super();
 		assignedObjects.put("page", "locations");
 	}
 

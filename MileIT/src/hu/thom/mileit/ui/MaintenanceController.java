@@ -26,7 +26,7 @@ public class MaintenanceController extends Controller {
 	 * Constructor
 	 */
 	public MaintenanceController() {
-		validationMessages.clear();
+		super();
 		assignedObjects.put("page", "maintenance");
 	}
 

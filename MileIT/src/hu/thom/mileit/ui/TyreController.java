@@ -24,7 +24,7 @@ public class TyreController extends Controller {
 	 * Constructor
 	 */
 	public TyreController() {
-		validationMessages.clear();
+		super();
 		assignedObjects.put("page", "tyres");
 	}
 

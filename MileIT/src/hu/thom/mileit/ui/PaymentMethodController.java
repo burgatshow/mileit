@@ -24,7 +24,7 @@ public class PaymentMethodController extends Controller {
 	 * Constructor
 	 */
 	public PaymentMethodController() {
-		validationMessages.clear();
+		super();
 		assignedObjects.put("page", "payment");
 	}
 

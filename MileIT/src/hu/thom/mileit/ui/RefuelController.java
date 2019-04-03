@@ -27,7 +27,7 @@ public class RefuelController extends Controller {
 	 * Constructor
 	 */
 	public RefuelController() {
-		validationMessages.clear();
+		super();
 		assignedObjects.put("page", "refuels");
 	}
 

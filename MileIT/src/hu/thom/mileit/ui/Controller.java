@@ -64,6 +64,8 @@ public class Controller extends HttpServlet {
 
 		assignedObjects.put("v", VERSION);
 		assignedObjects.put("page", "index");
+		
+		validationMessages.clear();
 	}
 
 	/**

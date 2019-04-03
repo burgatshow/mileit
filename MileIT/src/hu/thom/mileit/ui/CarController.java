@@ -24,7 +24,7 @@ public class CarController extends Controller {
 	 * Constructor
 	 */
 	public CarController() {
-		validationMessages.clear();
+		super();
 		assignedObjects.put("page", "cars");
 	}
 
