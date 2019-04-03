@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import hu.thom.mileit.core.UIKeys;
 import hu.thom.mileit.models.CarModel;
 
 /**
@@ -25,7 +26,7 @@ public class CarController extends Controller {
 	 */
 	public CarController() {
 		super();
-		assignedObjects.put("page", "cars");
+		assignedObjects.put(UIKeys.PAGE, "cars");
 	}
 
 	/**
@@ -45,43 +46,43 @@ public class CarController extends Controller {
 	 *      response)
 	 */
 	@Override
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		super.doGet(request, response);
 
 		parseMode(request);
 
-		assignedObjects.put("carVendors", dbm.getCarVendors());
-		assignedObjects.put("cars", dbm.getCars(user.getId()));
+		assignedObjects.put(UIKeys.CAR_VENDORS, dbm.getCarVendors());
+		assignedObjects.put(UIKeys.CARS, dbm.getCars(user.getId()));
 
 		switch (m) {
-		case "new":
+		case UIKeys.MODE_NEW:
+			assignedObjects.remove(UIKeys.CARS);
 			renderPage(CARS_FORM, request, response);
 			break;
 
-		case "archive":
+		case UIKeys.MODE_ARCHIVE:
 			parseId(request);
 
-			assignedObjects.put("status", dbm.archiveCar(id) ? 1 : -1);
+			assignedObjects.put(UIKeys.STATUS, dbm.archiveCar(id) ? 1 : -1);
 			renderPage(CARS, request, response);
 
 			break;
 
-		case "update":
+		case UIKeys.MODE_UPDATE:
 			parseId(request);
 
 			CarModel car = dbm.getCar(id);
 			if (car != null) {
-				assignedObjects.put("car", car);
+				assignedObjects.put(UIKeys.CARS, car);
 				renderPage(CARS_FORM, request, response);
 			} else {
-				assignedObjects.put("status", -1);
+				assignedObjects.put(UIKeys.STATUS, -1);
 				renderPage(CARS, request, response);
 			}
 
 			break;
-		case "":
-		case "cancel":
+		case UIKeys.MODE_:
+		case UIKeys.MODE_CANCEL:
 		default:
 			renderPage(CARS, request, response);
 			break;
@@ -96,8 +97,7 @@ public class CarController extends Controller {
 	 *      response)
 	 */
 	@Override
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		super.doPost(request, response);
 
 		parseMode(request);
@@ -129,25 +129,26 @@ public class CarController extends Controller {
 			car.setUser(user);
 
 			switch (m) {
-			case "new":
+			case UIKeys.MODE_NEW:
 				car.setOperation(0);
 				break;
-			case "update":
+			case UIKeys.MODE_UPDATE:
 				parseId(request);
 				car.setId(id);
 				car.setOperation(1);
 				break;
 
-			case "":
+			case UIKeys.MODE_:
+			case UIKeys.MODE_CANCEL:
 			default:
 				break;
 			}
 
-			assignedObjects.put("status", dbm.createUpdateCar(car) ? 1 : -1);
-			assignedObjects.put("cars", dbm.getCars(user.getId()));
+			assignedObjects.put(UIKeys.STATUS, dbm.createUpdateCar(car) ? 1 : -1);
+			assignedObjects.put(UIKeys.CARS, dbm.getCars(user.getId()));
 			renderPage(CARS, request, response);
 		} else {
-			assignedObjects.put("status", -2);
+			assignedObjects.put(UIKeys.STATUS, -2);
 			renderPage(CARS_FORM, request, response);
 		}
 	}

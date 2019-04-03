@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import hu.thom.mileit.core.DBManager;
+import hu.thom.mileit.core.UIKeys;
 import hu.thom.mileit.models.UserModel;
 
 /**
@@ -62,9 +63,9 @@ public class Controller extends HttpServlet {
 			dbm = new DBManager();
 		}
 
-		assignedObjects.put("v", VERSION);
-		assignedObjects.put("page", "index");
-		
+		assignedObjects.put(UIKeys.VERSION, VERSION);
+		assignedObjects.put(UIKeys.PAGE, "index");
+
 		validationMessages.clear();
 	}
 
@@ -74,13 +75,12 @@ public class Controller extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
 	 *      response)
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
 
 		if (request.getUserPrincipal() != null) {
 			this.user = dbm.getUserProfile(new UserModel(request.getUserPrincipal().getName()));
-			assignedObjects.put("user", user);
+			assignedObjects.put(UIKeys.USER, user);
 		}
 
 	}
@@ -91,13 +91,12 @@ public class Controller extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
 	 *      response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
 
 		if (request.getUserPrincipal() != null) {
 			this.user = dbm.getUserProfile(new UserModel(request.getUserPrincipal().getName()));
-			assignedObjects.put("user", user);
+			assignedObjects.put(UIKeys.USER, user);
 		}
 	}
 
@@ -112,10 +111,10 @@ public class Controller extends HttpServlet {
 			if (request.getParameter("m") != null && !"".equalsIgnoreCase(request.getParameter("m"))) {
 				this.m = request.getParameter("m");
 			} else {
-				this.m = "cancel";
+				this.m = UIKeys.MODE_CANCEL;
 			}
 		} else {
-			this.m = "cancel";
+			this.m = UIKeys.MODE_CANCEL;
 		}
 	}
 
@@ -134,8 +133,7 @@ public class Controller extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
 	 *      response)
 	 */
-	public void renderPage(String targetJSP, HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	public void renderPage(String targetJSP, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		if (assignedObjects != null && assignedObjects.size() > 0) {
 			for (Map.Entry<String, Object> entry : assignedObjects.entrySet()) {
 				request.setAttribute(entry.getKey(), entry.getValue());
@@ -143,7 +141,7 @@ public class Controller extends HttpServlet {
 		}
 
 		if (!validationMessages.isEmpty()) {
-			request.setAttribute("validationMessages", validationMessages);
+			request.setAttribute(UIKeys.VALIDATION_MSGS, validationMessages);
 		}
 		request.getRequestDispatcher(targetJSP).forward(request, response);
 	}

@@ -34,18 +34,18 @@
 		<div class="row">
 			<div class="col-md-12">
 				<h1>
-					<c:if test="${not empty refuel}">
+					<c:if test="${not empty refuels}">
 						<fmt:message key="refuels.title.edit" />
 					</c:if>
-					<c:if test="${empty refuel}">
+					<c:if test="${empty refuels}">
 						<fmt:message key="refuels.title.new" />
 					</c:if>
 				</h1>
 			</div>
 		</div>
 		<form method="post">
-			<c:if test="${not empty refuel}">
-				<input type="hidden" name="id" value="<c:out value="${refuel.id}" />">
+			<c:if test="${not empty refuels.id}">
+				<input type="hidden" name="id" value="<c:out value="${refuels.id}" />">
 			</c:if>
 			<div class="row">
 				<div class="col-md-6">
@@ -65,9 +65,9 @@
 				<div class="col-md-6">
 					<div class="form-group">
 						<label for="location"><fmt:message key="refuels.form.place" /></label> <select id="location" class="form-control" name="location">
-							<option value="" <c:if test="${empty refuel}">selected="selected"</c:if>>---</option>
-							<c:forEach items="${locations}" var="l">
-								<option <c:if test="${refuel.location.id eq l.id}">selected="selected"</c:if> value="<c:out value="${l.id}" />"><c:out
+							<option value="" <c:if test="${empty refuels}">selected="selected"</c:if>>---</option>
+							<c:forEach items="${places}" var="l">
+								<option <c:if test="${refuels.location.id eq l.id}">selected="selected"</c:if> value="<c:out value="${l.id}" />"><c:out
 										value="${l.name}" /></option>
 							</c:forEach>
 						</select>
@@ -77,16 +77,19 @@
 			<div class="row">
 				<div class="col-md-6">
 					<div class="form-group">
-						<label for="odometer"><fmt:message key="refuels.form.odometer" /></label> <input name="odometer" type="text" class="form-control" id="odometer"
-							placeholder="<fmt:message key="refuels.form.odometer" />"
-							value="<c:out value="${not empty param.odometer ? param.odometer : not empty refuel ? refuel.odometer : ''}"/>">
+						<label for="odometer"><fmt:message key="refuels.form.odometer">
+								<fmt:param value="${user.distance eq 1 ? 'km' : 'mi'}" />
+							</fmt:message></label> <input name="odometer" type="text" class="form-control" id="odometer"
+							placeholder="<fmt:message key="refuels.form.odometer"><fmt:param value="${user.distance eq 1 ? 'km' : 'mi'}" />
+							</fmt:message>"
+							value="<fmt:formatNumber value="${not empty param.odometer ? param.odometer : not empty refuels ? refuels.odometer : ''}" type="number" pattern="#" minFractionDigits="0" maxFractionDigits="${user.rounded eq 1 ? '0' : '2'}" />">
 					</div>
 				</div>
 				<div class="col-md-6">
 					<div class="form-group">
 						<label for="paymentMethod"><fmt:message key="refuels.form.pm" /></label> <select id="paymentMethod" class="form-control" name="paymentMethod">
-							<c:forEach items="${paymentMethods}" var="pm">
-								<option <c:if test="${refuel.payment.id eq pm.id}">selected="selected"</c:if> value="<c:out value="${pm.id}" />"><c:out
+							<c:forEach items="${pms}" var="pm">
+								<option <c:if test="${refuels.payment.id eq pm.id}">selected="selected"</c:if> value="<c:out value="${pm.id}" />"><c:out
 										value="${pm.name}" /></option>
 							</c:forEach>
 						</select>
@@ -101,7 +104,7 @@
 							</fmt:message> <span class="ml-1 badge badge-pill badge-primary"> <fmt:message key="form.mandatory" /></span></label> <input name="unitPrice" type="text"
 							class="form-control <c:if test="${validationMessages.contains('unitPrice') }">is-invalid</c:if>" id="unitPrice"
 							placeholder="<fmt:message key="refuels.form.unitprice"><fmt:param value="${user.currency}" /></fmt:message>"
-							value="<c:out value="${not empty param.unitPrice ? param.unitPrice : not empty refuel ? refuel.unitPrice : ''}" />">
+							value="<fmt:formatNumber value="${not empty param.unitPrice ? param.unitPrice : not empty refuels ? refuels.unitPrice : ''}" type="number" pattern="#" minFractionDigits="0" maxFractionDigits="${user.rounded eq 1 ? '0' : '2'}" />">
 					</div>
 				</div>
 				<div class="col-md-6">
@@ -111,7 +114,7 @@
 							</fmt:message><span class="ml-1 badge badge-pill badge-primary"> <fmt:message key="form.mandatory" /></span></label> <input name="amount" type="text"
 							class="form-control <c:if test="${validationMessages.contains('amount') }">is-invalid</c:if>" id="amount"
 							placeholder="<fmt:message key="refuels.form.amount"><fmt:param value="${user.currency}" /></fmt:message>"
-							value="<c:out value="${not empty param.amount ? param.amount : not empty refuel ? refuel.amount : ''}" />">
+							value="<fmt:formatNumber value="${not empty param.amount ? param.amount : not empty refuels ? refuels.amount : ''}" type="number" pattern="#" minFractionDigits="0" maxFractionDigits="${user.rounded eq 1 ? '0' : '2'}" />">
 					</div>
 				</div>
 			</div>
@@ -121,12 +124,11 @@
 						<c:if test="${not empty param.refuelDate}">
 							<fmt:parseDate value="${param.refuelDate}" var="refuelDate" pattern="yyyy-MM-dd" />
 						</c:if>
-						<c:if test="${not empty refuel}">
-							<c:set var="refuelDate" value="${refuel.refuelDate}" />
+						<c:if test="${not empty refuels}">
+							<c:set var="refuelDate" value="${refuels.refuelDate}" />
 						</c:if>
 						<label for="refuelTimestamp"><fmt:message key="refuels.form.date" /></label> <input type="text" id="refuelDate" name="refuelTimestamp"
-							class="form-control" placeholder="<fmt:message key="refuels.form.date" />"
-							value="<fmt:formatDate value="${refuelDate}" pattern="yyyy-MM-dd"/>">
+							class="form-control" placeholder="<fmt:message key="refuels.form.date" />" value="<fmt:formatDate value="${refuelDate}" pattern="yyyy-MM-dd"/>">
 					</div>
 				</div>
 			</div>

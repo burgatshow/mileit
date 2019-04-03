@@ -71,8 +71,12 @@
 							<th class="text-right"><fmt:message key="refuels.form.amount">
 									<fmt:param value="${user.currency}" />
 								</fmt:message></th>
-							<th class="text-center"><fmt:message key="refuels.form.odometer" /></th>
-							<th class="text-center"><fmt:message key="refuels.form.distance" /></th>
+							<th class="text-center"><fmt:message key="refuels.form.odometer">
+									<fmt:param value="${user.distance eq '1' ? 'km' : 'mi'}" />
+								</fmt:message></th>
+							<th class="text-center"><fmt:message key="refuels.form.distance">
+									<fmt:param value="${user.distance eq '1' ? 'km' : 'mi'}" />
+								</fmt:message></th>
 							<th class="text-center"><fmt:message key="table.actions" /></th>
 						</tr>
 					</thead>
@@ -84,12 +88,16 @@
 												value="${r.car.plateNumber}" /></span></td>
 									<td class="align-middle"><c:out value="${r.location.name}" /><br> <span class="badge badge-dark"><fmt:formatDate
 												type="both" value="${r.refuelDate}" pattern="yyyy. MM. dd." /></span></td>
-									<td class="text-right align-middle"><fmt:formatNumber value="${r.unitPrice}" type="currency" pattern="###.###" maxFractionDigits="2"
-											currencySymbol="" /></td>
-									<td class="text-right align-middle"><fmt:formatNumber type="number" pattern="###.##" maxFractionDigits="2" value="${r.fuelAmount}" /></td>
-									<td class="text-right align-middle"><fmt:formatNumber value="${r.amount}" type="currency" maxFractionDigits="0" currencySymbol="" /></td>
-									<td class="text-right align-middle"><fmt:formatNumber value="${r.odometer}" type="number" minFractionDigits="0" maxFractionDigits="0" /></td>
-									<td class="text-right align-middle"><fmt:formatNumber value="${r.distance}" type="number" minFractionDigits="0" maxFractionDigits="0" /></td>
+									<td class="text-right align-middle"><fmt:formatNumber value="${r.unitPrice}" type="number" pattern="#,##0.00"
+											maxFractionDigits="${user.rounded eq 1 ? 0 : 2}" minFractionDigits="0" /></td>
+									<td class="text-right align-middle"><fmt:formatNumber type="number" pattern="#,##0.00" maxFractionDigits="${user.rounded eq 1 ? 0 : 2}"
+											minFractionDigits="0" value="${r.fuelAmount}" /></td>
+									<td class="text-right align-middle"><fmt:formatNumber value="${r.amount}" type="number" minFractionDigits="0"
+											maxFractionDigits="${user.rounded eq 1 ? 0 : 2}" pattern="#,##0.00" /></td>
+									<td class="text-right align-middle"><fmt:formatNumber value="${r.odometer}" pattern="#,##0.00" type="number" minFractionDigits="0"
+											maxFractionDigits="${user.rounded eq 1 ? 0 : 2}" /></td>
+									<td class="text-right align-middle"><fmt:formatNumber value="${r.distance}" pattern="#,##0.00" type="number" minFractionDigits="0"
+											maxFractionDigits="${user.rounded eq 1 ? 0 : 2}" /></td>
 									<td class="align-middle text-center"><a href="?m=update&amp;id=<c:out value="${r.id}" />" class="btn btn-primary" role="button"><fmt:message
 												key="button.edit" /></a></td>
 								</tr>

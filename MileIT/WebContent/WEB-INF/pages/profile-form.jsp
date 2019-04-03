@@ -61,8 +61,27 @@
 				<div class="col-md-12">
 					<div class="form-group">
 						<label for="currency"><fmt:message key="profile.form.currency" /><span data-toggle="tooltip"
-							title="<fmt:message key="profile.form.curreny.tooltip" />" class="ml-1 badge badge-pill badge-info">?</span></label> <input name="currency" type="text"
-							class="form-control" id="currency" placeholder="<fmt:message key="profile.form.currency" />" value="<c:out value="${user.currency}" />">
+							title="<fmt:message key="profile.form.currency.tooltip" />" class="ml-1 badge badge-pill badge-info">?</span></label> <input name="currency"
+							type="text" class="form-control" id="currency" placeholder="<fmt:message key="profile.form.currency" />"
+							value="<c:out value="${user.currency}" />">
+					</div>
+				</div>
+				<div class="col-md-12">
+					<div class="form-group">
+						<label for="distance"><fmt:message key="profile.form.distance" /></label> <select id="distance" name="distance" class="form-control"
+							name="distance">
+							<option value="1" <c:if test="${user.distance eq '1'}">selected="selected"</c:if>><fmt:message key="profile.form.distance.km" /></option>
+							<option value="2" <c:if test="${user.distance eq '2'}">selected="selected"</c:if>><fmt:message key="profile.form.distance.mi" /></option>
+						</select>
+					</div>
+				</div>
+				<div class="col-md-12">
+					<div class="form-group">
+						<label for="rounded"><fmt:message key="profile.form.rounded" /></label> <select id="rounded" name="rounded" class="form-control"
+							name="rounded">
+							<option value="0" <c:if test="${user.rounded eq '0'}">selected="selected"</c:if>><fmt:message key="no" /></option>
+							<option value="1" <c:if test="${user.rounded eq '1'}">selected="selected"</c:if>><fmt:message key="yes" /></option>
+						</select>
 					</div>
 				</div>
 			</div>

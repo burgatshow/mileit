@@ -70,7 +70,7 @@ public class CarModel extends Model {
 	private String vin;
 	private String plateNumber;
 	private Fuel fuel;
-	private Double fuelCapacity;
+	private double fuelCapacity;
 	private Date startDate;
 	private Date endDate;
 	private String description;
@@ -167,7 +167,11 @@ public class CarModel extends Model {
 	}
 
 	public Timestamp getManufacturerDateAsTimestamp() {
-		return new Timestamp(getManufacturerDate() == null ? null : getManufacturerDate().getTime());
+		if (manufacturerDate == null) {
+			return null;
+		}
+
+		return new Timestamp(manufacturerDate.getTime());
 	}
 
 	public void setManufacturerDate(String manufacturerDate) {
@@ -218,7 +222,7 @@ public class CarModel extends Model {
 		try {
 			this.fuelCapacity = Double.parseDouble(fuelCapacity);
 		} catch (Exception e) {
-			this.fuelCapacity = 0.0;
+			this.fuelCapacity = 0;
 		}
 	}
 
@@ -227,11 +231,11 @@ public class CarModel extends Model {
 	}
 
 	public Timestamp getStartDateAsTimestamp() {
-		if (getStartDate() == null) {
+		if (startDate == null) {
 			return null;
-		} else {
-			return new Timestamp(getStartDate().getTime());
 		}
+
+		return new Timestamp(startDate.getTime());
 	}
 
 	public void setStartDate(Date startDate) {
@@ -251,11 +255,11 @@ public class CarModel extends Model {
 	}
 
 	public Timestamp getEndDateAsTimestamp() {
-		if (getEndDate() == null) {
+		if (endDate == null) {
 			return null;
-		} else {
-			return new Timestamp(getEndDate().getTime());
 		}
+
+		return new Timestamp(endDate.getTime());
 	}
 
 	public void setEndDate(Date endDate) {
@@ -327,7 +331,9 @@ public class CarModel extends Model {
 		result = prime * result + ((endDate == null) ? 0 : endDate.hashCode());
 		result = prime * result + ((friendlyName == null) ? 0 : friendlyName.hashCode());
 		result = prime * result + ((fuel == null) ? 0 : fuel.hashCode());
-		result = prime * result + ((fuelCapacity == null) ? 0 : fuelCapacity.hashCode());
+		long temp;
+		temp = Double.doubleToLongBits(fuelCapacity);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
 		result = prime * result + manufacturer;
 		result = prime * result + ((manufacturerDate == null) ? 0 : manufacturerDate.hashCode());
 		result = prime * result + ((manufacturerName == null) ? 0 : manufacturerName.hashCode());
@@ -374,10 +380,7 @@ public class CarModel extends Model {
 			return false;
 		if (fuel != other.fuel)
 			return false;
-		if (fuelCapacity == null) {
-			if (other.fuelCapacity != null)
-				return false;
-		} else if (!fuelCapacity.equals(other.fuelCapacity))
+		if (Double.doubleToLongBits(fuelCapacity) != Double.doubleToLongBits(other.fuelCapacity))
 			return false;
 		if (manufacturer != other.manufacturer)
 			return false;

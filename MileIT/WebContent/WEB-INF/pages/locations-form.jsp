@@ -34,18 +34,18 @@
 		<div class="row">
 			<div class="col-md-12">
 				<h1>
-					<c:if test="${not empty location}">
+					<c:if test="${not empty places}">
 						<fmt:message key="locations.title.edit" />
 					</c:if>
-					<c:if test="${empty location}">
+					<c:if test="${empty places}">
 						<fmt:message key="locations.title.new" />
 					</c:if>
 				</h1>
 			</div>
 		</div>
 		<form method="post">
-			<c:if test="${not empty location}">
-				<input type="hidden" name="id" value="<c:out value="${location.id}" />">
+			<c:if test="${not empty places}">
+				<input type="hidden" name="id" value="<c:out value="${places.id}" />">
 			</c:if>
 			<div class="row">
 				<div class="col-md-12">
@@ -55,7 +55,7 @@
 							class="ml-1 badge badge-pill badge-info">?</span></label> <input name="name" type="text"
 							class="form-control <c:if test="${validationMessages.contains('name') }">is-invalid</c:if>" id="name"
 							placeholder="<fmt:message key="locations.form.name" />"
-							value="<c:out value="${not empty param.name ? param.name : not empty location ? location.name : ''}" />">
+							value="<c:out value="${not empty param.name ? param.name : not empty places ? places.name : ''}" />">
 					</div>
 				</div>
 				<div class="col-md-12">
@@ -63,7 +63,7 @@
 						<label for="address"><fmt:message key="locations.form.address" /><span data-toggle="tooltip"
 							title="<fmt:message key="locations.form.address.tooltip" />" class="ml-1 badge badge-pill badge-info">?</span></label> <input name="address"
 							type="text" class="form-control" id="address" placeholder="<fmt:message key="locations.form.address" />"
-							value="<c:out value="${not empty param.address ? param.address : not empty location ? location.address : ''}" />">
+							value="<c:out value="${not empty param.address ? param.address : not empty places ? places.address : ''}" />">
 					</div>
 				</div>
 			</div>
@@ -73,7 +73,7 @@
 						<label for="latitude"><fmt:message key="locations.form.latitude" /><span data-toggle="tooltip"
 							title="<fmt:message key="locations.form.latitude.tooltip" />" class="ml-1 badge badge-pill badge-info">?</span></label> <input name="latitude"
 							type="text" class="form-control" id="latitude" placeholder="<fmt:message key="locations.form.latitude" />"
-							value="<c:out value="${not empty param.latitude ? param.latitude : not empty location ? location.latitude : ''}" />">
+							value="<c:out value="${not empty param.latitude ? param.latitude : not empty places ? places.latitude : ''}" />">
 					</div>
 				</div>
 				<div class="col-md-6">
@@ -81,14 +81,14 @@
 						<label for="longitude"><fmt:message key="locations.form.longitude" /><span data-toggle="tooltip"
 							title="<fmt:message key="locations.form.longitude.tooltip" />" class="ml-1 badge badge-pill badge-info">?</span></label> <input name="longitude"
 							type="text" class="form-control" id="longitude" placeholder="<fmt:message key="locations.form.longitude" />"
-							value="<c:out value="${not empty param.longitude ? param.longitude : not empty location ? location.longitude : ''}" />">
+							value="<c:out value="${not empty param.longitude ? param.longitude : not empty places ? places.longitude : ''}" />">
 					</div>
 				</div>
 			</div>
-			<c:if test="${not empty location and (not empty location.longitude and not empty location.latitude)}">
+			<c:if test="${not empty places and (not empty places.longitude and not empty places.latitude)}">
 				<div class="row mb-3">
 					<div class="col-md-12 mapCol">
-						<div class="map" id="map" data-latitude="<c:out value="${location.latitude}" />" data-longitude="<c:out value="${location.longitude}" />"></div>
+						<div class="map" id="map" data-latitude="<c:out value="${places.latitude}" />" data-longitude="<c:out value="${places.longitude}" />"></div>
 					</div>
 				</div>
 			</c:if>

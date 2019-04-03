@@ -67,8 +67,8 @@
 						</tr>
 					</thead>
 					<tbody>
-						<c:if test="${not empty paymentMethods}">
-							<c:forEach items="${paymentMethods}" var="pm">
+						<c:if test="${not empty pms}">
+							<c:forEach items="${pms}" var="pm">
 								<tr>
 									<td class="align-middle"><c:out value="${pm.name}" /><br> <span class="badge badge-dark"><c:out value="${pm.description}" /></span></td>
 									<td class="align-middle text-center"><a href="?m=update&amp;id=<c:out value="${pm.id}" />" class="btn btn-primary" role="button"><fmt:message

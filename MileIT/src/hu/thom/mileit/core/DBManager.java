@@ -212,16 +212,21 @@ public class DBManager implements Serializable {
 				con = ds.getConnection();
 				ps = con.prepareStatement(m.getOperation() == 0 ? DBCommands.SQL_I_MAINTENANCE : DBCommands.SQL_U_MAINTENANCE);
 
+				// VALUES (?, ?, IF(((SELECT distance FROM users WHERE user_id = ?) = 1), ?, (?
+				// / 0.621)), ?, ?, ?, ?)";
+
 				ps.setInt(1, m.getCar().getId());
 				ps.setInt(2, m.getPayment().getId());
-				ps.setDouble(3, m.getOdometer());
-				ps.setTimestamp(4, m.getMaintenanceDateAsTimestamp());
-				ps.setString(5, m.getDescription());
-				ps.setDouble(6, m.getAmount());
-				ps.setInt(7, m.getUser().getId());
+				ps.setInt(3, m.getUser().getId());
+				ps.setDouble(4, m.getOdometer());
+				ps.setDouble(5, m.getOdometer());
+				ps.setTimestamp(6, m.getMaintenanceDateAsTimestamp());
+				ps.setString(7, m.getDescription());
+				ps.setDouble(8, m.getAmount());
+				ps.setInt(9, m.getUser().getId());
 
 				if (m.getOperation() == 1) {
-					ps.setInt(8, m.getId());
+					ps.setInt(10, m.getId());
 				}
 
 				if (ps.executeUpdate() == 1) {
@@ -285,16 +290,19 @@ public class DBManager implements Serializable {
 				ps.setInt(1, rf.getCar().getId());
 				ps.setInt(2, rf.getLocation().getId());
 				ps.setTimestamp(3, rf.getRefuelDateAsTimestamp());
-				ps.setDouble(4, rf.getOdometer());
-				ps.setDouble(5, rf.getUnitPrice());
-				ps.setDouble(6, rf.getAmount() / rf.getUnitPrice());
-				ps.setInt(7, rf.getPayment().getId());
-				ps.setDouble(8, rf.getAmount());
+				ps.setInt(4, rf.getUser().getId());
+				ps.setDouble(5, rf.getOdometer());
+				ps.setDouble(6, rf.getOdometer());
+							
+				ps.setDouble(7, rf.getUnitPrice());
+				ps.setDouble(8, rf.getAmount() / rf.getUnitPrice());
+				ps.setInt(9, rf.getPayment().getId());
+				ps.setDouble(10, rf.getAmount());
 
 				if (rf.getOperation() == 0) {
-					ps.setInt(9, rf.getUser().getId());
+					ps.setInt(11, rf.getUser().getId());
 				} else {
-					ps.setInt(9, rf.getId());
+					ps.setInt(11, rf.getId());
 				}
 
 				if (ps.executeUpdate() == 1) {
@@ -799,10 +807,12 @@ public class DBManager implements Serializable {
 			rs = ps.executeQuery();
 
 			if (rs.next()) {
-				user.setCurrency(rs.getString("currency"));
-				user.setLocale(rs.getString("locale"));
-				user.setId(rs.getInt("user_id"));
-				user.setUsername(rs.getString("username"));
+				user.setCurrency(rs.getString(1));
+				user.setLocale(rs.getString(2));
+				user.setId(rs.getInt(3));
+				user.setUsername(rs.getString(4));
+				user.setDistance(rs.getInt(5));
+				user.setRounded(rs.getInt(6));
 			}
 		} catch (Exception e) {
 			logger.logException("getUserProfile()", e);
@@ -872,7 +882,9 @@ public class DBManager implements Serializable {
 
 				ps.setString(1, user.getCurrency());
 				ps.setString(2, user.getLocale());
-				ps.setString(3, user.getUsername());
+				ps.setInt(3, user.getDistance());
+				ps.setInt(4, user.getRounded());
+				ps.setInt(5, user.getId());
 
 				if (ps.executeUpdate() == 1) {
 					return true;

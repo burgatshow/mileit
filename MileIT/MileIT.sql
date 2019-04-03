@@ -71,6 +71,8 @@ CREATE TABLE IF NOT EXISTS `users` (
   `username` varchar(20) COLLATE utf8mb4_hungarian_ci DEFAULT NULL,
   `currency` varchar(5) COLLATE utf8mb4_hungarian_ci DEFAULT 'Ft',
   `locale` varchar(2) COLLATE utf8mb4_hungarian_ci DEFAULT 'hu',
+  `distance` int(1) UNSIGNED NOT NULL DEFAULT '1',
+  `rounded` INT(1) UNSIGNED NOT NULL DEFAULT '1' AFTER
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `username` (`username`)
 ) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;

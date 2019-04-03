@@ -57,7 +57,11 @@ public class RefuelModel extends Model {
 	}
 
 	public Timestamp getRefuelDateAsTimestamp() {
-		return new Timestamp(getRefuelDate() == null ? null : getRefuelDate().getTime());
+		if (refuelDate == null) {
+			return null;
+		}
+		
+		return new Timestamp(refuelDate.getTime());
 	}
 
 	public void setRefuelDate(Date refuelDate) {

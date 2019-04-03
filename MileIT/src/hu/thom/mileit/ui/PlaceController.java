@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import hu.thom.mileit.core.UIKeys;
 import hu.thom.mileit.models.PlaceModel;
 
 /**
@@ -25,7 +26,7 @@ public class PlaceController extends Controller {
 	 */
 	public PlaceController() {
 		super();
-		assignedObjects.put("page", "locations");
+		assignedObjects.put(UIKeys.PAGE, "locations");
 	}
 
 	/**
@@ -45,33 +46,32 @@ public class PlaceController extends Controller {
 	 *      response)
 	 */
 	@Override
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		super.doGet(request, response);
 
 		parseMode(request);
 
-		assignedObjects.put("locations", dbm.getPlaces(user.getId()));
+		assignedObjects.put(UIKeys.PLACES, dbm.getPlaces(user.getId()));
 
 		switch (m) {
-		case "new":
+		case UIKeys.MODE_NEW:
 			renderPage(PLACES_FORM, request, response);
 			break;
 
-		case "update":
+		case UIKeys.MODE_UPDATE:
 			parseId(request);
 
 			PlaceModel l = dbm.getPlace(id);
 			if (l != null) {
-				assignedObjects.put("location", l);
+				assignedObjects.put(UIKeys.PLACES, l);
 				renderPage(PLACES_FORM, request, response);
 			} else {
-				assignedObjects.put("status", -1);
+				assignedObjects.put(UIKeys.STATUS, -1);
 				renderPage(PLACES, request, response);
 			}
 			break;
-		case "":
-		case "cancel":
+		case UIKeys.MODE_:
+		case UIKeys.MODE_CANCEL:
 		default:
 			renderPage(PLACES, request, response);
 			break;
@@ -85,8 +85,7 @@ public class PlaceController extends Controller {
 	 *      response)
 	 */
 	@Override
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		super.doPost(request, response);
 
 		parseMode(request);
@@ -110,24 +109,25 @@ public class PlaceController extends Controller {
 			l.setLongitude(request.getParameter("longitude"));
 
 			switch (m) {
-			case "new":
+			case UIKeys.MODE_NEW:
 				l.setOperation(0);
 				break;
-			case "update":
+			case UIKeys.MODE_UPDATE:
 				parseId(request);
 				l.setOperation(1);
 				l.setId(id);
 				break;
-			case "":
+			case UIKeys.MODE_:
+			case UIKeys.MODE_CANCEL:
 			default:
 				break;
 			}
-			
-			assignedObjects.put("status", dbm.createUpdatePlace(l) ? 1 : -1);
-			assignedObjects.put("locations", dbm.getPlaces(user.getId()));
+
+			assignedObjects.put(UIKeys.STATUS, dbm.createUpdatePlace(l) ? 1 : -1);
+			assignedObjects.put(UIKeys.PLACES, dbm.getPlaces(user.getId()));
 			renderPage(PLACES, request, response);
 		} else {
-			assignedObjects.put("status", -2);
+			assignedObjects.put(UIKeys.STATUS, -2);
 			renderPage(PLACES_FORM, request, response);
 		}
 	}
