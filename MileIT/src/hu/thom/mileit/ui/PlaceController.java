@@ -55,6 +55,7 @@ public class PlaceController extends Controller {
 
 		switch (m) {
 		case UIKeys.MODE_NEW:
+			assignedObjects.remove(UIKeys.PLACES);
 			renderPage(PLACES_FORM, request, response);
 			break;
 
