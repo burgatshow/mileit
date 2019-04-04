@@ -18,12 +18,12 @@
 			<ul class="navbar-nav mr-auto">
 				<li class="nav-item <c:if test="${not empty page and page eq 'index' }">active</c:if>"><a class="nav-link" href="index"> <fmt:message
 							key="menu.dashboard" /> <span class="sr-only"><fmt:message key="menu.sr.current" /></span></a></li>
-				<li class="nav-item dropdown <c:if test="${not empty page and (page eq 'cars' or page eq 'maintenance') }">active</c:if>"><a class="nav-link dropdown-toggle"
+				<li class="nav-item dropdown <c:if test="${not empty page and (page eq 'cars' or page eq 'maintenance' or page eq 'tyres') }">active</c:if>"><a class="nav-link dropdown-toggle"
 					href="cars" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <fmt:message key="menu.cars" />
 				</a>
 					<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
 						<a class="dropdown-item" href="cars"> <fmt:message key="menu.cars.cars" />
-						</a> <a class="dropdown-item" href="maintenance"><fmt:message key="menu.car.maintenance" /></a> <a class="dropdown-item" href="cars"> <fmt:message
+						</a> <a class="dropdown-item" href="maintenance"><fmt:message key="menu.car.maintenance" /></a> <a class="dropdown-item" href="tyres"> <fmt:message
 								key="menu.car.maintenance.tyres" />
 						</a>
 					</div></li>

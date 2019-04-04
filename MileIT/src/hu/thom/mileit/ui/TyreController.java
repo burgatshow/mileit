@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import hu.thom.mileit.core.UIKeys;
-import hu.thom.mileit.models.PlaceModel;
+import hu.thom.mileit.models.TyreModel;
 
 /**
  * Servlet class to manage tyres related operations
@@ -48,33 +48,34 @@ public class TyreController extends Controller {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		super.doGet(request, response);
-		
 
 		parseMode(request);
 
+		assignedObjects.put(UIKeys.TYRES, dbm.getTyres(user.getId()));
+		assignedObjects.put(UIKeys.TYRE_VENDORS, dbm.getTyreVendors());
+
 		switch (m) {
-		case "new":
-			request.getRequestDispatcher(PLACES_FORM).forward(request, response);
+		case UIKeys.MODE_NEW:
+			assignedObjects.remove(UIKeys.TYRES);
+			renderPage(TYRES_FORM, request, response);
 			break;
 
-		case "update":
+		case UIKeys.MODE_UPDATE:
 			parseId(request);
 
-			PlaceModel l = dbm.getPlace(id);
-			if (l != null) {
-				request.setAttribute("location", l);
-				request.getRequestDispatcher(PLACES_FORM).forward(request, response);
+			TyreModel tm = dbm.getTyre(id);
+			if (tm != null) {
+				assignedObjects.put(UIKeys.TYRES, tm);
+				renderPage(TYRES_FORM, request, response);
 			} else {
-				request.setAttribute("status", -1);
-				request.setAttribute("locations", dbm.getPlaces(user.getId()));
-				request.getRequestDispatcher(PLACES).forward(request, response);
+				assignedObjects.put(UIKeys.STATUS, -1);
+				renderPage(TYRES, request, response);
 			}
 			break;
-		case "":
-		case "cancel":
+		case UIKeys.MODE_:
+		case UIKeys.MODE_CANCEL:
 		default:
-			request.setAttribute("locations", dbm.getPlaces(user.getId()));
-			request.getRequestDispatcher(PLACES).forward(request, response);
+			renderPage(TYRES, request, response);
 			break;
 		}
 	}
@@ -90,8 +91,8 @@ public class TyreController extends Controller {
 		super.doPost(request, response);
 
 		parseMode(request);
-
-		String[] mustElements = { "name" };
+		
+		String[] mustElements = { "manufacturer", "model", "width", "height", "radius", "axis", "type" };
 		for (String key : mustElements) {
 			if (request.getParameter(key) == null || "".equalsIgnoreCase(request.getParameter(key))) {
 				validationMessages.add(key);
@@ -101,55 +102,30 @@ public class TyreController extends Controller {
 		}
 
 		if (validationMessages.isEmpty()) {
-			PlaceModel l = new PlaceModel();
-			l.setUser(user);
-
-			l.setName(request.getParameter("name"));
-			l.setAddress(request.getParameter("address"));
-			l.setLatitude(request.getParameter("latitude"));
-			l.setLongitude(request.getParameter("longitude"));
+			TyreModel tyre = new TyreModel(request.getParameterMap(), user);
 
 			switch (m) {
-			case "new":
-				l.setOperation(0);
-
-				if (dbm.createUpdatePlace(l)) {
-					request.setAttribute("status", 0);
-				} else {
-					request.setAttribute("status", -1);
-				}
-
-				request.setAttribute("locations", dbm.getPlaces(user.getId()));
-				request.getRequestDispatcher(PLACES).forward(request, response);
-
+			case UIKeys.MODE_NEW:
+				tyre.setOperation(0);
 				break;
-
-			case "update":
+			case UIKeys.MODE_UPDATE:
 				parseId(request);
-
-				l.setOperation(1);
-				l.setId(id);
-				
-//				assignedObjects.put(UIKeys.STATUS, dbm.create);
-//				dbm.createUpdatePlace(l) ? 
-
-				if (dbm.createUpdatePlace(l)) {
-					request.setAttribute(UIKeys.STATUS, 1);
-				} else {
-					request.setAttribute(UIKeys.STATUS, -1);
-				}
-
-				request.setAttribute("locations", dbm.getPlaces(user.getId()));
-				request.getRequestDispatcher(PLACES).forward(request, response);
+				tyre.setId(id);
+				tyre.setOperation(1);
 				break;
 
-			case "":
+			case UIKeys.MODE_:
+			case UIKeys.MODE_CANCEL:
 			default:
 				break;
 			}
+
+			assignedObjects.put(UIKeys.STATUS, dbm.createUpdateTyre(tyre) ? 1 : -1);
+			assignedObjects.put(UIKeys.TYRES, dbm.getTyres(user.getId()));
+			renderPage(TYRES, request, response);
 		} else {
-			request.setAttribute(UIKeys.STATUS, -2);
-			request.getRequestDispatcher(PLACES_FORM).forward(request, response);
+			assignedObjects.put(UIKeys.STATUS, -2);
+			renderPage(TYRES_FORM, request, response);
 		}
 	}
 }
