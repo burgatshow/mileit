@@ -434,7 +434,7 @@ public class DBManager implements Serializable {
 				car.setDescription(rs.getString(12));
 				car.setFriendlyName(rs.getString(13));
 				car.setActive(rs.getInt(14) == 1 ? true : false);
-				car.setManufacturerName(rs.getString(15));
+				car.setManufacturerName(rs.getString(16));
 				cars.add(car);
 			}
 		} catch (Exception e) {
@@ -898,6 +898,53 @@ public class DBManager implements Serializable {
 	}
 
 	/**
+	 * Checks whether the user exists in the DB or not
+	 * 
+	 * @param username {@link String} the username provided upon sign in
+	 * @return true if yes, false otherwise
+	 */
+	private boolean checkUserProfile(String username) {
+		boolean status = false;
+		try {
+			con = ds.getConnection();
+			ps = con.prepareStatement(DBCommands.SQL_S_CHECK_USER);
+			ps.setString(1, username);
+
+			rs = ps.executeQuery();
+
+			if (rs.next()) {
+				status = rs.getInt(1) == 1 ? true : false;
+			}
+		} catch (Exception e) {
+			logger.logException("checkUserProfile()", e);
+		} finally {
+			closeConnection();
+		}
+		return status;
+	}
+
+	/**
+	 * Creates a user profile for the user after the very first login
+	 * 
+	 * @param username {@link String} the username provided upon sign in
+	 * @return true on success, false otherwise
+	 */
+	private boolean createUserProfile(String username) {
+		boolean status = false;
+		try {
+			con = ds.getConnection();
+			ps = con.prepareStatement(DBCommands.SQL_I_USER);
+			ps.setString(1, username);
+			status = ps.executeUpdate() == 1 ? true : false;
+		} catch (Exception e) {
+			logger.logException("createUserProfile()", e);
+		} finally {
+			closeConnection();
+		}
+		return status;
+	}
+
+	/**
 	 * Returns the user profile
 	 * 
 	 * @param user {@link String} username of the user
@@ -935,6 +982,9 @@ public class DBManager implements Serializable {
 	 * @return the completed {@link UserModel}
 	 */
 	public UserModel getUserProfile(UserModel user) {
+		if (!checkUserProfile(user.getUsername())) {
+			createUserProfile(user.getUsername());
+		}
 		return getUserProfile(user.getUsername());
 	}
 

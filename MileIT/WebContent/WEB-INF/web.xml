@@ -46,15 +46,15 @@
 			<http-only>true</http-only>
 		</cookie-config>
 	</session-config>
-	<error-page>
+	<error-page id="Error403">
 		<error-code>403</error-code>
 		<location>/WEB-INF/pages/errors/403.jsp</location>
 	</error-page>
-	<error-page>
+	<error-page id="Error404">
 		<error-code>404</error-code>
 		<location>/WEB-INF/pages/errors/404.jsp</location>
 	</error-page>
-	<error-page>
+	<error-page id="Error503">
 		<error-code>503</error-code>
 		<location>/WEB-INF/pages/errors/503.jsp</location>
 	</error-page>
