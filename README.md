@@ -1,5 +1,5 @@
 # What is MileIT?
-MileIT (Mile IT) is a standard J2EE web application running on standard J2EE application server using MariaDB as a database to manage you family's, your company's car milage data. MileIT can be accessed using a regular, modern web browser and if you have a need to automate some of the tasks, REST API is what you are looking for.
+MileIT (Mile IT) is a standard J2EE web application (as a backend) running on standard J2EE application server using MariaDB as a database to manage you family's, your company's car milage data. User interface is built on Bootstrap. MileIT can be accessed using a regular, modern web browser and if you have a need to automate some of the tasks, REST API is what you are looking for.
 
 Mile IT can support a multi-user / multi-car purpose where every user has its own car set, own refuel locations as well as having a separate account to track important events for a car.
 
