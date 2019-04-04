@@ -26,17 +26,17 @@
 			<div class="col-md-12">
 				<c:if test="${status eq '0'}">
 					<div class="alert alert-dismissible alert-success">
-						<fmt:message key="locations.status.add.ok" />
+						<fmt:message key="tyres.status.add.ok" />
 					</div>
 				</c:if>
 				<c:if test="${status eq '1'}">
 					<div class="alert alert-dismissible alert-success">
-						<fmt:message key="locations.status.edit.ok" />
+						<fmt:message key="tyres.status.edit.ok" />
 					</div>
 				</c:if>
 				<c:if test="${status eq -1}">
 					<div class="alert alert-dismissible alert-danger mt-4">
-						<fmt:message key="locations.status.nok" />
+						<fmt:message key="tyres.status.nok" />
 					</div>
 				</c:if>
 			</div>
@@ -45,7 +45,7 @@
 		<div class="row">
 			<div class="col-md-12">
 				<h1>
-					<fmt:message key="locations.title" />
+					<fmt:message key="tyres.title" />
 				</h1>
 			</div>
 		</div>
@@ -56,31 +56,51 @@
 			</div>
 		</div>
 
-		<!-- Cars table -->
 		<div class="row">
 			<div class="col-md-12">
 				<table class="mt-3 table table-bordered table-striped table-condensed table-hover" id="cars">
 					<thead class="thead-light">
 						<tr>
-							<th><fmt:message key="locations.form.name" /></th>
+							<th><fmt:message key="tyres.form.name" /></th>
+							<th class="text-center"><fmt:message key="tyres.form.type" /></th>
+							<th class="text-center"><fmt:message key="tyres.form.axis" /></th>
+							<th class="text-center"><fmt:message key="tyres.form.purchasedate" /></th>
 							<th class="text-center"><fmt:message key="table.actions" /></th>
 						</tr>
 					</thead>
 					<tbody>
-						<c:if test="${not empty locations}">
-							<c:forEach items="${locations}" var="l">
+						<c:if test="${not empty tyres}">
+							<c:forEach items="${tyres}" var="t">
 								<tr>
-									<td class="align-middle"><c:out value="${l.name}" /><br> <span class="badge badge-dark"><c:out value="${l.address}" /></span></td>
-									<td class="align-middle text-center"><a href="?m=update&amp;id=<c:out value="${l.id}" />" class="btn btn-primary" role="button"><fmt:message
+									<td class="align-middle"><fmt:message key="tyres.name">
+											<fmt:param value="${t.manufacturerName}" />
+											<fmt:param value="${t.model}" />
+										</fmt:message><br> <span class="badge badge-dark"> <fmt:message key="tyres.size">
+												<fmt:param value="${t.sizeW}" />
+												<fmt:param value="${t.sizeH}" />
+												<fmt:param value="${t.sizeR}" />
+											</fmt:message>
+									</span></td>
+									<td class="align-middle text-center"><fmt:message
+											key="${t.type eq 'WINTER' ? 'tyres.form.type.winter' : t.type eq 'SUMMER' ? 'tyres.form.type.summer' : t.type eq 'ALLSEASONS' ? 'tyres.form.type.all' : 'tyres.form.type.other'}" />
+									</td>
+									<td class="align-middle text-center"><fmt:message
+											key="${t.axis eq 'FRONT' ? 'tyres.form.axis.front' : t.axis eq 'REAR' ? 'tyres.form.axis.rear' : t.axis eq 'BOTH' ? 'tyres.form.axis.all' : 'tyres.form.axis.none'}" /></td>
+									<td class="align-middle text-center"><fmt:formatDate type="both" value="${t.purchaseDate}" pattern="yyyy. MM. dd." /></td>
+									<td class="align-middle text-center"><a href="?m=update&amp;id=<c:out value="${t.id}" />" class="btn btn-primary" role="button"><fmt:message
 												key="button.edit" /></a></td>
 								</tr>
 							</c:forEach>
+						</c:if>
+						<c:if test="${empty tyres}">
+							<tr>
+								<td colspan="2" class="align-middle text-center"><fmt:message key="nodata" /></td>
+							</tr>
 						</c:if>
 					</tbody>
 				</table>
 			</div>
 		</div>
-		<!-- END Cars table -->
 	</div>
 	<div class="modal fade" id="confirm-archive" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 		<div class="modal-dialog">

@@ -30,8 +30,7 @@ public class PlaceModel extends Model {
 		setId(id);
 		this.name = name;
 		this.address = address;
-		setUser(new UserModel());
-		getUser().setId(userId);
+		setUser(new UserModel(userId));
 		this.latitude = latitude;
 		this.longitude = longitude;
 	}
@@ -42,6 +41,14 @@ public class PlaceModel extends Model {
 		this.address = address;
 		setLongitude(longitude);
 		setLatitude(latitude);
+	}
+
+	public PlaceModel(int id, String name, String address, double longitude, double latitude) {
+		setId(id);
+		this.name = name;
+		this.address = address;
+		this.longitude = longitude;
+		this.latitude = latitude;
 	}
 
 	public String getName() {

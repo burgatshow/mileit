@@ -89,6 +89,12 @@ public class CarModel extends Model {
 	public CarModel(String id) {
 		setId(id);
 	}
+	
+	public CarModel(int id, String friendlyName, String plateNumber) {
+		setId(id);
+		this.friendlyName = friendlyName;
+		this.plateNumber = plateNumber;
+	}
 
 	public CarModel(Map<String, String[]> params, UserModel user) {
 		setManufacturer(params.get("manufacturer")[0]);
@@ -107,7 +113,7 @@ public class CarModel extends Model {
 
 		this.user = user;
 	}
-
+	
 	public String getManufacturerName() {
 		return manufacturerName;
 	}

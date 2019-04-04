@@ -61,7 +61,7 @@
 					<div class="form-group">
 						<label for="manufacturer"><fmt:message key="cars.form.manufacturer" /><span class="ml-1 badge badge-pill badge-primary"> <fmt:message
 									key="form.mandatory" /></span></label> <select id="manufacturer" name="manufacturer"
-							class="form-control <c:if test="${validationMessages.contains('manufacturer') }">is-invalid</c:if>" name="fuel">
+							class="form-control <c:if test="${validationMessages.contains('manufacturer') }">is-invalid</c:if>">
 							<c:forEach items="${carVendors}" var="carManufacturer">
 								<option value="<c:out value="${carManufacturer.key}" />"
 									<c:if test="${not empty cars and cars.manufacturer eq carManufacturer.key}">selected="selected"</c:if>><c:out

@@ -22,7 +22,7 @@ public class UIKeys implements Serializable {
 	public static final String MODE_ARCHIVE = "archive";
 	public static final String MODE_UPDATE = "update";
 	public static final String MODE_CANCEL = "cancel";
-	
+
 	// IndexController
 	public static final String LAST_REFUEL = "lr";
 	public static final String STAT_KEY = "fuelStatsKey";
@@ -35,13 +35,17 @@ public class UIKeys implements Serializable {
 
 	// PaymentMethodController
 	public static final String PMS = "pms";
-	
+
 	// RefuelController
 	public static final String REFUELS = "refuels";
-	
+
 	// PlaceController
 	public static final String PLACES = "places";
-	
+
 	// MaintenanceController
 	public static final String MAINTENANCES = "maintenances";
+
+	// TyreController
+	public static final String TYRES = "tyres";
+	public static final String TYRE_VENDORS = "tyreVendors";
 }
