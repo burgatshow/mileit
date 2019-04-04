@@ -56,7 +56,6 @@
 			</div>
 		</div>
 
-		<!-- Cars table -->
 		<div class="row">
 			<div class="col-md-12">
 				<table class="mt-3 table table-bordered table-striped table-condensed table-hover" id="cars">
@@ -76,11 +75,15 @@
 								</tr>
 							</c:forEach>
 						</c:if>
+						<c:if test="${empty pms}">
+							<tr>
+								<td colspan="2" class="align-middle text-center"><fmt:message key="nodata" /></td>
+							</tr>
+						</c:if>
 					</tbody>
 				</table>
 			</div>
 		</div>
-		<!-- END Cars table -->
 	</div>
 	<div class="modal fade" id="confirm-archive" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 		<div class="modal-dialog">

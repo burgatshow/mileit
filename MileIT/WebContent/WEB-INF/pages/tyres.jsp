@@ -94,7 +94,7 @@
 						</c:if>
 						<c:if test="${empty tyres}">
 							<tr>
-								<td colspan="2" class="align-middle text-center"><fmt:message key="nodata" /></td>
+								<td colspan="5" class="align-middle text-center"><fmt:message key="nodata" /></td>
 							</tr>
 						</c:if>
 					</tbody>
