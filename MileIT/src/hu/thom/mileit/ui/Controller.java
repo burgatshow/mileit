@@ -81,6 +81,7 @@ public class Controller extends HttpServlet {
 		if (request.getUserPrincipal() != null) {
 			this.user = dbm.getUserProfile(new UserModel(request.getUserPrincipal().getName()));
 			assignedObjects.put(UIKeys.USER, user);
+
 		}
 
 	}

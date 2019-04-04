@@ -16,6 +16,8 @@ public class DBCommands implements Serializable {
 	public static final String SQL_S_PRICE_GRAPH = "SELECT r.refuel_timestamp, r.odometer, r.amount, unit_price FROM refuels AS r WHERE r.user_id = ? ORDER BY r.refuel_timestamp LIMIT 10";
 
 	// User
+	public static final String SQL_S_CHECK_USER = "SELECT COUNT(*) FROM users AS u WHERE username = ?";
+	public static final String SQL_I_USER = "INSERT INTO users (username) VALUES (?)";
 	public static final String SQL_S_PROFILE = "SELECT u.currency, u.locale, u.user_id, u.username, u.distance, u.rounded FROM users AS u WHERE u.username = ?";
 	public static final String SQL_U_PROFILE = "UPDATE users SET currency = ?, locale = ?, distance = ?, rounded = ? WHERE user_id = ?";
 

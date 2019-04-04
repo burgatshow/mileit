@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS `cars` (
   `archived` int(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`car_id`),
   UNIQUE KEY `vin` (`vin`)
-) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
 CREATE TABLE IF NOT EXISTS `maintenances` (
   `mntnc_id` int(11) NOT NULL AUTO_INCREMENT,
@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS `maintenances` (
   `description` varchar(1000) COLLATE utf8mb4_hungarian_ci DEFAULT NULL,
   `amount` double NOT NULL,
   PRIMARY KEY (`mntnc_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
 CREATE TABLE IF NOT EXISTS `payment_method` (
   `pm_id` int(11) NOT NULL AUTO_INCREMENT,
@@ -40,7 +40,7 @@ CREATE TABLE IF NOT EXISTS `payment_method` (
   `user_id` int(11) NOT NULL,
   `description` varchar(100) COLLATE utf8mb4_hungarian_ci DEFAULT NULL,
   PRIMARY KEY (`pm_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
 CREATE TABLE IF NOT EXISTS `places` (
   `place_id` int(11) NOT NULL AUTO_INCREMENT,
@@ -50,7 +50,7 @@ CREATE TABLE IF NOT EXISTS `places` (
   `longitude` double DEFAULT NULL,
   `latitude` double DEFAULT NULL,
   PRIMARY KEY (`place_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
 CREATE TABLE IF NOT EXISTS `refuels` (
   `refuel_id` int(11) NOT NULL AUTO_INCREMENT,
@@ -64,18 +64,18 @@ CREATE TABLE IF NOT EXISTS `refuels` (
   `amount` double unsigned NOT NULL,
   `user_id` int(11) NOT NULL,
   PRIMARY KEY (`refuel_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
 CREATE TABLE IF NOT EXISTS `users` (
   `user_id` int(11) NOT NULL AUTO_INCREMENT,
-  `username` varchar(20) COLLATE utf8mb4_hungarian_ci DEFAULT NULL,
-  `currency` varchar(5) COLLATE utf8mb4_hungarian_ci DEFAULT 'Ft',
-  `locale` varchar(2) COLLATE utf8mb4_hungarian_ci DEFAULT 'hu',
+  `username` varchar(20) NOT NULL COLLATE utf8mb4_hungarian_ci,
+  `currency` varchar(5) NOT NULL COLLATE utf8mb4_hungarian_ci DEFAULT 'Ft',
+  `locale` varchar(2) NOT NULL COLLATE utf8mb4_hungarian_ci DEFAULT 'hu',
   `distance` int(1) UNSIGNED NOT NULL DEFAULT '1',
   `rounded` INT(1) UNSIGNED NOT NULL DEFAULT '1' AFTER
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `username` (`username`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
 CREATE TABLE IF NOT EXISTS `sup_car_manufacturers` (
   `manufacturer_id` int(11) NOT NULL AUTO_INCREMENT,
@@ -219,6 +219,21 @@ INSERT INTO sup_car_manufacturers (name) VALUES
 	('YUGO'),
 	('ZAPOROZSEC'),
 	('ZASTAVA');
+
+CREATE TABLE IF NOT EXISTS `tyres` (
+  `tyre_id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `car_id` int(11) DEFAULT NULL,
+  `type` int(1) unsigned NOT NULL DEFAULT 1,
+  `manufacturer` int(11) unsigned NOT NULL,
+  `model` varchar(50) COLLATE utf8mb4_hungarian_ci NOT NULL,
+  `axis` int(1) unsigned NOT NULL DEFAULT 1,
+  `size_r` int(11) NOT NULL,
+  `size_h` int(11) NOT NULL,
+  `size_w` int(11) NOT NULL,
+  `purchase_date` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`tyre_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
 CREATE TABLE IF NOT EXISTS `sup_tyre_manufacturers` (
   `manufacturer_id` int(11) NOT NULL AUTO_INCREMENT,
