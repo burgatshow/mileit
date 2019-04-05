@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author thom <tamas.bures@protonmail.com>
  *
  */
-@WebServlet(value = "logout")
+@WebServlet("/logout")
 public class LogoutController extends Controller {
 	private static final long serialVersionUID = -1161650807822947664L;
 	
