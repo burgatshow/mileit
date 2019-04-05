@@ -101,8 +101,8 @@ public class PlaceController extends Controller {
 		}
 
 		if (validationMessages.isEmpty()) {
-			PlaceModel l = new PlaceModel(user, request.getParameter("name"), request.getParameter("address"), request.getParameter("latitude"),
-					request.getParameter("longitude"));
+			PlaceModel l = new PlaceModel(user, request.getParameter("name"), request.getParameter("address"), request.getParameter("longitude"),
+					request.getParameter("latitude"));
 
 			switch (m) {
 			case UIKeys.MODE_NEW:
