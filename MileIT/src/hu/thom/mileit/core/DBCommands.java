@@ -22,7 +22,7 @@ public class DBCommands implements Serializable {
 	public static final String SQL_U_PROFILE = "UPDATE users SET currency = ?, locale = ?, distance = ?, rounded = ? WHERE user_id = ?";
 
 	// Cars
-	public static final String SQL_I_CAR = "INSERT INTO cars (manufacturer, model, manufacture_date, color, UPPER(vin), UPPER(plate_number), fuel_capacity, fuel, start_date, end_date, description, friendly_name, user_id, active) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+	public static final String SQL_I_CAR = "INSERT INTO cars (manufacturer, model, manufacture_date, color, vin, plate_number, fuel_capacity, fuel, start_date, end_date, description, friendly_name, user_id, active) VALUES (?, ?, ?, ?, UPPER(?), UPPER(?), ?, ?, ?, ?, ?, ?, ?, ?)";
 	public static final String SQL_U_CAR = "UPDATE cars SET manufacturer = ?, model = ?, manufacture_date = ?, color = ?, vin = UPPER(?), plate_number = UPPER(?), fuel_capacity = ?, fuel = ?, start_date = ?, end_date = ?, description = ?, friendly_name = ?, active = ? WHERE car_id = ?";
 	public static final String SQL_U_CAR_ARCHIVE = "UPDATE cars SET archived = 1 WHERE car_id = ?";
 	public static final String SQL_S_CARS = "SELECT c.car_id, c.manufacturer, c.model, c.manufacture_date, c.color, c.vin, c.plate_number, c.fuel_capacity, c.fuel, c.start_date, c.end_date, c.description, c.friendly_name, c.active, v.manufacturer_id, IF(v.NAME = 'BMW', 'BMW', CONCAT(UPPER(SUBSTR(v.NAME, 1, 1)), LOWER(SUBSTR(v.NAME, 2, LENGTH(v.NAME)-1)))) AS name FROM cars AS c, sup_car_manufacturers AS v WHERE c.user_id = ? AND c.archived = 0 AND c.manufacturer = v.manufacturer_id ORDER BY c.active DESC, c.plate_number ASC";
