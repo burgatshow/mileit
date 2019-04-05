@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.sql.DataSource;
 
 import hu.thom.mileit.models.CarModel;
@@ -47,10 +48,24 @@ public class DBManager implements Serializable {
 	 */
 	public DBManager() {
 		if (ds == null) {
+			forceObtainDS();
+		}
+	}
+
+	/**
+	 * This is for to obtain the datasource from the application server because
+	 * Liberty and Tomcat works differently
+	 * 
+	 * @return {@link DataSource} if obtained, null otherwise
+	 */
+	private void forceObtainDS() {
+		try {
+			ds = (DataSource) new InitialContext().lookup("jdbc/mileit");
+		} catch (NamingException e) {
 			try {
-				ds = (DataSource) new InitialContext().lookup("jdbc/mileit");
-			} catch (Exception e) {
-				logger.logException("DBManager()", e);
+				ds = (DataSource) new InitialContext().lookup("java:comp/env/jdbc/mileit");
+			} catch (NamingException e2) {
+				logger.logException("forceObtainDS()", e);
 			}
 		}
 	}
