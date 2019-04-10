@@ -18,6 +18,7 @@
 	<keyStore id="defaultKeyStore"
 		password="{xor}CDo9HiwIOj0eDA==" />
 
+	<!-- MariaDB driver location -->
 	<library id="mariadb-lib">
 		<fileset dir="${server.config.dir}/lib"
 			includes="mariadb-java-client-1.7.4.jar" />
