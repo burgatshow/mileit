@@ -59,11 +59,13 @@ public class DBManager implements Serializable {
 	 * @return {@link DataSource} if obtained, null otherwise
 	 */
 	private void forceObtainDS() {
+		InitialContext ctx = null;
 		try {
-			ds = (DataSource) new InitialContext().lookup("jdbc/mileit");
+			ctx = new InitialContext();
+			ds = (DataSource) ctx.lookup("jdbc/mileit");
 		} catch (NamingException e) {
 			try {
-				ds = (DataSource) new InitialContext().lookup("java:comp/env/jdbc/mileit");
+				ds = (DataSource) ctx.lookup("java:comp/env/jdbc/mileit");
 			} catch (NamingException e2) {
 				logger.logException("forceObtainDS()", e);
 			}
