@@ -93,8 +93,7 @@
 				</div>
 			</c:if>
 			<div class="row">
-				<div class="col-md-6"></div>
-				<div class="col-md-6 text-right">
+				<div class="col-md-12 text-right">
 					<input type="submit" class="btn btn-primary" value="<fmt:message key="button.save" />"> <a class="btn btn-danger" href="locations"
 						role="button"> <fmt:message key="button.cancel" />
 					</a>

@@ -58,13 +58,14 @@
 
 		<div class="row">
 			<div class="col-md-12">
-				<table class="mt-3 table table-bordered table-striped table-condensed table-hover" id="cars">
+				<table class="mt-3 table table-bordered table-condensed table-hover" id="tyres">
 					<thead class="thead-light">
 						<tr>
 							<th><fmt:message key="tyres.form.name" /></th>
 							<th class="text-center"><fmt:message key="tyres.form.type" /></th>
 							<th class="text-center"><fmt:message key="tyres.form.axis" /></th>
 							<th class="text-center"><fmt:message key="tyres.form.purchasedate" /></th>
+							<th class="text-center"><fmt:message key="tyres.form.car" /></th>
 							<th class="text-center"><fmt:message key="table.actions" /></th>
 						</tr>
 					</thead>
@@ -87,8 +88,26 @@
 									<td class="align-middle text-center"><fmt:message
 											key="${t.axis eq 'FRONT' ? 'tyres.form.axis.front' : t.axis eq 'REAR' ? 'tyres.form.axis.rear' : t.axis eq 'BOTH' ? 'tyres.form.axis.all' : 'tyres.form.axis.none'}" /></td>
 									<td class="align-middle text-center"><fmt:formatDate type="both" value="${t.purchaseDate}" pattern="yyyy. MM. dd." /></td>
-									<td class="align-middle text-center"><a href="?m=update&amp;id=<c:out value="${t.id}" />" class="btn btn-primary" role="button"><fmt:message
-												key="button.edit" /></a></td>
+									<td class="text-center align-middle"><c:out value="${t.car.friendlyName}" /> <br> <span class="badge badge-dark"><c:out
+												value="${t.car.plateNumber}" /></span></td>
+									<td class="align-middle text-center"><c:if test="${t.car.id eq 0}">
+											<a href="?m=map&amp;id=<c:out value="${t.id}" />" class="btn btn-warning" role="button"><fmt:message key="button.map" /></a>
+										</c:if> <a href="?m=update&amp;id=<c:out value="${t.id}" />" class="btn btn-primary" role="button"><fmt:message key="button.edit" /></a><a
+										href="#" data-href="?m=archive&amp;id=<c:out value="${t.id}" />" class="btn btn-danger ml-2" data-toggle="modal"
+										data-target="#confirm-archive" role="button"><fmt:message key="button.archive" /></a></td>
+								</tr>
+								<tr class="table-primary">
+									<th class="align-middle text-left">First installed</th>
+									<td class="align-middle text-center"><fmt:formatDate type="both" value="${t.tyreEventModel.dateStart}" pattern="yyyy. MM. dd." /> <br>
+										<span class="badge badge-dark"><fmt:formatNumber value="${t.tyreEventModel.odometerStart}" pattern="#,##0.00" type="number"
+												minFractionDigits="0" maxFractionDigits="${user.rounded eq 1 ? 0 : 2}" /></span></td>
+									<th class="align-middle text-left">Last removed</th>
+									<td class="align-middle text-center"><fmt:formatDate type="both" value="${t.tyreEventModel.dateEnd}" pattern="yyyy. MM. dd." /> <br>
+										<span class="badge badge-dark"><fmt:formatNumber value="${t.tyreEventModel.odometerEnd}" pattern="#,##0.00" type="number"
+												minFractionDigits="0" maxFractionDigits="${user.rounded eq 1 ? 0 : 2}" /></span></td>
+									<th class="align-middle text-left">Total distance</th>
+									<td class="align-middle text-right"><fmt:formatNumber value="${t.tyreEventModel.totalDistance}" pattern="#,##0.00" type="number"
+											minFractionDigits="0" maxFractionDigits="${user.rounded eq 1 ? 0 : 2}" /></td>
 								</tr>
 							</c:forEach>
 						</c:if>

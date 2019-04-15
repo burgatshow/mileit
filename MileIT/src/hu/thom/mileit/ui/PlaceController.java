@@ -90,15 +90,8 @@ public class PlaceController extends Controller {
 		super.doPost(request, response);
 
 		parseMode(request);
-
-		String[] mustElements = { "name" };
-		for (String key : mustElements) {
-			if (request.getParameter(key) == null || "".equalsIgnoreCase(request.getParameter(key))) {
-				validationMessages.add(key);
-			} else {
-				validationMessages.remove(key);
-			}
-		}
+		
+		checkValidationMessages(UIKeys.FORM_ME_PLACE, validationMessages, request);
 
 		if (validationMessages.isEmpty()) {
 			PlaceModel l = new PlaceModel(user, request.getParameter("name"), request.getParameter("address"), request.getParameter("longitude"),

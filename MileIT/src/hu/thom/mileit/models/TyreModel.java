@@ -105,15 +105,19 @@ public class TyreModel extends Model {
 	private int sizeR;
 	private Axis axis;
 	private Date purchaseDate;
+	private TyreEventModel tyreEventModel;
 
 	public TyreModel() {
 	}
 
-	public TyreModel(int tyre_id, int user_id, int car_id, byte tyreType, int sizeW, int sizeH, int sizeR, int manufacturerId,
-			String manufacturerName, String model, byte axis, Timestamp purchaseDate) {
+	public TyreModel(String id) {
+		setId(id);
+	}
+
+	public TyreModel(int tyre_id, int user_id, byte tyreType, int sizeW, int sizeH, int sizeR, int manufacturerId, String manufacturerName,
+			String model, byte axis, Timestamp purchaseDate) {
 		setId(tyre_id);
 		setUser(new UserModel(user_id));
-		setCar(new CarModel(car_id));
 		this.type = TyreType.fromCode(tyreType);
 		this.sizeW = sizeW;
 		this.sizeR = sizeR;
@@ -128,9 +132,6 @@ public class TyreModel extends Model {
 	public TyreModel(Map<String, String[]> params, UserModel user) {
 		setManufacturerId(params.get("manufacturer")[0]);
 		this.model = params.get("model")[0];
-
-		// FIXME
-		setCar(new CarModel());
 
 		setSizeW(params.get("width")[0]);
 		setSizeH(params.get("height")[0]);
@@ -251,6 +252,14 @@ public class TyreModel extends Model {
 		} catch (Exception e) {
 			this.sizeR = 0;
 		}
+	}
+
+	public TyreEventModel getTyreEventModel() {
+		return tyreEventModel;
+	}
+
+	public void setTyreEventModel(TyreEventModel tyreEventModel) {
+		this.tyreEventModel = tyreEventModel;
 	}
 
 	public Axis getAxis() {

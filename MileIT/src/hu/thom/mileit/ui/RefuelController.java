@@ -57,7 +57,7 @@ public class RefuelController extends Controller {
 		assignedObjects.put(UIKeys.PLACES, dbm.getPlaces(user.getId()));
 		assignedObjects.put(UIKeys.PMS, dbm.getPaymentMethods(user.getId()));
 		assignedObjects.put(UIKeys.REFUELS, dbm.getRefuels(user.getId()));
-		
+
 		switch (m) {
 		case UIKeys.MODE_NEW:
 			assignedObjects.remove(UIKeys.REFUELS);
@@ -96,14 +96,7 @@ public class RefuelController extends Controller {
 
 		parseMode(request);
 
-		String[] mustElements = { "car", "unitPrice", "amount" };
-		for (String key : mustElements) {
-			if (request.getParameter(key) == null || "".equalsIgnoreCase(request.getParameter(key))) {
-				validationMessages.add(key);
-			} else {
-				validationMessages.remove(key);
-			}
-		}
+		checkValidationMessages(UIKeys.FORM_ME_REFUEL, validationMessages, request);
 
 		if (validationMessages.isEmpty()) {
 			RefuelModel rf = new RefuelModel();

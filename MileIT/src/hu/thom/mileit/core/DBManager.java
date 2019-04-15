@@ -21,7 +21,10 @@ import hu.thom.mileit.models.MaintenanceModel;
 import hu.thom.mileit.models.PaymentMethodModel;
 import hu.thom.mileit.models.PlaceModel;
 import hu.thom.mileit.models.RefuelModel;
+import hu.thom.mileit.models.TyreEventModel;
 import hu.thom.mileit.models.TyreModel;
+import hu.thom.mileit.models.TyreModel.Axis;
+import hu.thom.mileit.models.TyreModel.TyreType;
 import hu.thom.mileit.models.UserModel;
 
 /**
@@ -75,7 +78,7 @@ public class DBManager implements Serializable {
 	/**
 	 * Method to be able to archive a car when the user decided to.
 	 * 
-	 * @param id int the user id
+	 * @param id int the car's id
 	 * @return true on success, false otherwise
 	 */
 	public boolean archiveCar(int id) {
@@ -90,6 +93,30 @@ public class DBManager implements Serializable {
 
 		} catch (Exception e) {
 			logger.logException("archiveCar()", e);
+		} finally {
+			closeConnection();
+		}
+		return false;
+	}
+	
+	/**
+	 * Method to be able to archive a tyre when the user decided to.
+	 * 
+	 * @param id int the tyre's ID
+	 * @return true on success, false otherwise
+	 */
+	public boolean archiveTyre(int id) {
+		try {
+			con = ds.getConnection();
+			ps = con.prepareStatement(DBCommands.SQL_U_TYRE_ARCHIVE);
+			ps.setInt(1, id);
+
+			if (ps.executeUpdate() >= 1) {
+				return true;
+			}
+
+		} catch (Exception e) {
+			logger.logException("archiveTyre()", e);
 		} finally {
 			closeConnection();
 		}
@@ -301,23 +328,23 @@ public class DBManager implements Serializable {
 	 */
 	public boolean createUpdateTyre(TyreModel tyre) {
 		if (tyre != null) {
+			System.out.println(tyre);
 			try {
 				con = ds.getConnection();
 				ps = con.prepareStatement(tyre.getOperation() == 0 ? DBCommands.SQL_I_TYRE : DBCommands.SQL_U_TYRE);
-				ps.setInt(1, tyre.getCar().getId());
-				ps.setInt(2, tyre.getType().getCode());
-				ps.setInt(3, tyre.getManufacturerId());
-				ps.setString(4, tyre.getModel());
-				ps.setInt(5, tyre.getAxis().getCode());
-				ps.setInt(6, tyre.getSizeR());
-				ps.setInt(7, tyre.getSizeH());
-				ps.setInt(8, tyre.getSizeW());
-				ps.setTimestamp(9, new Timestamp(tyre.getPurchaseDate().getTime()));
+				ps.setInt(1, tyre.getType().getCode());
+				ps.setInt(2, tyre.getManufacturerId());
+				ps.setString(3, tyre.getModel());
+				ps.setInt(4, tyre.getAxis().getCode());
+				ps.setInt(5, tyre.getSizeR());
+				ps.setInt(6, tyre.getSizeH());
+				ps.setInt(7, tyre.getSizeW());
+				ps.setTimestamp(8, new Timestamp(tyre.getPurchaseDate().getTime()));
 
-				if (tyre.getOperation() == 1) {
-					ps.setInt(10, tyre.getUser().getId());
+				if (tyre.getOperation() == 0) {
+					ps.setInt(9, tyre.getUser().getId());
 				} else {
-					ps.setInt(10, tyre.getId());
+					ps.setInt(9, tyre.getId());
 				}
 
 				if (ps.executeUpdate() == 1) {
@@ -325,6 +352,38 @@ public class DBManager implements Serializable {
 				}
 			} catch (Exception e) {
 				logger.logException("createUpdateTyre()", e);
+			} finally {
+				closeConnection();
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Creates a new record in table 'tyres_events'
+	 * 
+	 * @param car {@link TyreEventModel} a tyre event object
+	 * @return true on success, false otherwise
+	 */
+	public boolean createTyreEvent(TyreEventModel tyreEvent) {
+		if (tyreEvent != null) {
+			try {
+				con = ds.getConnection();
+				ps = con.prepareStatement(DBCommands.SQL_I_TYRE_EVENT);
+
+				ps.setInt(1, tyreEvent.getTyre().getId());
+				ps.setInt(2, tyreEvent.getUser().getId());
+				ps.setInt(3, tyreEvent.getCar().getId());
+				ps.setDouble(4, tyreEvent.getOdometerStart());
+				ps.setDouble(5, tyreEvent.getOdometerEnd());
+				ps.setTimestamp(6, new Timestamp(tyreEvent.getEventDate().getTime()));
+
+				if (ps.executeUpdate() == 1) {
+					return true;
+				}
+			} catch (Exception e) {
+				logger.logException("createTyreEvent()", e);
 			} finally {
 				closeConnection();
 			}
@@ -511,8 +570,8 @@ public class DBManager implements Serializable {
 			rs = ps.executeQuery();
 
 			if (rs.next()) {
-				tyre = new TyreModel(rs.getInt(1), rs.getInt(2), rs.getInt(3), (byte) rs.getInt(4), rs.getInt(5), rs.getInt(6), rs.getInt(7),
-						rs.getInt(8), rs.getString(9), rs.getString(10), (byte) rs.getInt(11), rs.getTimestamp(12));
+				tyre = new TyreModel(rs.getInt(1), rs.getInt(2), (byte) rs.getInt(3), rs.getInt(4), rs.getInt(5), rs.getInt(6), rs.getInt(7),
+						rs.getString(8), rs.getString(9), (byte) rs.getInt(10), rs.getTimestamp(11));
 			}
 
 		} catch (Exception e) {
@@ -541,9 +600,25 @@ public class DBManager implements Serializable {
 
 			rs = ps.executeQuery();
 
+			TyreModel t = null;
 			while (rs.next()) {
-				tyres.add(new TyreModel(rs.getInt(1), rs.getInt(2), rs.getInt(3), (byte) rs.getInt(4), rs.getInt(5), rs.getInt(6), rs.getInt(7),
-						rs.getInt(8), rs.getString(9), rs.getString(10), (byte) rs.getInt(11), rs.getTimestamp(12)));
+				t = new TyreModel();
+				t.setId(rs.getInt(1));
+				t.setSizeR(rs.getInt(2));
+				t.setSizeW(rs.getInt(3));
+				t.setSizeH(rs.getInt(4));
+				t.setManufacturerId(rs.getInt(5));
+				t.setType(TyreType.fromCode((byte) rs.getInt(6)));
+				t.setAxis(Axis.fromCode((byte) rs.getInt(7)));
+				t.setPurchaseDate(rs.getTimestamp(8));
+				t.setModel(rs.getString(10));
+				t.setManufacturerName(rs.getString(9));
+				t.setCar(new CarModel(rs.getInt(16), rs.getString(17), rs.getString(18)));
+
+				t.setTyreEventModel(
+						new TyreEventModel(rs.getTimestamp(13), rs.getTimestamp(14), rs.getDouble(15), rs.getDouble(11), rs.getDouble(12)));
+
+				tyres.add(t);
 			}
 		} catch (Exception e) {
 			logger.logException("getTyres()", e);

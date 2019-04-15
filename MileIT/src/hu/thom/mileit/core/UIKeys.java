@@ -11,6 +11,15 @@ import java.io.Serializable;
 public class UIKeys implements Serializable {
 	private static final long serialVersionUID = -1572929004551162917L;
 
+	// Form submission must elements
+	public static final String[] FORM_ME_CARS = { "manufacturer", "fuel", "model", "vin", "plateNumber", "status" };
+	public static final String[] FORM_ME_MAINTENANCE = { "car", "odometer", "paymentMethod", "amount", "maintenanceDate" };
+	public static final String[] FORM_ME_TYRE = { "manufacturer", "model", "width", "height", "radius", "axis", "type" };
+	public static final String[] FORM_ME_TYRE_EVENT = { "car", "odometer_start" };
+	public static final String[] FORM_ME_REFUEL = { "car", "unitPrice", "amount" };
+	public static final String[] FORM_ME_PLACE = { "name" };
+	public static final String[] FORM_ME_PAYMENT_METHOD = { "name" };
+
 	// General controller keys
 	public static final String VERSION = "v";
 	public static final String PAGE = "page";
@@ -19,6 +28,7 @@ public class UIKeys implements Serializable {
 	public static final String STATUS = "status";
 	public static final String MODE_NEW = "new";
 	public static final String MODE_ = "";
+	public static final String MODE_MAP = "map";
 	public static final String MODE_ARCHIVE = "archive";
 	public static final String MODE_UPDATE = "update";
 	public static final String MODE_CANCEL = "cancel";
@@ -48,4 +58,5 @@ public class UIKeys implements Serializable {
 	// TyreController
 	public static final String TYRES = "tyres";
 	public static final String TYRE_VENDORS = "tyreVendors";
+	public static final String TYRE_EVENTS = "tes";
 }
