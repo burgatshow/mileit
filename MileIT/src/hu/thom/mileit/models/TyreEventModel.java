@@ -1,13 +1,10 @@
 package hu.thom.mileit.models;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 
 public class TyreEventModel extends Model {
 	private static final long serialVersionUID = 736208459104609557L;
-
-	private SimpleDateFormat sdfDates = new SimpleDateFormat("yyyy-MM-dd");
 
 	private double odometerStart;
 	private double odometerEnd;
@@ -78,7 +75,7 @@ public class TyreEventModel extends Model {
 
 	public void setEventDate(String eventDate) {
 		try {
-			this.eventDate = sdfDates.parse(eventDate);
+			this.eventDate = this.getSdfDates().parse(eventDate);
 		} catch (Exception e) {
 			this.eventDate = new Date();
 		}

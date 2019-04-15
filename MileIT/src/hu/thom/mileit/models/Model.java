@@ -1,14 +1,12 @@
 package hu.thom.mileit.models;
 
-import java.io.Serializable;
-
 /**
  * Super model holding general attributes for other models
  * 
  * @author thom <tamas.bures@protonmail.com>
  *
  */
-public class Model implements Serializable {
+public class Model extends DateModel {
 	private static final long serialVersionUID = -6095129005934760543L;
 
 	private int id;

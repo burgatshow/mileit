@@ -1,7 +1,6 @@
 package hu.thom.mileit.models;
 
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 
@@ -13,9 +12,6 @@ import java.util.Map;
  */
 public class CarModel extends Model {
 	private static final long serialVersionUID = -5197813796132584702L;
-
-	private SimpleDateFormat sdfManufactureDate = new SimpleDateFormat("yyyy");
-	private SimpleDateFormat sdfDates = new SimpleDateFormat("yyyy-MM-dd");
 
 	public static enum Fuel {
 		PETROL((byte) 1), DIESEL((byte) 2), ELECTRIC((byte) 3), BIOETHANOL((byte) 4), OTHER((byte) 5);
@@ -200,7 +196,7 @@ public class CarModel extends Model {
 
 	public void setManufacturerDate(String manufacturerDate) {
 		try {
-			this.manufacturerDate = sdfManufactureDate.parse(manufacturerDate);
+			this.manufacturerDate = this.getSdfManufacturerDate().parse(manufacturerDate);
 		} catch (Exception e) {
 			this.manufacturerDate = null;
 		}
@@ -268,7 +264,7 @@ public class CarModel extends Model {
 
 	public void setStartDate(String startDate) {
 		try {
-			this.startDate = sdfDates.parse(startDate);
+			this.startDate = this.getSdfDates().parse(startDate);
 		} catch (Exception e) {
 			this.startDate = null;
 		}
@@ -292,7 +288,7 @@ public class CarModel extends Model {
 
 	public void setEndDate(String endDate) {
 		try {
-			this.endDate = sdfDates.parse(endDate);
+			this.endDate = this.getSdfDates().parse(endDate);
 		} catch (Exception e) {
 			this.endDate = null;
 		}
