@@ -95,8 +95,6 @@ public class TyreModel extends Model {
 	}
 
 	private TyreType type;
-	private CarModel car;
-	private UserModel user;
 	private int manufacturerId;
 	private String manufacturerName;
 	private String model;
@@ -105,7 +103,6 @@ public class TyreModel extends Model {
 	private int sizeR;
 	private Axis axis;
 	private Date purchaseDate;
-	private TyreEventModel tyreEventModel;
 
 	public TyreModel() {
 	}
@@ -139,7 +136,7 @@ public class TyreModel extends Model {
 		setType(params.get("type")[0]);
 		setAxis(params.get("axis")[0]);
 		setPurchaseDate(params.get("purchaseDate")[0]);
-		this.user = user;
+		this.setUser(user);
 	}
 
 	public TyreType getType() {
@@ -156,22 +153,6 @@ public class TyreModel extends Model {
 		} catch (Exception e) {
 			this.type = TyreType.OTHER;
 		}
-	}
-
-	public CarModel getCar() {
-		return car;
-	}
-
-	public void setCar(CarModel car) {
-		this.car = car;
-	}
-
-	public UserModel getUser() {
-		return user;
-	}
-
-	public void setUser(UserModel user) {
-		this.user = user;
 	}
 
 	public int getManufacturerId() {
@@ -254,14 +235,6 @@ public class TyreModel extends Model {
 		}
 	}
 
-	public TyreEventModel getTyreEventModel() {
-		return tyreEventModel;
-	}
-
-	public void setTyreEventModel(TyreEventModel tyreEventModel) {
-		this.tyreEventModel = tyreEventModel;
-	}
-
 	public Axis getAxis() {
 		return axis;
 	}
@@ -299,15 +272,14 @@ public class TyreModel extends Model {
 		final int prime = 31;
 		int result = super.hashCode();
 		result = prime * result + ((axis == null) ? 0 : axis.hashCode());
-		result = prime * result + ((car == null) ? 0 : car.hashCode());
 		result = prime * result + manufacturerId;
+		result = prime * result + ((manufacturerName == null) ? 0 : manufacturerName.hashCode());
 		result = prime * result + ((model == null) ? 0 : model.hashCode());
 		result = prime * result + ((purchaseDate == null) ? 0 : purchaseDate.hashCode());
 		result = prime * result + sizeH;
 		result = prime * result + sizeR;
 		result = prime * result + sizeW;
 		result = prime * result + ((type == null) ? 0 : type.hashCode());
-		result = prime * result + ((user == null) ? 0 : user.hashCode());
 		return result;
 	}
 
@@ -322,12 +294,12 @@ public class TyreModel extends Model {
 		TyreModel other = (TyreModel) obj;
 		if (axis != other.axis)
 			return false;
-		if (car == null) {
-			if (other.car != null)
-				return false;
-		} else if (!car.equals(other.car))
-			return false;
 		if (manufacturerId != other.manufacturerId)
+			return false;
+		if (manufacturerName == null) {
+			if (other.manufacturerName != null)
+				return false;
+		} else if (!manufacturerName.equals(other.manufacturerName))
 			return false;
 		if (model == null) {
 			if (other.model != null)
@@ -347,18 +319,13 @@ public class TyreModel extends Model {
 			return false;
 		if (type != other.type)
 			return false;
-		if (user == null) {
-			if (other.user != null)
-				return false;
-		} else if (!user.equals(other.user))
-			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "TyreModel [type=" + type + ", car=" + car + ", user=" + user + ", manufacturer=" + manufacturerId + ", model=" + model + ", sizeW="
-				+ sizeW + ", sizeH=" + sizeH + ", sizeR=" + sizeR + ", axis=" + axis + ", purchaseDate=" + purchaseDate + ", toString()="
+		return "TyreModel [type=" + type + ", manufacturerId=" + manufacturerId + ", manufacturerName=" + manufacturerName + ", model=" + model
+				+ ", sizeW=" + sizeW + ", sizeH=" + sizeH + ", sizeR=" + sizeR + ", axis=" + axis + ", purchaseDate=" + purchaseDate + ", toString()="
 				+ super.toString() + "]";
 	}
 

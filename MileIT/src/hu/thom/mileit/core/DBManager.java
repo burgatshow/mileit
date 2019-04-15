@@ -638,9 +638,7 @@ public class DBManager implements Serializable {
 				t.setModel(rs.getString(10));
 				t.setManufacturerName(rs.getString(9));
 				t.setCar(new CarModel(rs.getInt(16), rs.getString(17), rs.getString(18)));
-
-				t.setTyreEventModel(
-						new TyreEventModel(rs.getTimestamp(13), rs.getTimestamp(14), rs.getDouble(15), rs.getDouble(11), rs.getDouble(12)));
+				t.setTyreEvent(new TyreEventModel(rs.getTimestamp(13), rs.getTimestamp(14), rs.getDouble(15), rs.getDouble(11), rs.getDouble(12)));
 
 				tyres.add(t);
 			}

@@ -33,7 +33,7 @@
 					<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
 						<a class="dropdown-item" href="refuels"> <fmt:message key="menu.refuels" />
 						</a> <a class="dropdown-item" href="payment_methods"><fmt:message key="menu.refuels.payment" /></a> <a class="dropdown-item" href="places">
-							<fmt:message key="menu.refuels.locations" />
+							<fmt:message key="menu.refuels.places" />
 						</a>
 					</div></li>
 				<li class="nav-item <c:if test="${not empty page and page eq 'stats' }">active</c:if>"><a class="nav-link" href="stats"> <fmt:message

@@ -35,10 +35,10 @@
 			<div class="col-md-12">
 				<h1>
 					<c:if test="${not empty places}">
-						<fmt:message key="locations.title.edit" />
+						<fmt:message key="places.title.edit" />
 					</c:if>
 					<c:if test="${empty places}">
-						<fmt:message key="locations.title.new" />
+						<fmt:message key="places.title.new" />
 					</c:if>
 				</h1>
 			</div>
@@ -50,19 +50,19 @@
 			<div class="row">
 				<div class="col-md-12">
 					<div class="form-group">
-						<label for="name"><fmt:message key="locations.form.name" /><span class="ml-1 badge badge-pill badge-primary"> <fmt:message
-									key="form.mandatory" /></span><span data-toggle="tooltip" title="<fmt:message key="locations.form.name.tooltip" />"
+						<label for="name"><fmt:message key="places.form.name" /><span class="ml-1 badge badge-pill badge-primary"> <fmt:message
+									key="form.mandatory" /></span><span data-toggle="tooltip" title="<fmt:message key="places.form.name.tooltip" />"
 							class="ml-1 badge badge-pill badge-info">?</span></label> <input name="name" type="text"
 							class="form-control <c:if test="${validationMessages.contains('name') }">is-invalid</c:if>" id="name"
-							placeholder="<fmt:message key="locations.form.name" />"
+							placeholder="<fmt:message key="places.form.name" />"
 							value="<c:out value="${not empty param.name ? param.name : not empty places ? places.name : ''}" />">
 					</div>
 				</div>
 				<div class="col-md-12">
 					<div class="form-group">
-						<label for="address"><fmt:message key="locations.form.address" /><span data-toggle="tooltip"
-							title="<fmt:message key="locations.form.address.tooltip" />" class="ml-1 badge badge-pill badge-info">?</span></label> <input name="address"
-							type="text" class="form-control" id="address" placeholder="<fmt:message key="locations.form.address" />"
+						<label for="address"><fmt:message key="places.form.address" /><span data-toggle="tooltip"
+							title="<fmt:message key="places.form.address.tooltip" />" class="ml-1 badge badge-pill badge-info">?</span></label> <input name="address"
+							type="text" class="form-control" id="address" placeholder="<fmt:message key="places.form.address" />"
 							value="<c:out value="${not empty param.address ? param.address : not empty places ? places.address : ''}" />">
 					</div>
 				</div>
@@ -70,17 +70,17 @@
 			<div class="row">
 				<div class="col-md-6">
 					<div class="form-group">
-						<label for="latitude"><fmt:message key="locations.form.latitude" /><span data-toggle="tooltip"
-							title="<fmt:message key="locations.form.latitude.tooltip" />" class="ml-1 badge badge-pill badge-info">?</span></label> <input name="latitude"
-							type="text" class="form-control" id="latitude" placeholder="<fmt:message key="locations.form.latitude" />"
+						<label for="latitude"><fmt:message key="places.form.latitude" /><span data-toggle="tooltip"
+							title="<fmt:message key="places.form.latitude.tooltip" />" class="ml-1 badge badge-pill badge-info">?</span></label> <input name="latitude"
+							type="text" class="form-control" id="latitude" placeholder="<fmt:message key="places.form.latitude" />"
 							value="<c:out value="${not empty param.latitude ? param.latitude : not empty places ? places.latitude : ''}" />">
 					</div>
 				</div>
 				<div class="col-md-6">
 					<div class="form-group">
-						<label for="longitude"><fmt:message key="locations.form.longitude" /><span data-toggle="tooltip"
-							title="<fmt:message key="locations.form.longitude.tooltip" />" class="ml-1 badge badge-pill badge-info">?</span></label> <input name="longitude"
-							type="text" class="form-control" id="longitude" placeholder="<fmt:message key="locations.form.longitude" />"
+						<label for="longitude"><fmt:message key="places.form.longitude" /><span data-toggle="tooltip"
+							title="<fmt:message key="places.form.longitude.tooltip" />" class="ml-1 badge badge-pill badge-info">?</span></label> <input name="longitude"
+							type="text" class="form-control" id="longitude" placeholder="<fmt:message key="places.form.longitude" />"
 							value="<c:out value="${not empty param.longitude ? param.longitude : not empty places ? places.longitude : ''}" />">
 					</div>
 				</div>

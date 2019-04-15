@@ -9,9 +9,6 @@ public class TyreEventModel extends Model {
 
 	private SimpleDateFormat sdfDates = new SimpleDateFormat("yyyy-MM-dd");
 
-	private CarModel car;
-	private TyreModel tyre;
-	private UserModel user;
 	private double odometerStart;
 	private double odometerEnd;
 	private double totalDistance;
@@ -31,28 +28,12 @@ public class TyreEventModel extends Model {
 	}
 
 	public TyreEventModel(Map<String, String[]> params, UserModel user) {
-		this.car = new CarModel(params.get("car")[0]);
-		this.tyre = new TyreModel(params.get("id")[0]);
+		this.setCar(new CarModel(params.get("car")[0]));
+		this.setTyre(new TyreModel(params.get("id")[0]));
 		setOdometerStart(params.get("odometer_start")[0]);
 		setOdometerEnd(params.get("odometer_end")[0]);
 		setEventDate(params.get("changeDate")[0]);
-		this.user = user;
-	}
-
-	public CarModel getCar() {
-		return car;
-	}
-
-	public void setCar(CarModel car) {
-		this.car = car;
-	}
-
-	public TyreModel getTyre() {
-		return tyre;
-	}
-
-	public void setTyre(TyreModel tyre) {
-		this.tyre = tyre;
+		this.setUser(user);
 	}
 
 	public double getOdometerStart() {
@@ -127,26 +108,20 @@ public class TyreEventModel extends Model {
 		this.dateEnd = dateEnd;
 	}
 
-	public UserModel getUser() {
-		return user;
-	}
-
-	public void setUser(UserModel user) {
-		this.user = user;
-	}
-
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + ((car == null) ? 0 : car.hashCode());
+		result = prime * result + ((dateEnd == null) ? 0 : dateEnd.hashCode());
+		result = prime * result + ((dateStart == null) ? 0 : dateStart.hashCode());
 		result = prime * result + ((eventDate == null) ? 0 : eventDate.hashCode());
 		long temp;
 		temp = Double.doubleToLongBits(odometerEnd);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
 		temp = Double.doubleToLongBits(odometerStart);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
-		result = prime * result + ((tyre == null) ? 0 : tyre.hashCode());
+		temp = Double.doubleToLongBits(totalDistance);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
 		return result;
 	}
 
@@ -159,10 +134,15 @@ public class TyreEventModel extends Model {
 		if (getClass() != obj.getClass())
 			return false;
 		TyreEventModel other = (TyreEventModel) obj;
-		if (car == null) {
-			if (other.car != null)
+		if (dateEnd == null) {
+			if (other.dateEnd != null)
 				return false;
-		} else if (!car.equals(other.car))
+		} else if (!dateEnd.equals(other.dateEnd))
+			return false;
+		if (dateStart == null) {
+			if (other.dateStart != null)
+				return false;
+		} else if (!dateStart.equals(other.dateStart))
 			return false;
 		if (eventDate == null) {
 			if (other.eventDate != null)
@@ -173,18 +153,15 @@ public class TyreEventModel extends Model {
 			return false;
 		if (Double.doubleToLongBits(odometerStart) != Double.doubleToLongBits(other.odometerStart))
 			return false;
-		if (tyre == null) {
-			if (other.tyre != null)
-				return false;
-		} else if (!tyre.equals(other.tyre))
+		if (Double.doubleToLongBits(totalDistance) != Double.doubleToLongBits(other.totalDistance))
 			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "TyreEventModel [car=" + car + ", tyre=" + tyre + ", odometerStart=" + odometerStart + ", odometerEnd=" + odometerEnd + ", eventDate="
-				+ eventDate + ", toString()=" + super.toString() + "]";
+		return "TyreEventModel [odometerStart=" + odometerStart + ", odometerEnd=" + odometerEnd + ", totalDistance=" + totalDistance + ", dateStart="
+				+ dateStart + ", dateEnd=" + dateEnd + ", eventDate=" + eventDate + ", toString()=" + super.toString() + "]";
 	}
 
 }

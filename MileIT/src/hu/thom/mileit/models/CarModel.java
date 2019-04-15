@@ -77,7 +77,6 @@ public class CarModel extends Model {
 	private String description;
 	private String friendlyName;
 	private boolean active;
-	private UserModel user;
 
 	public CarModel() {
 	}
@@ -89,7 +88,7 @@ public class CarModel extends Model {
 	public CarModel(String id) {
 		setId(id);
 	}
-	
+
 	public CarModel(int id, String friendlyName, String plateNumber) {
 		setId(id);
 		this.friendlyName = friendlyName;
@@ -111,9 +110,9 @@ public class CarModel extends Model {
 		this.friendlyName = params.get("friendlyName")[0];
 		setActive(params.get("status")[0]);
 
-		this.user = user;
+		this.setUser(user);
 	}
-	
+
 	public String getManufacturerName() {
 		return manufacturerName;
 	}
@@ -338,14 +337,6 @@ public class CarModel extends Model {
 		}
 	}
 
-	public UserModel getUser() {
-		return user;
-	}
-
-	public void setUser(UserModel user) {
-		this.user = user;
-	}
-
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -364,10 +355,7 @@ public class CarModel extends Model {
 		result = prime * result + ((manufacturerName == null) ? 0 : manufacturerName.hashCode());
 		result = prime * result + ((model == null) ? 0 : model.hashCode());
 		result = prime * result + ((plateNumber == null) ? 0 : plateNumber.hashCode());
-		result = prime * result + ((sdfDates == null) ? 0 : sdfDates.hashCode());
-		result = prime * result + ((sdfManufactureDate == null) ? 0 : sdfManufactureDate.hashCode());
 		result = prime * result + ((startDate == null) ? 0 : startDate.hashCode());
-		result = prime * result + ((user == null) ? 0 : user.hashCode());
 		result = prime * result + ((vin == null) ? 0 : vin.hashCode());
 		return result;
 	}
@@ -429,25 +417,10 @@ public class CarModel extends Model {
 				return false;
 		} else if (!plateNumber.equals(other.plateNumber))
 			return false;
-		if (sdfDates == null) {
-			if (other.sdfDates != null)
-				return false;
-		} else if (!sdfDates.equals(other.sdfDates))
-			return false;
-		if (sdfManufactureDate == null) {
-			if (other.sdfManufactureDate != null)
-				return false;
-		} else if (!sdfManufactureDate.equals(other.sdfManufactureDate))
-			return false;
 		if (startDate == null) {
 			if (other.startDate != null)
 				return false;
 		} else if (!startDate.equals(other.startDate))
-			return false;
-		if (user == null) {
-			if (other.user != null)
-				return false;
-		} else if (!user.equals(other.user))
 			return false;
 		if (vin == null) {
 			if (other.vin != null)
@@ -459,10 +432,10 @@ public class CarModel extends Model {
 
 	@Override
 	public String toString() {
-		return "CarModel [sdfManufactureDate=" + sdfManufactureDate + ", sdfDates=" + sdfDates + ", manufacturer=" + manufacturer + ", model=" + model
-				+ ", manufacturerDate=" + manufacturerDate + ", color=" + color + ", vin=" + vin + ", plateNumber=" + plateNumber + ", fuel=" + fuel
-				+ ", fuelCapacity=" + fuelCapacity + ", startDate=" + startDate + ", endDate=" + endDate + ", description=" + description
-				+ ", friendlyName=" + friendlyName + ", active=" + active + ", user=" + user + "]";
+		return "CarModel [manufacturer=" + manufacturer + ", manufacturerName=" + manufacturerName + ", model=" + model + ", manufacturerDate="
+				+ manufacturerDate + ", color=" + color + ", vin=" + vin + ", plateNumber=" + plateNumber + ", fuel=" + fuel + ", fuelCapacity="
+				+ fuelCapacity + ", startDate=" + startDate + ", endDate=" + endDate + ", description=" + description + ", friendlyName="
+				+ friendlyName + ", active=" + active + ", toString()=" + super.toString() + "]";
 	}
 
 }

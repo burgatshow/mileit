@@ -26,17 +26,17 @@
 			<div class="col-md-12">
 				<c:if test="${status eq '0'}">
 					<div class="alert alert-dismissible alert-success">
-						<fmt:message key="locations.status.add.ok" />
+						<fmt:message key="places.status.add.ok" />
 					</div>
 				</c:if>
 				<c:if test="${status eq '1'}">
 					<div class="alert alert-dismissible alert-success">
-						<fmt:message key="locations.status.edit.ok" />
+						<fmt:message key="places.status.edit.ok" />
 					</div>
 				</c:if>
 				<c:if test="${status eq -1}">
 					<div class="alert alert-dismissible alert-danger mt-4">
-						<fmt:message key="locations.status.nok" />
+						<fmt:message key="places.status.nok" />
 					</div>
 				</c:if>
 			</div>
@@ -45,7 +45,7 @@
 		<div class="row">
 			<div class="col-md-12">
 				<h1>
-					<fmt:message key="locations.title" />
+					<fmt:message key="places.title" />
 				</h1>
 			</div>
 		</div>
@@ -61,7 +61,7 @@
 				<table class="mt-3 table table-bordered table-striped table-condensed table-hover" id="cars">
 					<thead class="thead-light">
 						<tr>
-							<th><fmt:message key="locations.form.name" /></th>
+							<th><fmt:message key="places.form.name" /></th>
 							<th class="text-center"><fmt:message key="table.actions" /></th>
 						</tr>
 					</thead>
