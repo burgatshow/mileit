@@ -98,7 +98,7 @@ public class DBManager implements Serializable {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Method to be able to archive a tyre when the user decided to.
 	 * 
@@ -117,6 +117,30 @@ public class DBManager implements Serializable {
 
 		} catch (Exception e) {
 			logger.logException("archiveTyre()", e);
+		} finally {
+			closeConnection();
+		}
+		return false;
+	}
+
+	/**
+	 * Method to be able to archive a place when the user decided to.
+	 * 
+	 * @param id int the place's ID
+	 * @return true on success, false otherwise
+	 */
+	public boolean archivePlace(int id) {
+		try {
+			con = ds.getConnection();
+			ps = con.prepareStatement(DBCommands.SQL_U_PLACE_ARCHIVE);
+			ps.setInt(1, id);
+
+			if (ps.executeUpdate() >= 1) {
+				return true;
+			}
+
+		} catch (Exception e) {
+			logger.logException("archivePlace()", e);
 		} finally {
 			closeConnection();
 		}
@@ -239,7 +263,7 @@ public class DBManager implements Serializable {
 					return true;
 				}
 			} catch (Exception e) {
-				logger.logException("createUpdateLocation()", e);
+				logger.logException("createUpdatePlace()", e);
 			} finally {
 				closeConnection();
 			}
@@ -405,7 +429,7 @@ public class DBManager implements Serializable {
 				ps = con.prepareStatement(rf.getOperation() == 0 ? DBCommands.SQL_I_REFUEL : DBCommands.SQL_U_REFUEL);
 
 				ps.setInt(1, rf.getCar().getId());
-				ps.setInt(2, rf.getLocation().getId());
+				ps.setInt(2, rf.getPlace().getId());
 				ps.setTimestamp(3, rf.getRefuelDateAsTimestamp());
 				ps.setInt(4, rf.getUser().getId());
 				ps.setDouble(5, rf.getOdometer());
@@ -710,7 +734,7 @@ public class DBManager implements Serializable {
 				rf.setCar(new CarModel());
 				rf.getCar().setId(rs.getInt(1));
 				rf.setId(rs.getInt(2));
-				rf.setLocation(new PlaceModel(rs.getInt(3)));
+				rf.setPlace(new PlaceModel(rs.getInt(3)));
 				rf.setRefuelDate(rs.getTimestamp(4));
 				rf.setOdometer(rs.getDouble(5));
 				rf.setFuelAmount(rs.getDouble(6));
@@ -745,7 +769,7 @@ public class DBManager implements Serializable {
 				l = new PlaceModel(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getInt(4), rs.getDouble(5), rs.getDouble(6));
 			}
 		} catch (Exception e) {
-			logger.logException("getLocation()", e);
+			logger.logException("getPlace()", e);
 		} finally {
 			closeConnection();
 		}
@@ -774,7 +798,7 @@ public class DBManager implements Serializable {
 				ls.add(new PlaceModel(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getDouble(4), rs.getDouble(5)));
 			}
 		} catch (Exception e) {
-			logger.logException("getLocations()", e);
+			logger.logException("getPlaces()", e);
 		} finally {
 			closeConnection();
 		}
@@ -931,7 +955,7 @@ public class DBManager implements Serializable {
 			if (rs.next()) {
 				rf = new RefuelModel(rs.getInt(1));
 				rf.setCar(new CarModel(rs.getInt(2)));
-				rf.setLocation(new PlaceModel(rs.getInt(3)));
+				rf.setPlace(new PlaceModel(rs.getInt(3)));
 				rf.setRefuelDate(rs.getTimestamp(4));
 				rf.setOdometer(rs.getDouble(5));
 				rf.setUnitPrice(rs.getDouble(6));
@@ -969,7 +993,7 @@ public class DBManager implements Serializable {
 			while (rs.next()) {
 				refuel = new RefuelModel(rs.getInt(1));
 				refuel.setCar(new CarModel(rs.getInt(2), rs.getString(12), rs.getString(11)));
-				refuel.setLocation(new PlaceModel(rs.getInt(3), rs.getString(13), null, 0, 0));
+				refuel.setPlace(new PlaceModel(rs.getInt(3), rs.getString(13), null, 0, 0));
 				refuel.setRefuelDate(rs.getTimestamp(4));
 				refuel.setOdometer(rs.getDouble(5));
 				refuel.setFuelAmount(rs.getDouble(7));

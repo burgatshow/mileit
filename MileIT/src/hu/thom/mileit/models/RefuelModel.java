@@ -84,12 +84,12 @@ public class RefuelModel extends Model {
 		this.car = car;
 	}
 
-	public PlaceModel getLocation() {
+	public PlaceModel getPlace() {
 		return location;
 	}
 
-	public void setLocation(PlaceModel location) {
-		this.location = location;
+	public void setPlace(PlaceModel place) {
+		this.location = place;
 	}
 
 	public PaymentMethodModel getPayment() {

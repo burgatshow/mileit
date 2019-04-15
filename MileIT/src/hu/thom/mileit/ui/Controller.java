@@ -35,8 +35,8 @@ public class Controller extends HttpServlet {
 	public static final String REFUELS_FORM = "/WEB-INF/pages/refuels-form.jsp";
 	public static final String PAYMENT_METHODS = "/WEB-INF/pages/payment-methods.jsp";
 	public static final String PAYMENT_METHODS_FORM = "/WEB-INF/pages/payment-methods-form.jsp";
-	public static final String PLACES = "/WEB-INF/pages/locations.jsp";
-	public static final String PLACES_FORM = "/WEB-INF/pages/locations-form.jsp";
+	public static final String PLACES = "/WEB-INF/pages/places.jsp";
+	public static final String PLACES_FORM = "/WEB-INF/pages/places-form.jsp";
 	public static final String PROFILE_FORM = "/WEB-INF/pages/profile-form.jsp";
 	public static final String MAINTENANCES = "/WEB-INF/pages/maintenances.jsp";
 	public static final String MAINTENANCES_FORM = "/WEB-INF/pages/maintenances-form.jsp";

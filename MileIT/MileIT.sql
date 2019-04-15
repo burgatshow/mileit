@@ -71,15 +71,16 @@ CREATE TABLE IF NOT EXISTS `users` (
   `username` VARCHAR(20) NOT NULL COLLATE utf8mb4_hungarian_ci,
   `currency` VARCHAR(5) NOT NULL COLLATE utf8mb4_hungarian_ci DEFAULT 'Ft',
   `locale` VARCHAR(2) NOT NULL COLLATE utf8mb4_hungarian_ci DEFAULT 'hu',
-  `distance` TINYINT(1) UNSIGNED NOT NULL DEFAULT '1',
-  `rounded` TINYINT(1) UNSIGNED NOT NULL DEFAULT '1',
+  `distance` TINYINT(1) UNSIGNED NOT NULL DEFAULT 1,
+  `rounded` TINYINT(1) UNSIGNED NOT NULL DEFAULT 1,
+  `archived` TINYINT(1) UNSIGNED NOT NULL DEFAULT 0
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `username` (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
 CREATE TABLE IF NOT EXISTS `sup_car_manufacturers` (
   `manufacturer_id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(50) COLLATE utf8mb4_hungarian_ci NOT NULL DEFAULT '0',
+  `name` VARCHAR(50) COLLATE utf8mb4_hungarian_ci NOT NULL DEFAULT 0,
   `active` TINYINT(1) UNSIGNED NOT NULL DEFAULT 1,
   PRIMARY KEY (`manufacturer_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
@@ -231,13 +232,13 @@ CREATE TABLE IF NOT EXISTS `tyres` (
   `size_h` INT(11) UNSIGNED NOT NULL,
   `size_w` INT(11) UNSIGNED NOT NULL,
   `purchase_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `achived` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0'
+  `achived` TINYINT(1) UNSIGNED NOT NULL DEFAULT 0
   PRIMARY KEY (`tyre_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
 CREATE TABLE IF NOT EXISTS `sup_tyre_manufacturers` (
   `manufacturer_id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(50) COLLATE utf8mb4_hungarian_ci NOT NULL DEFAULT '0',
+  `name` VARCHAR(50) COLLATE utf8mb4_hungarian_ci NOT NULL DEFAULT 0,
   `active` TINYINT(1) UNSIGNED NOT NULL DEFAULT 1,
   PRIMARY KEY (`manufacturer_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;

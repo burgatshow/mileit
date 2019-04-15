@@ -101,7 +101,7 @@ public class RefuelController extends Controller {
 		if (validationMessages.isEmpty()) {
 			RefuelModel rf = new RefuelModel();
 			rf.setCar(new CarModel(request.getParameter("car")));
-			rf.setLocation(new PlaceModel(request.getParameter("location")));
+			rf.setPlace(new PlaceModel(request.getParameter("location")));
 			rf.setPayment(new PaymentMethodModel(request.getParameter("paymentMethod")));
 			rf.setUser(user);
 

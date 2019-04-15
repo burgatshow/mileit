@@ -71,7 +71,8 @@
 								<tr>
 									<td class="align-middle"><c:out value="${l.name}" /><br> <span class="badge badge-dark"><c:out value="${l.address}" /></span></td>
 									<td class="align-middle text-center"><a href="?m=update&amp;id=<c:out value="${l.id}" />" class="btn btn-primary" role="button"><fmt:message
-												key="button.edit" /></a></td>
+												key="button.edit" /></a><a href="#" data-href="?m=archive&amp;id=<c:out value="${l.id}" />" class="btn btn-danger ml-2" data-toggle="modal"
+										data-target="#confirm-archive" role="button"><fmt:message key="button.archive" /></a></td>
 								</tr>
 							</c:forEach>
 						</c:if>
