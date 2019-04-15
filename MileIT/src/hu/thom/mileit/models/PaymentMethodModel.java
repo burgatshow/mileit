@@ -11,7 +11,6 @@ public class PaymentMethodModel extends Model {
 
 	private String name;
 	private String description;
-	private UserModel user;
 
 	public PaymentMethodModel() {
 	}
@@ -38,14 +37,6 @@ public class PaymentMethodModel extends Model {
 		this.name = name;
 	}
 
-	public UserModel getUser() {
-		return user;
-	}
-
-	public void setUser(UserModel user) {
-		this.user = user;
-	}
-
 	public String getDescription() {
 		return description;
 	}
@@ -60,7 +51,6 @@ public class PaymentMethodModel extends Model {
 		int result = super.hashCode();
 		result = prime * result + ((description == null) ? 0 : description.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + ((user == null) ? 0 : user.hashCode());
 		return result;
 	}
 
@@ -83,17 +73,12 @@ public class PaymentMethodModel extends Model {
 				return false;
 		} else if (!name.equals(other.name))
 			return false;
-		if (user == null) {
-			if (other.user != null)
-				return false;
-		} else if (!user.equals(other.user))
-			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "PaymentMethodModel [name=" + name + ", description=" + description + ", user=" + user + ", toString()=" + super.toString() + "]";
+		return "PaymentMethodModel [name=" + name + ", description=" + description + ", toString()=" + super.toString() + "]";
 	}
 
 }

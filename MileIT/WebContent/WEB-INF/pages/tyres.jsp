@@ -98,15 +98,15 @@
 								</tr>
 								<tr class="table-primary">
 									<th class="align-middle text-left">First installed</th>
-									<td class="align-middle text-center"><fmt:formatDate type="both" value="${t.tyreEventModel.dateStart}" pattern="yyyy. MM. dd." /> <br>
-										<span class="badge badge-dark"><fmt:formatNumber value="${t.tyreEventModel.odometerStart}" pattern="#,##0.00" type="number"
+									<td class="align-middle text-center"><fmt:formatDate type="both" value="${t.tyreEvent.dateStart}" pattern="yyyy. MM. dd." /> <br>
+										<span class="badge badge-dark"><fmt:formatNumber value="${t.tyreEvent.odometerStart}" pattern="#,##0.00" type="number"
 												minFractionDigits="0" maxFractionDigits="${user.rounded eq 1 ? 0 : 2}" /></span></td>
 									<th class="align-middle text-left">Last removed</th>
-									<td class="align-middle text-center"><fmt:formatDate type="both" value="${t.tyreEventModel.dateEnd}" pattern="yyyy. MM. dd." /> <br>
-										<span class="badge badge-dark"><fmt:formatNumber value="${t.tyreEventModel.odometerEnd}" pattern="#,##0.00" type="number"
+									<td class="align-middle text-center"><fmt:formatDate type="both" value="${t.tyreEvent.dateEnd}" pattern="yyyy. MM. dd." /> <br>
+										<span class="badge badge-dark"><fmt:formatNumber value="${t.tyreEvent.odometerEnd}" pattern="#,##0.00" type="number"
 												minFractionDigits="0" maxFractionDigits="${user.rounded eq 1 ? 0 : 2}" /></span></td>
 									<th class="align-middle text-left">Total distance</th>
-									<td class="align-middle text-right"><fmt:formatNumber value="${t.tyreEventModel.totalDistance}" pattern="#,##0.00" type="number"
+									<td class="align-middle text-right"><fmt:formatNumber value="${t.tyreEvent.totalDistance}" pattern="#,##0.00" type="number"
 											minFractionDigits="0" maxFractionDigits="${user.rounded eq 1 ? 0 : 2}" /></td>
 								</tr>
 							</c:forEach>

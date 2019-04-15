@@ -85,7 +85,7 @@
 								<tr>
 									<td class="text-center align-middle"><c:out value="${r.car.friendlyName}" /> <br> <span class="badge badge-dark"><c:out
 												value="${r.car.plateNumber}" /></span></td>
-									<td class="align-middle"><c:out value="${r.location.name}" /><br> <span class="badge badge-dark"><fmt:formatDate
+									<td class="align-middle"><c:out value="${r.place.name}" /><br> <span class="badge badge-dark"><fmt:formatDate
 												type="both" value="${r.refuelDate}" pattern="yyyy. MM. dd." /></span></td>
 									<td class="text-right align-middle"><fmt:formatNumber value="${r.unitPrice}" type="number" pattern="#,##0.00"
 											maxFractionDigits="${user.rounded eq 1 ? 0 : 2}" minFractionDigits="0" /></td>

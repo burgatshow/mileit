@@ -16,10 +16,6 @@ public class MaintenanceModel extends Model {
 
 	private SimpleDateFormat sdfDates = new SimpleDateFormat("yyyy-MM-dd");
 
-	private CarModel car;
-	private PaymentMethodModel payment;
-	private UserModel user;
-
 	private Date maintenanceDate;
 	private double odometer;
 	private String description;
@@ -37,37 +33,13 @@ public class MaintenanceModel extends Model {
 	}
 
 	public MaintenanceModel(Map<String, String[]> params, UserModel user) {
-		this.car = new CarModel(params.get("car")[0]);
-		this.user = user;
-		this.payment = new PaymentMethodModel(params.get("paymentMethod")[0]);
+		this.setCar(new CarModel(params.get("car")[0]));
+		this.setUser(user);
+		this.setPayment(new PaymentMethodModel(params.get("paymentMethod")[0]));
 		setMaintenanceDate(params.get("maintenanceDate")[0]);
 		setOdometer(params.get("odometer")[0]);
 		setAmount(params.get("amount")[0]);
 		this.description = params.get("description")[0];
-	}
-
-	public CarModel getCar() {
-		return car;
-	}
-
-	public void setCar(CarModel car) {
-		this.car = car;
-	}
-
-	public PaymentMethodModel getPayment() {
-		return payment;
-	}
-
-	public void setPayment(PaymentMethodModel payment) {
-		this.payment = payment;
-	}
-
-	public UserModel getUser() {
-		return user;
-	}
-
-	public void setUser(UserModel user) {
-		this.user = user;
 	}
 
 	public Date getMaintenanceDate() {
@@ -141,14 +113,10 @@ public class MaintenanceModel extends Model {
 		long temp;
 		temp = Double.doubleToLongBits(amount);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
-		result = prime * result + ((car == null) ? 0 : car.hashCode());
 		result = prime * result + ((description == null) ? 0 : description.hashCode());
 		result = prime * result + ((maintenanceDate == null) ? 0 : maintenanceDate.hashCode());
 		temp = Double.doubleToLongBits(odometer);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
-		result = prime * result + ((payment == null) ? 0 : payment.hashCode());
-		result = prime * result + ((sdfDates == null) ? 0 : sdfDates.hashCode());
-		result = prime * result + ((user == null) ? 0 : user.hashCode());
 		return result;
 	}
 
@@ -163,11 +131,6 @@ public class MaintenanceModel extends Model {
 		MaintenanceModel other = (MaintenanceModel) obj;
 		if (Double.doubleToLongBits(amount) != Double.doubleToLongBits(other.amount))
 			return false;
-		if (car == null) {
-			if (other.car != null)
-				return false;
-		} else if (!car.equals(other.car))
-			return false;
 		if (description == null) {
 			if (other.description != null)
 				return false;
@@ -180,28 +143,13 @@ public class MaintenanceModel extends Model {
 			return false;
 		if (Double.doubleToLongBits(odometer) != Double.doubleToLongBits(other.odometer))
 			return false;
-		if (payment == null) {
-			if (other.payment != null)
-				return false;
-		} else if (!payment.equals(other.payment))
-			return false;
-		if (sdfDates == null) {
-			if (other.sdfDates != null)
-				return false;
-		} else if (!sdfDates.equals(other.sdfDates))
-			return false;
-		if (user == null) {
-			if (other.user != null)
-				return false;
-		} else if (!user.equals(other.user))
-			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "MaintenanceModel [car=" + car + ", payment=" + payment + ", user=" + user + ", maintenanceDate=" + maintenanceDate + ", odometer="
-				+ odometer + ", description=" + description + ", amount=" + amount + ", toString()=" + super.toString() + "]";
+		return "MaintenanceModel [sdfDates=" + sdfDates + ", maintenanceDate=" + maintenanceDate + ", odometer=" + odometer + ", description="
+				+ description + ", amount=" + amount + ", toString()=" + super.toString() + "]";
 	}
 
 }

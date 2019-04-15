@@ -13,7 +13,6 @@ public class PlaceModel extends Model {
 	private String address;
 	private double longitude;
 	private double latitude;
-	private UserModel user;
 
 	public PlaceModel() {
 	}
@@ -30,13 +29,13 @@ public class PlaceModel extends Model {
 		setId(id);
 		this.name = name;
 		this.address = address;
-		setUser(new UserModel(userId));
+		this.setUser(new UserModel(userId));
 		this.latitude = latitude;
 		this.longitude = longitude;
 	}
 
 	public PlaceModel(UserModel user, String name, String address, String longitude, String latitude) {
-		this.user = user;
+		this.setUser(user);
 		this.name = name;
 		this.address = address;
 		setLongitude(longitude);
@@ -75,14 +74,6 @@ public class PlaceModel extends Model {
 		this.longitude = longitude;
 	}
 
-	public UserModel getUser() {
-		return user;
-	}
-
-	public void setUser(UserModel user) {
-		this.user = user;
-	}
-
 	public void setLongitude(String longitude) {
 		try {
 			this.longitude = Double.parseDouble(longitude);
@@ -118,7 +109,6 @@ public class PlaceModel extends Model {
 		temp = Double.doubleToLongBits(longitude);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + ((user == null) ? 0 : user.hashCode());
 		return result;
 	}
 
@@ -145,18 +135,13 @@ public class PlaceModel extends Model {
 				return false;
 		} else if (!name.equals(other.name))
 			return false;
-		if (user == null) {
-			if (other.user != null)
-				return false;
-		} else if (!user.equals(other.user))
-			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "LocationModel [name=" + name + ", address=" + address + ", longitude=" + longitude + ", latitude=" + latitude + ", getUser_id()="
-				+ getId() + "]";
+		return "PlaceModel [name=" + name + ", address=" + address + ", longitude=" + longitude + ", latitude=" + latitude + ", toString()="
+				+ super.toString() + "]";
 	}
 
 }

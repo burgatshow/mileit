@@ -21,10 +21,6 @@ public class RefuelModel extends Model {
 	private double fuelAmount;
 	private double amount;
 	private double distance;
-	private UserModel user;
-	private CarModel car;
-	private PlaceModel location;
-	private PaymentMethodModel payment;
 
 	public RefuelModel() {
 	}
@@ -44,14 +40,6 @@ public class RefuelModel extends Model {
 		this.unitPrice = unitPrice;
 	}
 
-	public UserModel getUser() {
-		return user;
-	}
-
-	public void setUser(UserModel user) {
-		this.user = user;
-	}
-
 	public Date getRefuelDate() {
 		return refuelDate;
 	}
@@ -60,7 +48,7 @@ public class RefuelModel extends Model {
 		if (refuelDate == null) {
 			return null;
 		}
-		
+
 		return new Timestamp(refuelDate.getTime());
 	}
 
@@ -74,30 +62,6 @@ public class RefuelModel extends Model {
 		} catch (Exception e) {
 			this.refuelDate = new Date();
 		}
-	}
-
-	public CarModel getCar() {
-		return car;
-	}
-
-	public void setCar(CarModel car) {
-		this.car = car;
-	}
-
-	public PlaceModel getPlace() {
-		return location;
-	}
-
-	public void setPlace(PlaceModel place) {
-		this.location = place;
-	}
-
-	public PaymentMethodModel getPayment() {
-		return payment;
-	}
-
-	public void setPayment(PaymentMethodModel payment) {
-		this.payment = payment;
 	}
 
 	public double getOdometer() {
@@ -179,20 +143,15 @@ public class RefuelModel extends Model {
 		long temp;
 		temp = Double.doubleToLongBits(amount);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
-		result = prime * result + ((car == null) ? 0 : car.hashCode());
 		temp = Double.doubleToLongBits(distance);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
 		temp = Double.doubleToLongBits(fuelAmount);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
-		result = prime * result + ((location == null) ? 0 : location.hashCode());
 		temp = Double.doubleToLongBits(odometer);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
-		result = prime * result + ((payment == null) ? 0 : payment.hashCode());
 		result = prime * result + ((refuelDate == null) ? 0 : refuelDate.hashCode());
-		result = prime * result + ((sdfDates == null) ? 0 : sdfDates.hashCode());
 		temp = Double.doubleToLongBits(unitPrice);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
-		result = prime * result + ((user == null) ? 0 : user.hashCode());
 		return result;
 	}
 
@@ -207,52 +166,26 @@ public class RefuelModel extends Model {
 		RefuelModel other = (RefuelModel) obj;
 		if (Double.doubleToLongBits(amount) != Double.doubleToLongBits(other.amount))
 			return false;
-		if (car == null) {
-			if (other.car != null)
-				return false;
-		} else if (!car.equals(other.car))
-			return false;
 		if (Double.doubleToLongBits(distance) != Double.doubleToLongBits(other.distance))
 			return false;
 		if (Double.doubleToLongBits(fuelAmount) != Double.doubleToLongBits(other.fuelAmount))
 			return false;
-		if (location == null) {
-			if (other.location != null)
-				return false;
-		} else if (!location.equals(other.location))
-			return false;
 		if (Double.doubleToLongBits(odometer) != Double.doubleToLongBits(other.odometer))
-			return false;
-		if (payment == null) {
-			if (other.payment != null)
-				return false;
-		} else if (!payment.equals(other.payment))
 			return false;
 		if (refuelDate == null) {
 			if (other.refuelDate != null)
 				return false;
 		} else if (!refuelDate.equals(other.refuelDate))
 			return false;
-		if (sdfDates == null) {
-			if (other.sdfDates != null)
-				return false;
-		} else if (!sdfDates.equals(other.sdfDates))
-			return false;
 		if (Double.doubleToLongBits(unitPrice) != Double.doubleToLongBits(other.unitPrice))
-			return false;
-		if (user == null) {
-			if (other.user != null)
-				return false;
-		} else if (!user.equals(other.user))
 			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "RefuelsModel [sdfDates=" + sdfDates + ", refuelDate=" + refuelDate + ", odometer=" + odometer + ", unitPrice=" + unitPrice
-				+ ", fuelAmount=" + fuelAmount + ", amount=" + amount + ", user=" + user + ", car=" + car + ", location=" + location + ", payment="
-				+ payment + ", toString()=" + super.toString() + "]";
+		return "RefuelModel [sdfDates=" + sdfDates + ", refuelDate=" + refuelDate + ", odometer=" + odometer + ", unitPrice=" + unitPrice
+				+ ", fuelAmount=" + fuelAmount + ", amount=" + amount + ", distance=" + distance + ", toString()=" + super.toString() + "]";
 	}
 
 }
