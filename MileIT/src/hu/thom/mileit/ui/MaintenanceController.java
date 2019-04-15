@@ -93,14 +93,7 @@ public class MaintenanceController extends Controller {
 
 		parseMode(request);
 
-		String[] mustElements = { "car", "odometer", "paymentMethod", "amount", "maintenanceDate" };
-		for (String key : mustElements) {
-			if (request.getParameter(key) == null || "".equalsIgnoreCase(request.getParameter(key))) {
-				validationMessages.add(key);
-			} else {
-				validationMessages.remove(key);
-			}
-		}
+		checkValidationMessages(UIKeys.FORM_ME_MAINTENANCE, validationMessages, request);
 
 		assignedObjects.put(UIKeys.CARS, dbm.getCars(user.getId()));
 		assignedObjects.put(UIKeys.PMS, dbm.getPaymentMethods(user.getId()));

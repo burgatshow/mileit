@@ -26,7 +26,7 @@ import hu.thom.mileit.models.UserModel;
 public class Controller extends HttpServlet {
 	private static final long serialVersionUID = 1849843955087394555L;
 
-	public static final String VERSION = "0.0.2 (beta)";
+	public static final String VERSION = "0.0.3 (beta)";
 	public static final String HOME = "/WEB-INF/pages/home.jsp";
 	public static final String REGISTER = "/WEB-INF/pages/register.jsp";
 	public static final String CARS = "/WEB-INF/pages/cars.jsp";
@@ -42,6 +42,7 @@ public class Controller extends HttpServlet {
 	public static final String MAINTENANCES_FORM = "/WEB-INF/pages/maintenances-form.jsp";
 	public static final String TYRES = "/WEB-INF/pages/tyres.jsp";
 	public static final String TYRES_FORM = "/WEB-INF/pages/tyres-form.jsp";
+	public static final String TYRES_MAP = "/WEB-INF/pages/tyres-map.jsp";
 
 	public DBManager dbm = null;
 
@@ -162,6 +163,18 @@ public class Controller extends HttpServlet {
 			}
 		} else {
 			this.id = -1;
+		}
+	}
+
+	public void checkValidationMessages(String[] mustElements, final Set<String> validationMessages, HttpServletRequest request) {
+		if (mustElements != null && mustElements.length != 0 && request != null && validationMessages != null) {
+			for (String key : mustElements) {
+				if (request.getParameter(key) == null || "".equalsIgnoreCase(request.getParameter(key))) {
+					validationMessages.add(key);
+				} else {
+					validationMessages.remove(key);
+				}
+			}
 		}
 	}
 }

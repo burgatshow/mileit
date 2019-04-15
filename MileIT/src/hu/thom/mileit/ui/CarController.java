@@ -64,6 +64,7 @@ public class CarController extends Controller {
 			parseId(request);
 
 			assignedObjects.put(UIKeys.STATUS, dbm.archiveCar(id) ? 1 : -1);
+			assignedObjects.put(UIKeys.CARS, dbm.getCars(user.getId()));
 			renderPage(CARS, request, response);
 
 			break;
@@ -102,14 +103,7 @@ public class CarController extends Controller {
 
 		parseMode(request);
 
-		String[] mustElements = { "manufacturer", "fuel", "model", "vin", "plateNumber", "status" };
-		for (String key : mustElements) {
-			if (request.getParameter(key) == null || "".equalsIgnoreCase(request.getParameter(key))) {
-				validationMessages.add(key);
-			} else {
-				validationMessages.remove(key);
-			}
-		}
+		checkValidationMessages(UIKeys.FORM_ME_CARS, validationMessages, request);
 
 		if (validationMessages.isEmpty()) {
 			CarModel car = new CarModel(request.getParameterMap(), user);

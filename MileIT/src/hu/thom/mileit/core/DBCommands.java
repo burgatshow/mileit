@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * All SQL commands used in {@link DBManager}
  * 
- * @author thom <tamas.bures@protonmail.com>
+ * @author thom <tamas.bures@protonmail.com> 
  *
  */
 public class DBCommands implements Serializable {
@@ -13,8 +13,8 @@ public class DBCommands implements Serializable {
 
 	// Home
 	public static final String SQL_S_BIG_STAT = "SELECT r.car_id, r.refuel_id, r.place_id, r.refuel_timestamp, r.odometer, r.fuel_amount, r.amount, r.unit_price, r.pm_id FROM refuels AS r WHERE r.user_id = ? ORDER BY r.refuel_timestamp DESC LIMIT 1";
-	public static final String SQL_S_PRICE_GRAPH = "SELECT r.refuel_timestamp, r.odometer, r.amount, unit_price FROM refuels AS r WHERE r.user_id = ? ORDER BY r.refuel_timestamp LIMIT 10";
-
+	public static final String SQL_S_PRICE_GRAPH = "SELECT * FROM ( SELECT r.refuel_timestamp, r.odometer, r.amount, unit_price FROM refuels AS r WHERE r.user_id = ? ORDER BY r.refuel_timestamp DESC LIMIT 20) AS sub ORDER BY refuel_timestamp ASC";
+ 
 	// User
 	public static final String SQL_S_CHECK_USER = "SELECT COUNT(*) FROM users AS u WHERE username = ?";
 	public static final String SQL_I_USER = "INSERT INTO users (username) VALUES (?)";
@@ -32,7 +32,7 @@ public class DBCommands implements Serializable {
 	public static final String SQL_S_CAR_VENDORS = "SELECT manufacturer_id, IF(NAME = 'BMW', 'BMW', CONCAT(UPPER(SUBSTR(NAME, 1, 1)), LOWER(SUBSTR(NAME, 2, LENGTH(NAME)-1)))) AS name FROM sup_car_manufacturers WHERE active = 1 ORDER BY name ASC";
 
 	// Maintenances
-	public static final String SQL_S_MAINTENANCES = "SELECT m.mntnc_id, m.car_id, m.user_id, m.pm_id, IF(((SELECT distance FROM users AS u WHERE u.user_id = m.user_id) = 1), m.odometer, (m.odometer * 0.621)) AS odometer, m.date, m.description, m.amount, c.friendly_name, UPPER(c.plate_number) AS plate_number, pm.name  FROM maintenances AS m, cars AS c, payment_method AS pm WHERE c.car_id = m.car_id AND m.pm_id = pm.pm_id AND m.user_id = ? ORDER BY m.date DESC";
+	public static final String SQL_S_MAINTENANCES = "SELECT m.mntnc_id, m.car_id, m.user_id, m.pm_id, IF(((SELECT distance FROM users AS u WHERE u.user_id = m.user_id) = 1), m.odometer, (m.odometer * 0.621)) AS odometer, m.date, m.description, m.amount, c.friendly_name, UPPER(c.plate_number) AS plate_number, pm.name  FROM maintenances AS m, cars AS c, payment_method AS pm WHERE c.car_id = m.car_id AND c.archived = 0 AND m.pm_id = pm.pm_id AND m.user_id = ? ORDER BY m.date DESC";
 	public static final String SQL_I_MAINTENANCE = "INSERT INTO maintenances (car_id, pm_id, odometer, date, description, amount, user_id) VALUES (?, ?, IF(((SELECT distance FROM users WHERE user_id = ?) = 1), ?, (? / 0.621)), ?, ?, ?, ?)";
 	public static final String SQL_U_MAINTENANCE = "UPDATE maintenances SET car_id = ?, pm_id = ?, odometer = IF(((SELECT distance FROM users WHERE user_id = ?) = 1), ?, (? / 0.621)), date = ?, description = ?, amount = ? WHERE user_id = ? AND mntnc_id = ?";
 	public static final String SQL_S_MAINTENANCE = "SELECT m.mntnc_id, m.car_id, m.user_id, m.pm_id, IF(((SELECT distance FROM users AS u WHERE u.user_id = m.user_id) = 1), m.odometer, (m.odometer * 0.621)) as odometer, m.date, m.description, m.amount FROM maintenances AS m WHERE m.mntnc_id = ?";
@@ -50,16 +50,17 @@ public class DBCommands implements Serializable {
 	public static final String SQL_S_PLACE = "SELECT p.place_id, p.name, p.address, p.user_id, p.longitude, p.latitude FROM places AS p WHERE p.place_id = ?";
 
 	// Refuels
-	public static final String SQL_S_REFUELS = "SELECT r.refuel_id, r.car_id, r.place_id, r.refuel_timestamp, IF(((SELECT u.distance FROM users AS u WHERE u.user_id = r.user_id) = 1), r.odometer, (r.odometer * 0.621)) AS odometer, r.unit_price, r.fuel_amount, r.pm_id, r.amount, r.user_id, UPPER(c.plate_number) AS plate_number, c.friendly_name, p.name AS location, pm.name AS payment_method_name, IFNULL(IF(((SELECT u.distance FROM users AS u WHERE u.user_id = r.user_id) = 1), r.odometer, (r.odometer * 0.621)) - (SELECT IF(((SELECT u.distance FROM users AS u WHERE u.user_id = r.user_id) = 1), p.odometer, (p.odometer * 0.621)) FROM refuels AS p WHERE p.refuel_timestamp = (SELECT MAX(pp.refuel_timestamp) FROM refuels AS pp WHERE pp.refuel_timestamp < r.refuel_timestamp ) ), 0) AS prev_refuel_diff FROM cars AS c, refuels AS r, places AS p, payment_method AS pm WHERE r.car_id IN (SELECT c.car_id FROM cars AS c WHERE c.user_id = ? AND c.archived = 0 ) AND pm.pm_id = r.pm_id AND c.car_id = r.car_id AND p.place_id = r.place_id ORDER BY r.refuel_timestamp DESC";
+	public static final String SQL_S_REFUELS = "SELECT r.refuel_id, r.car_id, r.place_id, r.refuel_timestamp, IF(((SELECT u.distance FROM users AS u WHERE u.user_id = r.user_id) = 1), r.odometer, (r.odometer * 0.621)) AS odometer, r.unit_price, r.fuel_amount, r.pm_id, r.amount, r.user_id, UPPER(c.plate_number) AS plate_number, c.friendly_name, p.name AS location, pm.name AS payment_method_name, IFNULL(IF(((SELECT u.distance FROM users AS u WHERE u.user_id = r.user_id) = 1), r.odometer, (r.odometer * 0.621)) - (SELECT IF(((SELECT u.distance FROM users AS u WHERE u.user_id = r.user_id) = 1), p.odometer, (p.odometer * 0.621)) FROM refuels AS p WHERE p.refuel_timestamp = (SELECT MAX(pp.refuel_timestamp) FROM refuels AS pp WHERE pp.refuel_timestamp < r.refuel_timestamp AND pp.car_id = r.car_id )), 0) AS prev_refuel_diff FROM cars AS c, refuels AS r, places AS p, payment_method AS pm WHERE r.car_id IN (SELECT c.car_id FROM cars AS c WHERE c.user_id = ? AND c.archived = 0) AND pm.pm_id = r.pm_id AND c.car_id = r.car_id AND p.place_id = r.place_id ORDER BY r.refuel_timestamp DESC";
 	public static final String SQL_I_REFUEL = "INSERT INTO refuels (car_id, place_id, refuel_timestamp, odometer, unit_price, fuel_amount, pm_id, amount, user_id) VALUES (?, ?, ?, IF(((SELECT distance FROM users WHERE user_id = ?) = 1), ?, (? / 0.621)), ?, ?, ?, ?, ?)";
 	public static final String SQL_U_REFUEL = "UPDATE refuels SET car_id = ?, place_id = ?, refuel_timestamp = ?, odometer = IF(((SELECT distance FROM users WHERE user_id = ?) = 1), ?, (? / 0.621)), unit_price = ?, fuel_amount = ?, pm_id = ?, amount = ? WHERE refuel_id = ?";
 	public static final String SQL_S_REFUEL = "SELECT r.refuel_id, r.car_id, r.place_id, r.refuel_timestamp, IF(((SELECT u.distance FROM users AS u WHERE u.user_id = r.user_id) = 1), r.odometer, (r.odometer * 0.621)) AS odometer, r.unit_price, r.fuel_amount, r.pm_id, r.amount, r.user_id FROM refuels AS r WHERE r.refuel_id = ?";
 
 	// Tyres
-	public static final String SQL_S_TYRES = "SELECT t.tyre_id, t.user_id, t.car_id, t.type, t.size_w, t.size_h, t.size_r, st.manufacturer_id, CONCAT(UPPER(SUBSTR(st.name, 1, 1)), LOWER(SUBSTR(st.name, 2, LENGTH(st.name)-1))) AS name, t.model, t.axis, t.purchase_date FROM tyres AS t, sup_tyre_manufacturers AS st WHERE t.manufacturer = st.manufacturer_id AND user_id = ?";
-	public static final String SQL_S_TYRE = "SELECT t.tyre_id, t.user_id, t.car_id, t.type, t.size_w, t.size_h, t.size_r, st.manufacturer_id, CONCAT(UPPER(SUBSTR(st.name, 1, 1)), LOWER(SUBSTR(st.name, 2, LENGTH(st.name)-1))) AS name, t.model, t.axis, t.purchase_date FROM tyres AS t, sup_tyre_manufacturers AS st WHERE t.manufacturer = st.manufacturer_id AND tyre_id = ?";
+	public static final String SQL_S_TYRES = "SELECT t.tyre_id, t.size_r, t.size_w, t.size_h, t.manufacturer, t.type, t.axis, t.purchase_date, CONCAT(UPPER(SUBSTR(stm.name, 1, 1)), LOWER(SUBSTR(stm.name, 2, LENGTH(stm.name)-1))) AS name, t.model, IFNULL((SELECT MIN(odometer_start) FROM tyres_events WHERE tyre_id = t.tyre_id), 0) AS tyre_first_odometer, IFNULL((SELECT MAX(odometer_end) FROM tyres_events WHERE tyre_id = t.tyre_id), 0) AS tyre_last_odometer, (SELECT MIN(change_date) FROM tyres_events WHERE tyre_id = t.tyre_id) AS tyre_first_date, (SELECT MAX(change_date) FROM tyres_events WHERE tyre_id = t.tyre_id) AS tyre_last_date, IFNULL((SELECT SUM(odometer_end - odometer_start) FROM tyres_events WHERE tyre_id = t.tyre_id), 0) AS tyre_total_distance, (SELECT car_id FROM cars AS c WHERE c.car_id = (SELECT DISTINCT car_id FROM tyres_events WHERE tyre_id = t.tyre_id)) AS car_id, (SELECT friendly_name FROM cars AS c WHERE c.car_id = (SELECT DISTINCT car_id FROM tyres_events WHERE tyre_id = t.tyre_id)) AS friendly_name, (SELECT plate_number FROM cars AS c WHERE c.car_id = (SELECT DISTINCT car_id FROM tyres_events WHERE tyre_id = t.tyre_id)) AS plate_number FROM tyres AS t, sup_tyre_manufacturers AS stm WHERE t.manufacturer = stm.manufacturer_id AND t.archived = 0 AND t.user_id = ?";
+	public static final String SQL_S_TYRE = "SELECT t.tyre_id, t.user_id, t.type, t.size_w, t.size_h, t.size_r, st.manufacturer_id, CONCAT(UPPER(SUBSTR(st.name, 1, 1)), LOWER(SUBSTR(st.name, 2, LENGTH(st.name)-1))) AS name, t.model, t.axis, t.purchase_date FROM tyres AS t, sup_tyre_manufacturers AS st WHERE t.manufacturer = st.manufacturer_id AND tyre_id = ?";
 	public static final String SQL_S_TYRE_VENDORS = "SELECT st.manufacturer_id, CONCAT(UPPER(SUBSTR(st.name, 1, 1)), LOWER(SUBSTR(st.name, 2, LENGTH(st.name)-1))) AS name FROM sup_tyre_manufacturers AS st ORDER BY st.name ASC";
-	public static final String SQL_I_TYRE = "INSERT INTO tyres (car_id, type, manufacturer, model, axis, size_r, size_h, size_w, purchase_date, user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-	public static final String SQL_U_TYRE = "UPDATE tyres SET car_id = ?, type = ?, manufacturer = ?, model = ?, axis = ?, size_r = ?, size_h = ?, size_w = ?, purchase_date = ? WHERE tyre_id = ?";
-
+	public static final String SQL_I_TYRE = "INSERT INTO tyres (type, manufacturer, model, axis, size_r, size_h, size_w, purchase_date, user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+	public static final String SQL_U_TYRE = "UPDATE tyres SET type = ?, manufacturer = ?, model = ?, axis = ?, size_r = ?, size_h = ?, size_w = ?, purchase_date = ? WHERE tyre_id = ?";
+	public static final String SQL_I_TYRE_EVENT = "INSERT INTO tyres_events (tyre_id, user_id, car_id, odometer_start, odometer_end, change_date) VALUES (?, ?, ?, ?, ?, ?)";
+	public static final String SQL_U_TYRE_ARCHIVE = "UPDATE tyres SET archived = 1 WHERE tyre_id = ?";
 }

@@ -91,14 +91,7 @@ public class PaymentMethodController extends Controller {
 
 		parseMode(request);
 
-		String[] mustElements = { "name" };
-		for (String key : mustElements) {
-			if (request.getParameter(key) == null || "".equalsIgnoreCase(request.getParameter(key))) {
-				validationMessages.add(key);
-			} else {
-				validationMessages.remove(key);
-			}
-		}
+		checkValidationMessages(UIKeys.FORM_ME_PAYMENT_METHOD, validationMessages, request);
 
 		if (validationMessages.isEmpty()) {
 			PaymentMethodModel pm = new PaymentMethodModel();
