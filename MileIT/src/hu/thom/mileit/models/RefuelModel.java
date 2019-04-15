@@ -1,7 +1,6 @@
 package hu.thom.mileit.models;
 
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -12,8 +11,6 @@ import java.util.Date;
  */
 public class RefuelModel extends Model {
 	private static final long serialVersionUID = -672842337477969286L;
-
-	private SimpleDateFormat sdfDates = new SimpleDateFormat("yyyy-MM-dd");
 
 	private Date refuelDate;
 	private double odometer;
@@ -58,7 +55,7 @@ public class RefuelModel extends Model {
 
 	public void setRefuelTimestamp(String refuelDate) {
 		try {
-			this.refuelDate = sdfDates.parse(refuelDate);
+			this.refuelDate = this.getSdfDates().parse(refuelDate);
 		} catch (Exception e) {
 			this.refuelDate = new Date();
 		}
@@ -184,7 +181,7 @@ public class RefuelModel extends Model {
 
 	@Override
 	public String toString() {
-		return "RefuelModel [sdfDates=" + sdfDates + ", refuelDate=" + refuelDate + ", odometer=" + odometer + ", unitPrice=" + unitPrice
+		return "RefuelModel [refuelDate=" + refuelDate + ", odometer=" + odometer + ", unitPrice=" + unitPrice
 				+ ", fuelAmount=" + fuelAmount + ", amount=" + amount + ", distance=" + distance + ", toString()=" + super.toString() + "]";
 	}
 

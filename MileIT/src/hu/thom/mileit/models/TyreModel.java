@@ -1,14 +1,11 @@
 package hu.thom.mileit.models;
 
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 
 public class TyreModel extends Model {
 	private static final long serialVersionUID = -4885680246070902751L;
-
-	private SimpleDateFormat sdfDates = new SimpleDateFormat("yyyy-MM-dd");
 
 	public static enum TyreType {
 		WINTER((byte) 1), SUMMER((byte) 2), ALLSEASONS((byte) 3), OTHER((byte) 4);
@@ -261,7 +258,7 @@ public class TyreModel extends Model {
 
 	public void setPurchaseDate(String purchaseDate) {
 		try {
-			this.purchaseDate = sdfDates.parse(purchaseDate);
+			this.purchaseDate = this.getSdfDates().parse(purchaseDate);
 		} catch (Exception e) {
 			this.purchaseDate = new Date();
 		}

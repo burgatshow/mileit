@@ -1,7 +1,6 @@
 package hu.thom.mileit.models;
 
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 
@@ -13,8 +12,6 @@ import java.util.Map;
  */
 public class MaintenanceModel extends Model {
 	private static final long serialVersionUID = 660856971074877480L;
-
-	private SimpleDateFormat sdfDates = new SimpleDateFormat("yyyy-MM-dd");
 
 	private Date maintenanceDate;
 	private double odometer;
@@ -60,7 +57,7 @@ public class MaintenanceModel extends Model {
 
 	public void setMaintenanceDate(String maintenanceDate) {
 		try {
-			this.maintenanceDate = sdfDates.parse(maintenanceDate);
+			this.maintenanceDate = this.getSdfDates().parse(maintenanceDate);
 		} catch (Exception e) {
 			this.maintenanceDate = new Date();
 		}
@@ -148,7 +145,7 @@ public class MaintenanceModel extends Model {
 
 	@Override
 	public String toString() {
-		return "MaintenanceModel [sdfDates=" + sdfDates + ", maintenanceDate=" + maintenanceDate + ", odometer=" + odometer + ", description="
+		return "MaintenanceModel [maintenanceDate=" + maintenanceDate + ", odometer=" + odometer + ", description="
 				+ description + ", amount=" + amount + ", toString()=" + super.toString() + "]";
 	}
 
