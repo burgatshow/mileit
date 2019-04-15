@@ -94,7 +94,7 @@
 			</c:if>
 			<div class="row">
 				<div class="col-md-12 text-right">
-					<input type="submit" class="btn btn-primary" value="<fmt:message key="button.save" />"> <a class="btn btn-danger" href="locations"
+					<input type="submit" class="btn btn-primary" value="<fmt:message key="button.save" />"> <a class="btn btn-danger" href="places"
 						role="button"> <fmt:message key="button.cancel" />
 					</a>
 				</div>

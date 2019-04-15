@@ -32,7 +32,7 @@
 				</a>
 					<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
 						<a class="dropdown-item" href="refuels"> <fmt:message key="menu.refuels" />
-						</a> <a class="dropdown-item" href="payment_methods"><fmt:message key="menu.refuels.payment" /></a> <a class="dropdown-item" href="locations">
+						</a> <a class="dropdown-item" href="payment_methods"><fmt:message key="menu.refuels.payment" /></a> <a class="dropdown-item" href="places">
 							<fmt:message key="menu.refuels.locations" />
 						</a>
 					</div></li>

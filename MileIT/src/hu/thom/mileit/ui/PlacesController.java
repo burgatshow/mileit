@@ -17,14 +17,14 @@ import hu.thom.mileit.models.PlaceModel;
  * @author thom <tamas.bures@protonmail.com>
  *
  */
-@WebServlet("/locations")
-public class PlaceController extends Controller {
+@WebServlet("/places")
+public class PlacesController extends Controller {
 	private static final long serialVersionUID = 2631517143636421486L;
 
 	/**
 	 * Constructor
 	 */
-	public PlaceController() {
+	public PlacesController() {
 		super();
 		assignedObjects.put(UIKeys.PAGE, "locations");
 	}
@@ -59,6 +59,15 @@ public class PlaceController extends Controller {
 			renderPage(PLACES_FORM, request, response);
 			break;
 
+		case UIKeys.MODE_ARCHIVE:
+			parseId(request);
+
+			assignedObjects.put(UIKeys.STATUS, dbm.archivePlace(id) ? 1 : -1);
+			assignedObjects.put(UIKeys.PLACES, dbm.getPlaces(user.getId()));
+			renderPage(PLACES, request, response);
+
+			break;
+
 		case UIKeys.MODE_UPDATE:
 			parseId(request);
 
@@ -90,7 +99,7 @@ public class PlaceController extends Controller {
 		super.doPost(request, response);
 
 		parseMode(request);
-		
+
 		checkValidationMessages(UIKeys.FORM_ME_PLACE, validationMessages, request);
 
 		if (validationMessages.isEmpty()) {
