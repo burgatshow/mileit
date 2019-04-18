@@ -64,11 +64,13 @@
 				</div>
 				<div class="col-md-6">
 					<div class="form-group">
-						<label for="location"><fmt:message key="refuels.form.place" /></label> <select id="location" class="form-control" name="location">
+						<label for="place"><fmt:message key="refuels.form.place" /></label> <select id="place" class="form-control" name="place">
 							<option value="" <c:if test="${empty refuels}">selected="selected"</c:if>>---</option>
-							<c:forEach items="${places}" var="l">
-								<option <c:if test="${refuels.location.id eq l.id}">selected="selected"</c:if> value="<c:out value="${l.id}" />"><c:out
-										value="${l.name}" /></option>
+							<c:forEach items="${places}" var="p">
+								<c:if test="${p.fuelStation}">
+									<option <c:if test="${refuels.place.id eq p.id}">selected="selected"</c:if> value="<c:out value="${p.id}" />"><c:out
+											value="${p.name}" /></option>
+								</c:if>
 							</c:forEach>
 						</select>
 					</div>

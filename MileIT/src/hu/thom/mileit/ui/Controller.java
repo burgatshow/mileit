@@ -63,7 +63,7 @@ public class Controller extends HttpServlet {
 		if (dbm == null) {
 			dbm = new DBManager();
 		}
-
+		
 		assignedObjects.put(UIKeys.VERSION, VERSION);
 		assignedObjects.put(UIKeys.PAGE, "index");
 

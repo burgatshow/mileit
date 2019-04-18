@@ -94,10 +94,7 @@ public class PaymentMethodController extends Controller {
 		checkValidationMessages(UIKeys.FORM_ME_PAYMENT_METHOD, validationMessages, request);
 
 		if (validationMessages.isEmpty()) {
-			PaymentMethodModel pm = new PaymentMethodModel();
-			pm.setUser(user);
-			pm.setName(request.getParameter("name"));
-			pm.setDescription(request.getParameter("description"));
+			PaymentMethodModel pm = new PaymentMethodModel(request.getParameterMap(), user);
 
 			switch (m) {
 			case UIKeys.MODE_NEW:

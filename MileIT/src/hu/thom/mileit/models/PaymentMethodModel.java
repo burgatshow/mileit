@@ -1,5 +1,7 @@
 package hu.thom.mileit.models;
 
+import java.util.Map;
+
 /**
  * Model file representing all attributes of a payment method
  * 
@@ -13,6 +15,12 @@ public class PaymentMethodModel extends Model {
 	private String description;
 
 	public PaymentMethodModel() {
+	}
+	
+	public PaymentMethodModel(Map<String, String[]> params, UserModel user) {
+		this.name = params.get("name")[0];
+		this.description = params.get("description")[0];
+		this.setUser(user);
 	}
 
 	public PaymentMethodModel(int id) {

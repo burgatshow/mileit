@@ -2,6 +2,7 @@ package hu.thom.mileit.models;
 
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.Map;
 
 /**
  * Model file representing all attributes of a refuel
@@ -20,6 +21,18 @@ public class RefuelModel extends Model {
 	private double distance;
 
 	public RefuelModel() {
+	}
+
+	public RefuelModel(Map<String, String[]> params, UserModel user) {
+		this.getCar().setId(params.get("car")[0]);
+		this.getPlace().setId(params.get("place")[0]);
+		this.getPayment().setId(params.get("paymentMethod")[0]);
+		setRefuelTimestamp(params.get("refuelTimestamp")[0]);
+		setOdometer(params.get("odometer")[0]);
+		setUnitPrice(params.get("unitPrice")[0]);
+		setAmount(params.get("amount")[0]);
+
+		this.setUser(user);
 	}
 
 	public RefuelModel(int id) {
@@ -181,8 +194,8 @@ public class RefuelModel extends Model {
 
 	@Override
 	public String toString() {
-		return "RefuelModel [refuelDate=" + refuelDate + ", odometer=" + odometer + ", unitPrice=" + unitPrice
-				+ ", fuelAmount=" + fuelAmount + ", amount=" + amount + ", distance=" + distance + ", toString()=" + super.toString() + "]";
+		return "RefuelModel [refuelDate=" + refuelDate + ", odometer=" + odometer + ", unitPrice=" + unitPrice + ", fuelAmount=" + fuelAmount
+				+ ", amount=" + amount + ", distance=" + distance + ", toString()=" + super.toString() + "]";
 	}
 
 }
