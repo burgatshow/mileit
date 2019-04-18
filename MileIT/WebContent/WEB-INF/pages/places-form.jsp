@@ -48,7 +48,7 @@
 				<input type="hidden" name="id" value="<c:out value="${places.id}" />">
 			</c:if>
 			<div class="row">
-				<div class="col-md-12">
+				<div class="col-md-6">
 					<div class="form-group">
 						<label for="name"><fmt:message key="places.form.name" /><span class="ml-1 badge badge-pill badge-primary"> <fmt:message
 									key="form.mandatory" /></span><span data-toggle="tooltip" title="<fmt:message key="places.form.name.tooltip" />"
@@ -58,11 +58,20 @@
 							value="<c:out value="${not empty param.name ? param.name : not empty places ? places.name : ''}" />">
 					</div>
 				</div>
+				<div class="col-md-6">
+					<label for="fuelStation"><fmt:message key="places.form.fuel_station" /><span class="ml-1 badge badge-pill badge-primary"> <fmt:message
+								key="form.mandatory" /></span></label><select id="fuelStation" class="form-control" name="fuelStation">
+						<option value="0" <c:if test="${not places.fuelStation}">selected="selected"</c:if>><fmt:message key="places.form.fuel_station.alt_no" /></option>
+						<option value="1" <c:if test="${places.fuelStation}">selected="selected"</c:if>><fmt:message key="places.form.fuel_station.alt_yes" /></option>
+					</select>
+				</div>
+			</div>
+			<div class="row">
 				<div class="col-md-12">
 					<div class="form-group">
 						<label for="address"><fmt:message key="places.form.address" /><span data-toggle="tooltip"
-							title="<fmt:message key="places.form.address.tooltip" />" class="ml-1 badge badge-pill badge-info">?</span></label> <input name="address"
-							type="text" class="form-control" id="address" placeholder="<fmt:message key="places.form.address" />"
+							title="<fmt:message key="places.form.address.tooltip" />" class="ml-1 badge badge-pill badge-info">?</span></label> <input name="address" type="text"
+							class="form-control" id="address" placeholder="<fmt:message key="places.form.address" />"
 							value="<c:out value="${not empty param.address ? param.address : not empty places ? places.address : ''}" />">
 					</div>
 				</div>
@@ -71,8 +80,8 @@
 				<div class="col-md-6">
 					<div class="form-group">
 						<label for="latitude"><fmt:message key="places.form.latitude" /><span data-toggle="tooltip"
-							title="<fmt:message key="places.form.latitude.tooltip" />" class="ml-1 badge badge-pill badge-info">?</span></label> <input name="latitude"
-							type="text" class="form-control" id="latitude" placeholder="<fmt:message key="places.form.latitude" />"
+							title="<fmt:message key="places.form.latitude.tooltip" />" class="ml-1 badge badge-pill badge-info">?</span></label> <input name="latitude" type="text"
+							class="form-control" id="latitude" placeholder="<fmt:message key="places.form.latitude" />"
 							value="<c:out value="${not empty param.latitude ? param.latitude : not empty places ? places.latitude : ''}" />">
 					</div>
 				</div>

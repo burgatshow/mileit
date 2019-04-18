@@ -103,8 +103,7 @@ public class PlacesController extends Controller {
 		checkValidationMessages(UIKeys.FORM_ME_PLACE, validationMessages, request);
 
 		if (validationMessages.isEmpty()) {
-			PlaceModel l = new PlaceModel(user, request.getParameter("name"), request.getParameter("address"), request.getParameter("longitude"),
-					request.getParameter("latitude"));
+			PlaceModel l = new PlaceModel(request.getParameterMap(), user);
 
 			switch (m) {
 			case UIKeys.MODE_NEW:

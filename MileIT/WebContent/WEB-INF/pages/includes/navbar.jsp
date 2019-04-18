@@ -36,9 +36,9 @@
 							<fmt:message key="menu.refuels.places" />
 						</a>
 					</div></li>
-				<li class="nav-item <c:if test="${not empty page and page eq 'stats' }">active</c:if>"><a class="nav-link" href="stats"> <fmt:message
-							key="menu.stats" />
-				</a></li>
+<%-- 				<li class="nav-item <c:if test="${not empty page and page eq 'stats' }">active</c:if>"><a class="nav-link" href="stats"> <fmt:message --%>
+<%-- 							key="menu.stats" /> --%>
+<!-- 				</a></li> -->
 			</ul>
 
 			<ul class="navbar-nav ml-auto">

@@ -1,5 +1,7 @@
 package hu.thom.mileit.models;
 
+import java.util.Map;
+
 /**
  * Model file representing all attributes of a place
  * 
@@ -13,6 +15,7 @@ public class PlaceModel extends Model {
 	private String address;
 	private double longitude;
 	private double latitude;
+	private boolean fuelStation;
 
 	public PlaceModel() {
 	}
@@ -25,29 +28,32 @@ public class PlaceModel extends Model {
 		setId(id);
 	}
 
-	public PlaceModel(int id, String name, String address, int userId, double longitude, double latitude) {
+	public PlaceModel(Map<String, String[]> params, UserModel user) {
+		this.name = params.get("name")[0];
+		this.address = params.get("address")[0];
+		setLongitude(params.get("longitude")[0]);
+		setLatitude(params.get("latitude")[0]);
+		setFuelStation(params.get("fuelStation")[0]);
+		this.setUser(user);
+	}
+
+	public PlaceModel(int id, String name, String address, int userId, double longitude, double latitude, boolean fuelStation) {
 		setId(id);
 		this.name = name;
 		this.address = address;
 		this.setUser(new UserModel(userId));
 		this.latitude = latitude;
 		this.longitude = longitude;
+		this.fuelStation = fuelStation;
 	}
 
-	public PlaceModel(UserModel user, String name, String address, String longitude, String latitude) {
-		this.setUser(user);
-		this.name = name;
-		this.address = address;
-		setLongitude(longitude);
-		setLatitude(latitude);
-	}
-
-	public PlaceModel(int id, String name, String address, double longitude, double latitude) {
+	public PlaceModel(int id, String name, String address, double longitude, double latitude, boolean fuelStation) {
 		setId(id);
 		this.name = name;
 		this.address = address;
 		this.longitude = longitude;
 		this.latitude = latitude;
+		this.fuelStation = fuelStation;
 	}
 
 	public String getName() {
@@ -56,6 +62,31 @@ public class PlaceModel extends Model {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public boolean isFuelStation() {
+		return fuelStation;
+	}
+
+	public void setFuelStation(boolean fuelStation) {
+		this.fuelStation = fuelStation;
+	}
+
+	public void setFuelStation(String fuelStation) {
+		switch (fuelStation.toLowerCase()) {
+		case "1":
+		case "true":
+		case "yes":
+			this.fuelStation = true;
+			break;
+		case "0":
+		case "false":
+		case "no":
+		case "":
+		default:
+			this.fuelStation = false;
+			break;
+		}
 	}
 
 	public String getAddress() {

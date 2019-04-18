@@ -44,10 +44,10 @@ public class DBCommands implements Serializable {
 	public static final String SQL_S_PAYMENT = "SELECT pm.pm_id, pm.name, pm.description FROM payment_method AS pm WHERE pm.pm_id = ?";
 
 	// Places
-	public static final String SQL_S_PLACES = "SELECT p.place_id, p.name, p.address, p.longitude, p.latitude FROM places AS p WHERE p.user_id = ? AND p.archived = 0 ORDER BY p.name ASC";
-	public static final String SQL_I_PLACE = "INSERT INTO places (name, address, latitude, longitude, user_id) VALUES (?, ?, ?, ?, ?)";
-	public static final String SQL_U_PLACE = "UPDATE places SET name = ?, address = ?, latitude = ?, longitude = ? WHERE place_id = ?";
-	public static final String SQL_S_PLACE = "SELECT p.place_id, p.name, p.address, p.user_id, p.longitude, p.latitude FROM places AS p WHERE p.place_id = ?";
+	public static final String SQL_S_PLACES = "SELECT p.place_id, p.name, p.address, p.longitude, p.latitude, p.fuel_station FROM places AS p WHERE p.user_id = ? AND p.archived = 0 ORDER BY p.name ASC";
+	public static final String SQL_I_PLACE = "INSERT INTO places (name, address, latitude, longitude, fuel_station, user_id) VALUES (?, ?, ?, ?, ?, ?)";
+	public static final String SQL_U_PLACE = "UPDATE places SET name = ?, address = ?, latitude = ?, longitude = ?, fuel_station = ? WHERE place_id = ?";
+	public static final String SQL_S_PLACE = "SELECT p.place_id, p.name, p.address, p.user_id, p.longitude, p.latitude, p.fuel_station FROM places AS p WHERE p.place_id = ?";
 	public static final String SQL_U_PLACE_ARCHIVE = "UPDATE places SET archived = 1 WHERE place_id = ?";
 
 	// Refuels

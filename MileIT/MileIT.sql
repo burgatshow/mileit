@@ -49,6 +49,8 @@ CREATE TABLE IF NOT EXISTS `places` (
   `address` VARCHAR(50) COLLATE utf8mb4_hungarian_ci DEFAULT NULL,
   `longitude` DOUBLE DEFAULT NULL,
   `latitude` DOUBLE DEFAULT NULL,
+  `fuel_station` TINYINT(1) UNSIGNED NULL DEFAULT 1,
+  `archived` TINYINT(1) UNSIGNED NULL DEFAULT 0
   PRIMARY KEY (`place_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 

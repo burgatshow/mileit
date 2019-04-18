@@ -19,6 +19,16 @@ public class Model extends DateModel {
 	private TyreEventModel tyreEvent;
 	private RefuelModel refuel;
 
+	private boolean archived;
+
+	public boolean isArchived() {
+		return archived;
+	}
+
+	public void setArchived(boolean archived) {
+		this.archived = archived;
+	}
+
 	public int getId() {
 		return id;
 	}
@@ -102,6 +112,7 @@ public class Model extends DateModel {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + (archived ? 1231 : 1237);
 		result = prime * result + ((car == null) ? 0 : car.hashCode());
 		result = prime * result + id;
 		result = prime * result + operation;
@@ -123,6 +134,8 @@ public class Model extends DateModel {
 		if (getClass() != obj.getClass())
 			return false;
 		Model other = (Model) obj;
+		if (archived != other.archived)
+			return false;
 		if (car == null) {
 			if (other.car != null)
 				return false;
@@ -168,7 +181,8 @@ public class Model extends DateModel {
 	@Override
 	public String toString() {
 		return "Model [id=" + id + ", operation=" + operation + ", car=" + car + ", user=" + user + ", payment=" + payment + ", place=" + place
-				+ ", tyre=" + tyre + ", tyreEvent=" + tyreEvent + ", refuel=" + refuel + ", toString()=" + super.toString() + "]";
+				+ ", tyre=" + tyre + ", tyreEvent=" + tyreEvent + ", refuel=" + refuel + ", archived=" + archived + ", toString()=" + super.toString()
+				+ "]";
 	}
 
 }

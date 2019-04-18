@@ -61,8 +61,9 @@
 				<table class="mt-3 table table-bordered table-striped table-condensed table-hover" id="cars">
 					<thead class="thead-light">
 						<tr>
-							<th><fmt:message key="places.form.name" /></th>
-							<th class="text-center"><fmt:message key="table.actions" /></th>
+							<th class="align-middle text-left"><fmt:message key="places.form.name" /></th>
+							<th class="align-middle text-center"><fmt:message key="places.form.fuel_station" /></th>
+							<th class="align-middle text-center"><fmt:message key="table.actions" /></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -70,6 +71,10 @@
 							<c:forEach items="${places}" var="l">
 								<tr>
 									<td class="align-middle"><c:out value="${l.name}" /><br> <span class="badge badge-dark"><c:out value="${l.address}" /></span></td>
+									<td class="align-middle text-center"><img class="img-fluid icon"
+										title="<fmt:message key="places.form.fuel_station.alt_${l.fuelStation ? 'yes' : 'no'}" />"
+										alt="<fmt:message key="places.form.fuel_station.alt_${l.fuelStation ? 'yes' : 'no'}" />"
+										src="img/<c:out value="${l.fuelStation ? 'petrol-station' : 'house'}"></c:out>.svg"></td>
 									<td class="align-middle text-center"><a href="?m=update&amp;id=<c:out value="${l.id}" />" class="btn btn-primary" role="button"><fmt:message
 												key="button.edit" /></a><a href="#" data-href="?m=archive&amp;id=<c:out value="${l.id}" />" class="btn btn-danger ml-2" data-toggle="modal"
 										data-target="#confirm-archive" role="button"><fmt:message key="button.archive" /></a></td>

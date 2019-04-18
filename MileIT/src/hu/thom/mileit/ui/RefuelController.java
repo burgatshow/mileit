@@ -9,9 +9,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import hu.thom.mileit.core.UIKeys;
-import hu.thom.mileit.models.CarModel;
-import hu.thom.mileit.models.PlaceModel;
-import hu.thom.mileit.models.PaymentMethodModel;
 import hu.thom.mileit.models.RefuelModel;
 
 /**
@@ -99,16 +96,7 @@ public class RefuelController extends Controller {
 		checkValidationMessages(UIKeys.FORM_ME_REFUEL, validationMessages, request);
 
 		if (validationMessages.isEmpty()) {
-			RefuelModel rf = new RefuelModel();
-			rf.setCar(new CarModel(request.getParameter("car")));
-			rf.setPlace(new PlaceModel(request.getParameter("location")));
-			rf.setPayment(new PaymentMethodModel(request.getParameter("paymentMethod")));
-			rf.setUser(user);
-
-			rf.setRefuelTimestamp(request.getParameter("refuelTimestamp"));
-			rf.setOdometer(request.getParameter("odometer"));
-			rf.setUnitPrice(request.getParameter("unitPrice"));
-			rf.setAmount(request.getParameter("amount"));
+			RefuelModel rf = new RefuelModel(request.getParameterMap(), user);
 
 			switch (m) {
 			case UIKeys.MODE_NEW:
