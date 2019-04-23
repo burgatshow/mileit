@@ -18,8 +18,8 @@
 			<ul class="navbar-nav mr-auto">
 				<li class="nav-item <c:if test="${not empty page and page eq 'index' }">active</c:if>"><a class="nav-link" href="index"> <fmt:message
 							key="menu.dashboard" /> <span class="sr-only"><fmt:message key="menu.sr.current" /></span></a></li>
-				<li class="nav-item dropdown <c:if test="${not empty page and (page eq 'cars' or page eq 'maintenance' or page eq 'tyres') }">active</c:if>"><a class="nav-link dropdown-toggle"
-					href="cars" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <fmt:message key="menu.cars" />
+				<li class="nav-item dropdown <c:if test="${not empty page and (page eq 'cars' or page eq 'maintenance' or page eq 'tyres') }">active</c:if>"><a
+					class="nav-link dropdown-toggle" href="cars" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <fmt:message key="menu.cars" />
 				</a>
 					<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
 						<a class="dropdown-item" href="cars"> <fmt:message key="menu.cars.cars" />
@@ -32,13 +32,15 @@
 				</a>
 					<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
 						<a class="dropdown-item" href="refuels"> <fmt:message key="menu.refuels" />
-						</a> <a class="dropdown-item" href="payment_methods"><fmt:message key="menu.refuels.payment" /></a> <a class="dropdown-item" href="places">
-							<fmt:message key="menu.refuels.places" />
+						</a> <a class="dropdown-item" href="payment_methods"><fmt:message key="menu.refuels.payment" /></a> <a class="dropdown-item" href="places"> <fmt:message
+								key="menu.refuels.places" />
 						</a>
 					</div></li>
-<%-- 				<li class="nav-item <c:if test="${not empty page and page eq 'stats' }">active</c:if>"><a class="nav-link" href="stats"> <fmt:message --%>
-<%-- 							key="menu.stats" /> --%>
-<!-- 				</a></li> -->
+				<li class="nav-item <c:if test="${not empty page and page eq 'routes' }">active</c:if>"><a class="nav-link" href="routes"> <fmt:message
+							key="menu.routes" /> <span class="sr-only"><fmt:message key="menu.sr.current" /></span></a></li>
+				<%-- 				<li class="nav-item <c:if test="${not empty page and page eq 'stats' }">active</c:if>"><a class="nav-link" href="stats"> <fmt:message --%>
+				<%-- 							key="menu.stats" /> --%>
+				<!-- 				</a></li> -->
 			</ul>
 
 			<ul class="navbar-nav ml-auto">

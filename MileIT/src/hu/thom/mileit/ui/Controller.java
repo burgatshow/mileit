@@ -26,7 +26,7 @@ import hu.thom.mileit.models.UserModel;
 public class Controller extends HttpServlet {
 	private static final long serialVersionUID = 1849843955087394555L;
 
-	public static final String VERSION = "0.0.3 (beta)";
+	public static final String VERSION = "0.0.4 (beta)";
 	public static final String HOME = "/WEB-INF/pages/home.jsp";
 	public static final String REGISTER = "/WEB-INF/pages/register.jsp";
 	public static final String CARS = "/WEB-INF/pages/cars.jsp";
@@ -43,6 +43,8 @@ public class Controller extends HttpServlet {
 	public static final String TYRES = "/WEB-INF/pages/tyres.jsp";
 	public static final String TYRES_FORM = "/WEB-INF/pages/tyres-form.jsp";
 	public static final String TYRES_MAP = "/WEB-INF/pages/tyres-map.jsp";
+	public static final String ROUTES = "/WEB-INF/pages/routes.jsp";
+	public static final String ROUTES_FORM = "/WEB-INF/pages/routes-form.jsp";
 
 	public DBManager dbm = null;
 

@@ -4,6 +4,12 @@ import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Map;
 
+/**
+ * Model file representing all attributes of a tyre
+ * 
+ * @author thom <tamas.bures@protonmail.com>
+ *
+ */
 public class TyreModel extends Model {
 	private static final long serialVersionUID = -4885680246070902751L;
 

@@ -47,8 +47,22 @@ $(document).ready(
 				endDate: new Date(),
 				weekStart: 1
 			});
+			
+			$('#routeDatetime').datepicker({
+				format : "yyyy-mm-dd",
+				todayHighlight : true,
+				endDate: new Date(),
+				weekStart: 1
+			});
 
 			$('#confirm-archive').on(
+					'show.bs.modal',
+					function(e) {
+						$(this).find('.btn-ok').attr('href',
+								$(e.relatedTarget).data('href'));
+					});
+			
+			$('#confirm-delete').on(
 					'show.bs.modal',
 					function(e) {
 						$(this).find('.btn-ok').attr('href',

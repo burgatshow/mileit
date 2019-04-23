@@ -19,6 +19,7 @@ public class UIKeys implements Serializable {
 	public static final String[] FORM_ME_REFUEL = { "car", "unitPrice", "amount" };
 	public static final String[] FORM_ME_PLACE = { "name" };
 	public static final String[] FORM_ME_PAYMENT_METHOD = { "name" };
+	public static final String[] FORM_ME_ROUTE = { "car", "type", "startPlace", "endPlace", "routeDatetime" };
 
 	// General controller keys
 	public static final String VERSION = "v";
@@ -32,6 +33,7 @@ public class UIKeys implements Serializable {
 	public static final String MODE_ARCHIVE = "archive";
 	public static final String MODE_UPDATE = "update";
 	public static final String MODE_CANCEL = "cancel";
+	public static final String MODE_DELETE = "delete";
 
 	// IndexController
 	public static final String LAST_REFUEL = "lr";
@@ -59,4 +61,7 @@ public class UIKeys implements Serializable {
 	public static final String TYRES = "tyres";
 	public static final String TYRE_VENDORS = "tyreVendors";
 	public static final String TYRE_EVENTS = "tes";
+	
+	// RoutesController
+	public static final String ROUTES = "routes";
 }

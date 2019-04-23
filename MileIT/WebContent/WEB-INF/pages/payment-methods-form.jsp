@@ -26,7 +26,7 @@
 			<div class="col-md-12">
 				<c:if test="${status eq -2}">
 					<div class="alert alert-dismissible alert-danger mt-4">
-						<fmt:message key="pm.status.missing" />
+						<fmt:message key="status.missing" />
 					</div>
 				</c:if>
 			</div>

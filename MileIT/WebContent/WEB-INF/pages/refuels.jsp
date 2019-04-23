@@ -26,17 +26,17 @@
 			<div class="col-md-12">
 				<c:if test="${status eq '0'}">
 					<div class="alert alert-dismissible alert-success">
-						<fmt:message key="refuels.status.add.ok" />
+						<fmt:message key="status.new" />
 					</div>
 				</c:if>
 				<c:if test="${status eq '1'}">
 					<div class="alert alert-dismissible alert-success">
-						<fmt:message key="refuels.status.edit.ok" />
+						<fmt:message key="status.edit" />
 					</div>
 				</c:if>
 				<c:if test="${status eq -1}">
 					<div class="alert alert-dismissible alert-danger mt-4">
-						<fmt:message key="refuels.status.nok" />
+						<fmt:message key="status.error" />
 					</div>
 				</c:if>
 			</div>
@@ -109,24 +109,6 @@
 						</c:if>
 					</tbody>
 				</table>
-			</div>
-		</div>
-	</div>
-	<div class="modal fade" id="confirm-archive" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<fmt:message key="archive.modal.title" />
-				</div>
-				<div class="modal-body">
-					<fmt:message key="archive.modal.body" />
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal">
-						<fmt:message key="button.cancel" />
-					</button>
-					<a class="btn btn-danger btn-ok"><fmt:message key="button.archive" /></a>
-				</div>
 			</div>
 		</div>
 	</div>

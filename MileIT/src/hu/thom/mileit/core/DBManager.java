@@ -21,6 +21,8 @@ import hu.thom.mileit.models.MaintenanceModel;
 import hu.thom.mileit.models.PaymentMethodModel;
 import hu.thom.mileit.models.PlaceModel;
 import hu.thom.mileit.models.RefuelModel;
+import hu.thom.mileit.models.RouteModel;
+import hu.thom.mileit.models.RouteModel.RouteType;
 import hu.thom.mileit.models.TyreEventModel;
 import hu.thom.mileit.models.TyreModel;
 import hu.thom.mileit.models.TyreModel.Axis;
@@ -36,15 +38,15 @@ import hu.thom.mileit.models.UserModel;
 public class DBManager implements Serializable {
 	private static final long serialVersionUID = -5527815745942370595L;
 
-	private DataSource ds;
-	private Connection con;
-	private PreparedStatement ps;
-	private ResultSet rs;
-
 	/**
 	 * Logger instance
 	 */
 	private static LoggerHelper logger = new LoggerHelper(DBManager.class);
+	private DataSource ds;
+	private Connection con;
+	private PreparedStatement ps;
+
+	private ResultSet rs;
 
 	/**
 	 * Constructor
@@ -52,26 +54,6 @@ public class DBManager implements Serializable {
 	public DBManager() {
 		if (ds == null) {
 			forceObtainDS();
-		}
-	}
-
-	/**
-	 * This is for to obtain the datasource from the application server because
-	 * Liberty and Tomcat works differently
-	 * 
-	 * @return {@link DataSource} if obtained, null otherwise
-	 */
-	private void forceObtainDS() {
-		InitialContext ctx = null;
-		try {
-			ctx = new InitialContext();
-			ds = (DataSource) ctx.lookup("jdbc/mileit");
-		} catch (NamingException e) {
-			try {
-				ds = (DataSource) ctx.lookup("java:comp/env/jdbc/mileit");
-			} catch (NamingException e2) {
-				logger.logException("forceObtainDS()", e);
-			}
 		}
 	}
 
@@ -93,6 +75,54 @@ public class DBManager implements Serializable {
 
 		} catch (Exception e) {
 			logger.logException("archiveCar()", e);
+		} finally {
+			closeConnection();
+		}
+		return false;
+	}
+
+	/**
+	 * Method to be able to archive a payment method when the user decided to.
+	 * 
+	 * @param id int the payment method's ID
+	 * @return true on success, false otherwise
+	 */
+	public boolean archivePaymentMethod(int id) {
+		try {
+			con = ds.getConnection();
+			ps = con.prepareStatement(DBCommands.SQL_U_PAYMENT_ARCHIVE);
+			ps.setInt(1, id);
+
+			if (ps.executeUpdate() >= 1) {
+				return true;
+			}
+
+		} catch (Exception e) {
+			logger.logException("archivePaymentMethod()", e);
+		} finally {
+			closeConnection();
+		}
+		return false;
+	}
+
+	/**
+	 * Method to be able to archive a place when the user decided to.
+	 * 
+	 * @param id int the place's ID
+	 * @return true on success, false otherwise
+	 */
+	public boolean archivePlace(int id) {
+		try {
+			con = ds.getConnection();
+			ps = con.prepareStatement(DBCommands.SQL_U_PLACE_ARCHIVE);
+			ps.setInt(1, id);
+
+			if (ps.executeUpdate() >= 1) {
+				return true;
+			}
+
+		} catch (Exception e) {
+			logger.logException("archivePlace()", e);
 		} finally {
 			closeConnection();
 		}
@@ -124,51 +154,29 @@ public class DBManager implements Serializable {
 	}
 
 	/**
-	 * Method to be able to archive a place when the user decided to.
+	 * Checks whether the user exists in the DB or not
 	 * 
-	 * @param id int the place's ID
-	 * @return true on success, false otherwise
+	 * @param username {@link String} the username provided upon sign in
+	 * @return true if yes, false otherwise
 	 */
-	public boolean archivePlace(int id) {
+	private boolean checkUserProfile(String username) {
+		boolean status = false;
 		try {
 			con = ds.getConnection();
-			ps = con.prepareStatement(DBCommands.SQL_U_PLACE_ARCHIVE);
-			ps.setInt(1, id);
+			ps = con.prepareStatement(DBCommands.SQL_S_CHECK_USER);
+			ps.setString(1, username);
 
-			if (ps.executeUpdate() >= 1) {
-				return true;
+			rs = ps.executeQuery();
+
+			if (rs.next()) {
+				status = rs.getInt(1) == 1 ? true : false;
 			}
-
 		} catch (Exception e) {
-			logger.logException("archivePlace()", e);
+			logger.logException("checkUserProfile()", e);
 		} finally {
 			closeConnection();
 		}
-		return false;
-	}
-	
-	/**
-	 * Method to be able to archive a payment method when the user decided to.
-	 * 
-	 * @param id int the payment method's ID
-	 * @return true on success, false otherwise
-	 */
-	public boolean archivePaymentMethod(int id) {
-		try {
-			con = ds.getConnection();
-			ps = con.prepareStatement(DBCommands.SQL_U_PAYMENT_ARCHIVE);
-			ps.setInt(1, id);
-
-			if (ps.executeUpdate() >= 1) {
-				return true;
-			}
-
-		} catch (Exception e) {
-			logger.logException("archivePaymentMethod()", e);
-		} finally {
-			closeConnection();
-		}
-		return false;
+		return status;
 	}
 
 	/**
@@ -206,6 +214,38 @@ public class DBManager implements Serializable {
 				logger.logException("closeConnection()", e);
 			}
 		}
+	}
+
+	/**
+	 * Creates a new record in table 'tyres_events'
+	 * 
+	 * @param car {@link TyreEventModel} a tyre event object
+	 * @return true on success, false otherwise
+	 */
+	public boolean createTyreEvent(TyreEventModel tyreEvent) {
+		if (tyreEvent != null) {
+			try {
+				con = ds.getConnection();
+				ps = con.prepareStatement(DBCommands.SQL_I_TYRE_EVENT);
+
+				ps.setInt(1, tyreEvent.getTyre().getId());
+				ps.setInt(2, tyreEvent.getUser().getId());
+				ps.setInt(3, tyreEvent.getCar().getId());
+				ps.setDouble(4, tyreEvent.getOdometerStart());
+				ps.setDouble(5, tyreEvent.getOdometerEnd());
+				ps.setTimestamp(6, new Timestamp(tyreEvent.getEventDate().getTime()));
+
+				if (ps.executeUpdate() == 1) {
+					return true;
+				}
+			} catch (Exception e) {
+				logger.logException("createTyreEvent()", e);
+			} finally {
+				closeConnection();
+			}
+		}
+
+		return false;
 	}
 
 	/**
@@ -253,38 +293,6 @@ public class DBManager implements Serializable {
 
 		return false;
 
-	}
-
-	/**
-	 * Creates a new record or updates an existing one in table 'places'
-	 * 
-	 * @param car {@link PlaceModel} a place object
-	 * @return true on success, false otherwise
-	 */
-	public boolean createUpdatePlace(PlaceModel l) {
-		if (l != null) {
-			try {
-				con = ds.getConnection();
-				ps = con.prepareStatement(l.getOperation() == 0 ? DBCommands.SQL_I_PLACE : DBCommands.SQL_U_PLACE);
-
-				ps.setString(1, l.getName());
-				ps.setString(2, l.getAddress());
-				ps.setDouble(3, l.getLatitude());
-				ps.setDouble(4, l.getLongitude());
-				ps.setInt(5, l.isFuelStation() ? 1 : 0);
-				ps.setInt(6, l.getOperation() == 0 ? l.getUser().getId() : l.getId());
-
-				if (ps.executeUpdate() == 1) {
-					return true;
-				}
-			} catch (Exception e) {
-				logger.logException("createUpdatePlace()", e);
-			} finally {
-				closeConnection();
-			}
-		}
-
-		return false;
 	}
 
 	/**
@@ -355,65 +363,29 @@ public class DBManager implements Serializable {
 	}
 
 	/**
-	 * Creates a new record or updates an existing one in table 'tyres'
+	 * Creates a new record or updates an existing one in table 'places'
 	 * 
-	 * @param car {@link TyreModel} a tyre object
+	 * @param car {@link PlaceModel} a place object
 	 * @return true on success, false otherwise
 	 */
-	public boolean createUpdateTyre(TyreModel tyre) {
-		if (tyre != null) {
-			System.out.println(tyre);
+	public boolean createUpdatePlace(PlaceModel l) {
+		if (l != null) {
 			try {
 				con = ds.getConnection();
-				ps = con.prepareStatement(tyre.getOperation() == 0 ? DBCommands.SQL_I_TYRE : DBCommands.SQL_U_TYRE);
-				ps.setInt(1, tyre.getType().getCode());
-				ps.setInt(2, tyre.getManufacturerId());
-				ps.setString(3, tyre.getModel());
-				ps.setInt(4, tyre.getAxis().getCode());
-				ps.setInt(5, tyre.getSizeR());
-				ps.setInt(6, tyre.getSizeH());
-				ps.setInt(7, tyre.getSizeW());
-				ps.setTimestamp(8, new Timestamp(tyre.getPurchaseDate().getTime()));
+				ps = con.prepareStatement(l.getOperation() == 0 ? DBCommands.SQL_I_PLACE : DBCommands.SQL_U_PLACE);
 
-				ps.setInt(9, tyre.getOperation() == 0 ? tyre.getUser().getId() : tyre.getId());
+				ps.setString(1, l.getName());
+				ps.setString(2, l.getAddress());
+				ps.setDouble(3, l.getLatitude());
+				ps.setDouble(4, l.getLongitude());
+				ps.setInt(5, l.isFuelStation() ? 1 : 0);
+				ps.setInt(6, l.getOperation() == 0 ? l.getUser().getId() : l.getId());
 
 				if (ps.executeUpdate() == 1) {
 					return true;
 				}
 			} catch (Exception e) {
-				logger.logException("createUpdateTyre()", e);
-			} finally {
-				closeConnection();
-			}
-		}
-
-		return false;
-	}
-
-	/**
-	 * Creates a new record in table 'tyres_events'
-	 * 
-	 * @param car {@link TyreEventModel} a tyre event object
-	 * @return true on success, false otherwise
-	 */
-	public boolean createTyreEvent(TyreEventModel tyreEvent) {
-		if (tyreEvent != null) {
-			try {
-				con = ds.getConnection();
-				ps = con.prepareStatement(DBCommands.SQL_I_TYRE_EVENT);
-
-				ps.setInt(1, tyreEvent.getTyre().getId());
-				ps.setInt(2, tyreEvent.getUser().getId());
-				ps.setInt(3, tyreEvent.getCar().getId());
-				ps.setDouble(4, tyreEvent.getOdometerStart());
-				ps.setDouble(5, tyreEvent.getOdometerEnd());
-				ps.setTimestamp(6, new Timestamp(tyreEvent.getEventDate().getTime()));
-
-				if (ps.executeUpdate() == 1) {
-					return true;
-				}
-			} catch (Exception e) {
-				logger.logException("createTyreEvent()", e);
+				logger.logException("createUpdatePlace()", e);
 			} finally {
 				closeConnection();
 			}
@@ -459,6 +431,137 @@ public class DBManager implements Serializable {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Creates a new record or updates an existing one in table 'routes'
+	 * 
+	 * @param route {@link RouteModel} a route object
+	 * @return true on success, false otherwise
+	 */
+	public boolean createUpdateRoute(RouteModel r) {
+		if (r != null) {
+			try {
+				con = ds.getConnection();
+				ps = con.prepareStatement(r.getOperation() == 0 ? DBCommands.SQL_I_ROUTE : DBCommands.SQL_U_ROUTE);
+				ps.setInt(1, r.getCar().getId());
+				ps.setInt(2, r.getStartPlace().getId());
+				ps.setInt(3, r.getEndPlace().getId());
+				ps.setInt(4, RouteType.toCode(r.getRouteType()));
+				ps.setTimestamp(5, r.getRouteDatetimeAsTimestamp());
+				ps.setDouble(6, r.getDistance());
+
+				ps.setInt(7, r.getOperation() == 0 ? r.getUser().getId() : r.getId());
+
+				if (ps.executeUpdate() == 1) {
+					return true;
+				}
+			} catch (Exception e) {
+				logger.logException("createUpdateRoute()", e);
+			} finally {
+				closeConnection();
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Creates a new record or updates an existing one in table 'tyres'
+	 * 
+	 * @param car {@link TyreModel} a tyre object
+	 * @return true on success, false otherwise
+	 */
+	public boolean createUpdateTyre(TyreModel tyre) {
+		if (tyre != null) {
+			System.out.println(tyre);
+			try {
+				con = ds.getConnection();
+				ps = con.prepareStatement(tyre.getOperation() == 0 ? DBCommands.SQL_I_TYRE : DBCommands.SQL_U_TYRE);
+				ps.setInt(1, tyre.getType().getCode());
+				ps.setInt(2, tyre.getManufacturerId());
+				ps.setString(3, tyre.getModel());
+				ps.setInt(4, tyre.getAxis().getCode());
+				ps.setInt(5, tyre.getSizeR());
+				ps.setInt(6, tyre.getSizeH());
+				ps.setInt(7, tyre.getSizeW());
+				ps.setTimestamp(8, new Timestamp(tyre.getPurchaseDate().getTime()));
+
+				ps.setInt(9, tyre.getOperation() == 0 ? tyre.getUser().getId() : tyre.getId());
+
+				if (ps.executeUpdate() == 1) {
+					return true;
+				}
+			} catch (Exception e) {
+				logger.logException("createUpdateTyre()", e);
+			} finally {
+				closeConnection();
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Creates a user profile for the user after the very first login
+	 * 
+	 * @param username {@link String} the username provided upon sign in
+	 * @return true on success, false otherwise
+	 */
+	private boolean createUserProfile(String username) {
+		boolean status = false;
+		try {
+			con = ds.getConnection();
+			ps = con.prepareStatement(DBCommands.SQL_I_USER);
+			ps.setString(1, username);
+			status = ps.executeUpdate() == 1 ? true : false;
+		} catch (Exception e) {
+			logger.logException("createUserProfile()", e);
+		} finally {
+			closeConnection();
+		}
+		return status;
+	}
+
+	/**
+	 * Deletes a route from the database
+	 * 
+	 * @param id ID of the route entry
+	 * @return true on success, false otherwise
+	 */
+	public boolean deleteRoute(int id) {
+		boolean status = false;
+		try {
+			con = ds.getConnection();
+			ps = con.prepareStatement(DBCommands.SQL_D_ROUTE);
+			ps.setInt(1, id);
+			status = ps.executeUpdate() == 1 ? true : false;
+		} catch (Exception e) {
+			logger.logException("deleteRoute()", e);
+		} finally {
+			closeConnection();
+		}
+		return status;
+	}
+
+	/**
+	 * This is for to obtain the datasource from the application server because
+	 * Liberty and Tomcat works differently
+	 * 
+	 * @return {@link DataSource} if obtained, null otherwise
+	 */
+	private void forceObtainDS() {
+		InitialContext ctx = null;
+		try {
+			ctx = new InitialContext();
+			ds = (DataSource) ctx.lookup("jdbc/mileit");
+		} catch (NamingException e) {
+			try {
+				ds = (DataSource) ctx.lookup("java:comp/env/jdbc/mileit");
+			} catch (NamingException e2) {
+				logger.logException("forceObtainDS()", e);
+			}
+		}
 	}
 
 	/**
@@ -583,6 +686,407 @@ public class DBManager implements Serializable {
 	}
 
 	/**
+	 * Returns a {@link List} of refuel records from the database identified by user
+	 * ID
+	 * 
+	 * @param id int the user's ID
+	 * @return a {@link List} of {@link RefuelModel} objects if found, empty list
+	 *         otherwise
+	 */
+	public List<RefuelModel> getFuelPriceStats(int user_id) {
+		List<RefuelModel> statData = new ArrayList<RefuelModel>();
+		try {
+			con = ds.getConnection();
+			ps = con.prepareStatement(DBCommands.SQL_S_PRICE_GRAPH);
+			ps.setInt(1, user_id);
+
+			rs = ps.executeQuery();
+			while (rs.next()) {
+				statData.add(new RefuelModel(rs.getTimestamp(1), rs.getDouble(2), rs.getDouble(3), rs.getDouble(4)));
+			}
+
+		} catch (Exception e) {
+			logger.logException("getFuelPriceStats()", e);
+		} finally {
+			closeConnection();
+		}
+
+		return statData;
+	}
+
+	/**
+	 * Returns a {@link RefuelModel} for the active user with basic statistical data
+	 * 
+	 * @param user_id int the user's ID
+	 * @return {@link RefuelModel} if found, null otherwise
+	 */
+	public RefuelModel getLastRefuel(int user_id) {
+		RefuelModel rf = null;
+		try {
+			con = ds.getConnection();
+			ps = con.prepareStatement(DBCommands.SQL_S_BIG_STAT);
+			ps.setInt(1, user_id);
+
+			rs = ps.executeQuery();
+
+			if (rs.next()) {
+				rf = new RefuelModel();
+				rf.setCar(new CarModel());
+				rf.getCar().setId(rs.getInt(1));
+				rf.setId(rs.getInt(2));
+				rf.setPlace(new PlaceModel(rs.getInt(3)));
+				rf.setRefuelDate(rs.getTimestamp(4));
+				rf.setOdometer(rs.getDouble(5));
+				rf.setFuelAmount(rs.getDouble(6));
+				rf.setAmount(rs.getDouble(7));
+				rf.setUnitPrice(rs.getDouble(8));
+				rf.setPayment(new PaymentMethodModel(rs.getInt(9)));
+			}
+		} catch (Exception e) {
+			logger.logException("getLastRefuel()", e);
+		} finally {
+			closeConnection();
+		}
+		return rf;
+	}
+
+	/**
+	 * Returns a {@link MaintenanceModel} of a given maintenance
+	 * 
+	 * @param id int the maintenance's ID
+	 * @return {@link MaintenanceModel} if found, null otherwise
+	 */
+	public MaintenanceModel getMaintenance(int id) {
+		MaintenanceModel mm = null;
+		try {
+			con = ds.getConnection();
+			ps = con.prepareStatement(DBCommands.SQL_S_MAINTENANCE);
+			ps.setInt(1, id);
+
+			rs = ps.executeQuery();
+
+			if (rs.next()) {
+				mm = new MaintenanceModel();
+				mm.setId(rs.getInt(1));
+				mm.setCar(new CarModel(rs.getInt(2)));
+				mm.setUser(new UserModel(rs.getInt(3)));
+				mm.setPayment(new PaymentMethodModel(rs.getInt(4)));
+				mm.setOdometer(rs.getDouble(5));
+				mm.setMaintenanceDate(rs.getDate(6));
+				mm.setDescription(rs.getString(7));
+				mm.setAmount(rs.getDouble(8));
+			}
+		} catch (Exception e) {
+			logger.logException("getMaintenance()", e);
+		} finally {
+			closeConnection();
+		}
+		return mm;
+	}
+
+	/**
+	 * Returns a {@link List} of maintenance entries from the database identified by
+	 * user ID
+	 * 
+	 * @param id int the user's ID
+	 * @return a {@link List} of {@link MaintenanceModel} objects if found, empty
+	 *         list otherwise
+	 */
+	public List<MaintenanceModel> getMaintenances(int id) {
+		List<MaintenanceModel> ms = new ArrayList<MaintenanceModel>();
+
+		try {
+			con = ds.getConnection();
+			ps = con.prepareStatement(DBCommands.SQL_S_MAINTENANCES);
+			ps.setInt(1, id);
+
+			rs = ps.executeQuery();
+
+			MaintenanceModel m = null;
+			while (rs.next()) {
+				m = new MaintenanceModel();
+				m.setId(rs.getInt(1));
+				m.setCar(new CarModel(rs.getInt(2), rs.getString(9), rs.getString(10)));
+				m.setUser(new UserModel(rs.getInt(3)));
+				m.setPayment(new PaymentMethodModel(rs.getInt(4), rs.getString(11), null));
+				m.setOdometer(rs.getDouble(5));
+				m.setMaintenanceDate(rs.getDate(6));
+				m.setDescription(rs.getString(7));
+				m.setAmount(rs.getDouble(8));
+
+				ms.add(m);
+			}
+		} catch (Exception e) {
+			logger.logException("getMaintenances()", e);
+		} finally {
+			closeConnection();
+		}
+
+		return ms;
+	}
+
+	/**
+	 * Returns a {@link PaymentMethodModel} of a given payment method
+	 * 
+	 * @param id int the place's ID
+	 * @return {@link PaymentMethodModel} if found, null otherwise
+	 */
+	public PaymentMethodModel getPaymentMethod(int id) {
+		PaymentMethodModel pm = null;
+		try {
+			con = ds.getConnection();
+			ps = con.prepareStatement(DBCommands.SQL_S_PAYMENT);
+			ps.setInt(1, id);
+
+			rs = ps.executeQuery();
+
+			if (rs.next()) {
+				pm = new PaymentMethodModel(rs.getInt(1), rs.getString(2), rs.getString(3));
+			}
+		} catch (Exception e) {
+			logger.logException("getPaymentMethod()", e);
+		} finally {
+			closeConnection();
+		}
+		return pm;
+	}
+
+	/**
+	 * Returns a {@link List} of payment method entries from the database identified
+	 * by user ID
+	 * 
+	 * @param id int the user's ID
+	 * @return a {@link List} of {@link PaymentMethodModel} objects if found, empty
+	 *         list otherwise
+	 */
+	public List<PaymentMethodModel> getPaymentMethods(int id) {
+		List<PaymentMethodModel> pms = new ArrayList<PaymentMethodModel>();
+
+		try {
+			con = ds.getConnection();
+			ps = con.prepareStatement(DBCommands.SQL_S_PAYMENTS);
+			ps.setInt(1, id);
+
+			rs = ps.executeQuery();
+
+			while (rs.next()) {
+				pms.add(new PaymentMethodModel(rs.getInt(1), rs.getString(2), rs.getString(3)));
+			}
+		} catch (Exception e) {
+			logger.logException("getPaymentMethods()", e);
+		} finally {
+			closeConnection();
+		}
+
+		return pms;
+	}
+
+	/**
+	 * Returns a {@link PlaceModel} of a given place
+	 * 
+	 * @param id int the place's ID
+	 * @return {@link PlaceModel} if found, null otherwise
+	 */
+	public PlaceModel getPlace(int id) {
+		PlaceModel l = null;
+		try {
+			con = ds.getConnection();
+			ps = con.prepareStatement(DBCommands.SQL_S_PLACE);
+			ps.setInt(1, id);
+
+			rs = ps.executeQuery();
+
+			if (rs.next()) {
+				l = new PlaceModel(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getInt(4), rs.getDouble(5), rs.getDouble(6), rs.getInt(7));
+			}
+		} catch (Exception e) {
+			logger.logException("getPlace()", e);
+		} finally {
+			closeConnection();
+		}
+		return l;
+	}
+
+	/**
+	 * Returns a {@link List} of place entries from the database identified by user
+	 * ID
+	 * 
+	 * @param id int the user's ID
+	 * @return a {@link List} of {@link PlaceModel} objects if found, empty list
+	 *         otherwise
+	 */
+	public List<PlaceModel> getPlaces(int id) {
+		List<PlaceModel> ls = new ArrayList<PlaceModel>();
+
+		try {
+			con = ds.getConnection();
+			ps = con.prepareStatement(DBCommands.SQL_S_PLACES);
+			ps.setInt(1, id);
+
+			rs = ps.executeQuery();
+
+			while (rs.next()) {
+				ls.add(new PlaceModel(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getDouble(4), rs.getDouble(5), rs.getInt(6)));
+			}
+		} catch (Exception e) {
+			logger.logException("getPlaces()", e);
+		} finally {
+			closeConnection();
+		}
+
+		return ls;
+	}
+
+	/**
+	 * Returns a {@link RefuelModel} of a given refuel
+	 * 
+	 * @param id int the refuel's ID
+	 * @return {@link RefuelModel} if found, null otherwise
+	 */
+	public RefuelModel getRefuel(int id) {
+		RefuelModel rf = null;
+		try {
+			con = ds.getConnection();
+			ps = con.prepareStatement(DBCommands.SQL_S_REFUEL);
+			ps.setInt(1, id);
+
+			rs = ps.executeQuery();
+
+			if (rs.next()) {
+				rf = new RefuelModel(rs.getInt(1));
+				rf.setCar(new CarModel(rs.getInt(2)));
+				rf.setPlace(new PlaceModel(rs.getInt(3)));
+				rf.setRefuelDate(rs.getTimestamp(4));
+				rf.setOdometer(rs.getDouble(5));
+				rf.setUnitPrice(rs.getDouble(6));
+				rf.setFuelAmount(rs.getDouble(7));
+				rf.setPayment(new PaymentMethodModel(rs.getInt(8)));
+				rf.setAmount(rs.getDouble(9));
+			}
+
+		} catch (Exception e) {
+			logger.logException("getRefuel()", e);
+		} finally {
+			closeConnection();
+		}
+		return rf;
+	}
+
+	/**
+	 * Returns a {@link List} of refuel entries from the database identified by user
+	 * ID
+	 * 
+	 * @param id int the user's ID
+	 * @return a {@link List} of {@link RefuelModel} objects if found, empty list
+	 *         otherwise
+	 */
+	public List<RefuelModel> getRefuels(int user_id) {
+		List<RefuelModel> refuels = new ArrayList<RefuelModel>();
+
+		try {
+			con = ds.getConnection();
+			ps = con.prepareStatement(DBCommands.SQL_S_REFUELS);
+			ps.setInt(1, user_id);
+
+			rs = ps.executeQuery();
+
+			RefuelModel refuel = null;
+			while (rs.next()) {
+				refuel = new RefuelModel(rs.getInt(1));
+				refuel.setCar(new CarModel(rs.getInt(2), rs.getString(12), rs.getString(11)));
+				refuel.setPlace(new PlaceModel(rs.getInt(3), rs.getString(13), null, 0, 0, 1));
+				refuel.setRefuelDate(rs.getTimestamp(4));
+				refuel.setOdometer(rs.getDouble(5));
+				refuel.setFuelAmount(rs.getDouble(7));
+				refuel.setAmount(rs.getDouble(9));
+				refuel.setUnitPrice(rs.getDouble(6));
+				refuel.setDistance(rs.getDouble(15));
+				refuel.setPayment(new PaymentMethodModel(rs.getInt(8), rs.getString(14), null));
+
+				refuels.add(refuel);
+			}
+		} catch (Exception e) {
+			logger.logException("getRefuels()", e);
+		} finally {
+			closeConnection();
+		}
+
+		return refuels;
+	}
+
+	/**
+	 * Returns a {@link RouteModel} of route entry from the database identified by
+	 * its ID ID
+	 * 
+	 * @param id int the route's ID
+	 * @return a {@link RouteModel} object if found, null otherwise
+	 */
+	public RouteModel getRoute(int route_id) {
+		RouteModel r = null;
+		try {
+			con = ds.getConnection();
+			ps = con.prepareStatement(DBCommands.SQL_S_ROUTE);
+			ps.setInt(1, route_id);
+
+			rs = ps.executeQuery();
+
+			if (rs.next()) {
+				r = new RouteModel(rs.getInt(1));
+				r.setRouteDatetime(rs.getTimestamp(2));
+				r.setDistance(rs.getDouble(3));
+				r.setRouteType(RouteType.fromCode((byte) rs.getInt(4)));
+				r.setCar(new CarModel(rs.getInt(5), rs.getString(7), rs.getString(6)));
+				r.setStartPlace(new PlaceModel(rs.getInt(8), rs.getString(9), rs.getString(10), 0, 0, 0));
+				r.setEndPlace(new PlaceModel(rs.getInt(11), rs.getString(12), rs.getString(13), 0, 0, 0));
+			}
+		} catch (Exception e) {
+			logger.logException("getRoute()", e);
+		} finally {
+			closeConnection();
+		}
+		return r;
+	}
+
+	/**
+	 * Returns a {@link List} of refuel entries from the database identified by user
+	 * ID
+	 * 
+	 * @param id int the user's ID
+	 * @return a {@link List} of {@link RefuelModel} objects if found, empty list
+	 *         otherwise
+	 */
+	public List<RouteModel> getRoutes(int user_id) {
+		List<RouteModel> routes = new ArrayList<RouteModel>();
+
+		try {
+			con = ds.getConnection();
+			ps = con.prepareStatement(DBCommands.SQL_S_ROUTES);
+			ps.setInt(1, user_id);
+
+			rs = ps.executeQuery();
+
+			RouteModel route = null;
+			while (rs.next()) {
+				route = new RouteModel(rs.getInt(1));
+				route.setRouteDatetime(rs.getTimestamp(2));
+				route.setDistance(rs.getDouble(3));
+				route.setRouteType(RouteType.fromCode((byte) rs.getInt(4)));
+				route.setCar(new CarModel(rs.getInt(5), rs.getString(7), rs.getString(6)));
+				route.setStartPlace(new PlaceModel(rs.getInt(8), rs.getString(9), rs.getString(10), 0, 0, 0));
+				route.setEndPlace(new PlaceModel(rs.getInt(11), rs.getString(12), rs.getString(13), 0, 0, 0));
+
+				routes.add(route);
+			}
+		} catch (Exception e) {
+			logger.logException("getRoutes()", e);
+		} finally {
+			closeConnection();
+		}
+
+		return routes;
+	}
+
+	/**
 	 * Returns a single tyre record from the database identified by its ID
 	 * 
 	 * @param id int the car's ID
@@ -686,382 +1190,6 @@ public class DBManager implements Serializable {
 		}
 
 		return tyreVendors;
-	}
-
-	/**
-	 * Returns a {@link List} of refuel records from the database identified by user
-	 * ID
-	 * 
-	 * @param id int the user's ID
-	 * @return a {@link List} of {@link RefuelModel} objects if found, empty list
-	 *         otherwise
-	 */
-	public List<RefuelModel> getFuelPriceStats(int user_id) {
-		List<RefuelModel> statData = new ArrayList<RefuelModel>();
-		try {
-			con = ds.getConnection();
-			ps = con.prepareStatement(DBCommands.SQL_S_PRICE_GRAPH);
-			ps.setInt(1, user_id);
-
-			rs = ps.executeQuery();
-			while (rs.next()) {
-				statData.add(new RefuelModel(rs.getTimestamp(1), rs.getDouble(2), rs.getDouble(3), rs.getDouble(4)));
-			}
-
-		} catch (Exception e) {
-			logger.logException("getFuelPriceStats()", e);
-		} finally {
-			closeConnection();
-		}
-
-		return statData;
-	}
-
-	/**
-	 * Returns a {@link RefuelModel} for the active user with basic statistical data
-	 * 
-	 * @param user_id int the user's ID
-	 * @return {@link RefuelModel} if found, null otherwise
-	 */
-	public RefuelModel getLastRefuel(int user_id) {
-		RefuelModel rf = null;
-		try {
-			con = ds.getConnection();
-			ps = con.prepareStatement(DBCommands.SQL_S_BIG_STAT);
-			ps.setInt(1, user_id);
-
-			rs = ps.executeQuery();
-
-			if (rs.next()) {
-				rf = new RefuelModel();
-				rf.setCar(new CarModel());
-				rf.getCar().setId(rs.getInt(1));
-				rf.setId(rs.getInt(2));
-				rf.setPlace(new PlaceModel(rs.getInt(3)));
-				rf.setRefuelDate(rs.getTimestamp(4));
-				rf.setOdometer(rs.getDouble(5));
-				rf.setFuelAmount(rs.getDouble(6));
-				rf.setAmount(rs.getDouble(7));
-				rf.setUnitPrice(rs.getDouble(8));
-				rf.setPayment(new PaymentMethodModel(rs.getInt(9)));
-			}
-		} catch (Exception e) {
-			logger.logException("getLastRefuel()", e);
-		} finally {
-			closeConnection();
-		}
-		return rf;
-	}
-
-	/**
-	 * Returns a {@link PlaceModel} of a given place
-	 * 
-	 * @param id int the place's ID
-	 * @return {@link PlaceModel} if found, null otherwise
-	 */
-	public PlaceModel getPlace(int id) {
-		PlaceModel l = null;
-		try {
-			con = ds.getConnection();
-			ps = con.prepareStatement(DBCommands.SQL_S_PLACE);
-			ps.setInt(1, id);
-
-			rs = ps.executeQuery();
-
-			if (rs.next()) {
-				l = new PlaceModel(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getInt(4), rs.getDouble(5), rs.getDouble(6), rs.getInt(7));
-			}
-		} catch (Exception e) {
-			logger.logException("getPlace()", e);
-		} finally {
-			closeConnection();
-		}
-		return l;
-	}
-
-	/**
-	 * Returns a {@link List} of place entries from the database identified by user
-	 * ID
-	 * 
-	 * @param id int the user's ID
-	 * @return a {@link List} of {@link PlaceModel} objects if found, empty list
-	 *         otherwise
-	 */
-	public List<PlaceModel> getPlaces(int id) {
-		List<PlaceModel> ls = new ArrayList<PlaceModel>();
-
-		try {
-			con = ds.getConnection();
-			ps = con.prepareStatement(DBCommands.SQL_S_PLACES);
-			ps.setInt(1, id);
-
-			rs = ps.executeQuery();
-
-			while (rs.next()) {
-				ls.add(new PlaceModel(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getDouble(4), rs.getDouble(5), rs.getInt(6)));
-			}
-		} catch (Exception e) {
-			logger.logException("getPlaces()", e);
-		} finally {
-			closeConnection();
-		}
-
-		return ls;
-	}
-
-	/**
-	 * Returns a {@link List} of maintenance entries from the database identified by
-	 * user ID
-	 * 
-	 * @param id int the user's ID
-	 * @return a {@link List} of {@link MaintenanceModel} objects if found, empty
-	 *         list otherwise
-	 */
-	public List<MaintenanceModel> getMaintenances(int id) {
-		List<MaintenanceModel> ms = new ArrayList<MaintenanceModel>();
-
-		try {
-			con = ds.getConnection();
-			ps = con.prepareStatement(DBCommands.SQL_S_MAINTENANCES);
-			ps.setInt(1, id);
-
-			rs = ps.executeQuery();
-
-			MaintenanceModel m = null;
-			while (rs.next()) {
-				m = new MaintenanceModel();
-				m.setId(rs.getInt(1));
-				m.setCar(new CarModel(rs.getInt(2), rs.getString(9), rs.getString(10)));
-				m.setUser(new UserModel(rs.getInt(3)));
-				m.setPayment(new PaymentMethodModel(rs.getInt(4), rs.getString(11), null));
-				m.setOdometer(rs.getDouble(5));
-				m.setMaintenanceDate(rs.getDate(6));
-				m.setDescription(rs.getString(7));
-				m.setAmount(rs.getDouble(8));
-
-				ms.add(m);
-			}
-		} catch (Exception e) {
-			logger.logException("getMaintenances()", e);
-		} finally {
-			closeConnection();
-		}
-
-		return ms;
-	}
-
-	/**
-	 * Returns a {@link MaintenanceModel} of a given maintenance
-	 * 
-	 * @param id int the maintenance's ID
-	 * @return {@link MaintenanceModel} if found, null otherwise
-	 */
-	public MaintenanceModel getMaintenance(int id) {
-		MaintenanceModel mm = null;
-		try {
-			con = ds.getConnection();
-			ps = con.prepareStatement(DBCommands.SQL_S_MAINTENANCE);
-			ps.setInt(1, id);
-
-			rs = ps.executeQuery();
-
-			if (rs.next()) {
-				mm = new MaintenanceModel();
-				mm.setId(rs.getInt(1));
-				mm.setCar(new CarModel(rs.getInt(2)));
-				mm.setUser(new UserModel(rs.getInt(3)));
-				mm.setPayment(new PaymentMethodModel(rs.getInt(4)));
-				mm.setOdometer(rs.getDouble(5));
-				mm.setMaintenanceDate(rs.getDate(6));
-				mm.setDescription(rs.getString(7));
-				mm.setAmount(rs.getDouble(8));
-			}
-		} catch (Exception e) {
-			logger.logException("getMaintenance()", e);
-		} finally {
-			closeConnection();
-		}
-		return mm;
-	}
-
-	/**
-	 * Returns a {@link PaymentMethodModel} of a given payment method
-	 * 
-	 * @param id int the place's ID
-	 * @return {@link PaymentMethodModel} if found, null otherwise
-	 */
-	public PaymentMethodModel getPaymentMethod(int id) {
-		PaymentMethodModel pm = null;
-		try {
-			con = ds.getConnection();
-			ps = con.prepareStatement(DBCommands.SQL_S_PAYMENT);
-			ps.setInt(1, id);
-
-			rs = ps.executeQuery();
-
-			if (rs.next()) {
-				pm = new PaymentMethodModel(rs.getInt(1), rs.getString(2), rs.getString(3));
-			}
-		} catch (Exception e) {
-			logger.logException("getPaymentMethod()", e);
-		} finally {
-			closeConnection();
-		}
-		return pm;
-	}
-
-	/**
-	 * Returns a {@link List} of payment method entries from the database identified
-	 * by user ID
-	 * 
-	 * @param id int the user's ID
-	 * @return a {@link List} of {@link PaymentMethodModel} objects if found, empty
-	 *         list otherwise
-	 */
-	public List<PaymentMethodModel> getPaymentMethods(int id) {
-		List<PaymentMethodModel> pms = new ArrayList<PaymentMethodModel>();
-
-		try {
-			con = ds.getConnection();
-			ps = con.prepareStatement(DBCommands.SQL_S_PAYMENTS);
-			ps.setInt(1, id);
-
-			rs = ps.executeQuery();
-
-			while (rs.next()) {
-				pms.add(new PaymentMethodModel(rs.getInt(1), rs.getString(2), rs.getString(3)));
-			}
-		} catch (Exception e) {
-			logger.logException("getPaymentMethods()", e);
-		} finally {
-			closeConnection();
-		}
-
-		return pms;
-	}
-
-	/**
-	 * Returns a {@link RefuelModel} of a given refuel
-	 * 
-	 * @param id int the refuel's ID
-	 * @return {@link RefuelModel} if found, null otherwise
-	 */
-	public RefuelModel getRefuel(int id) {
-		RefuelModel rf = null;
-		try {
-			con = ds.getConnection();
-			ps = con.prepareStatement(DBCommands.SQL_S_REFUEL);
-			ps.setInt(1, id);
-
-			rs = ps.executeQuery();
-
-			if (rs.next()) {
-				rf = new RefuelModel(rs.getInt(1));
-				rf.setCar(new CarModel(rs.getInt(2)));
-				rf.setPlace(new PlaceModel(rs.getInt(3)));
-				rf.setRefuelDate(rs.getTimestamp(4));
-				rf.setOdometer(rs.getDouble(5));
-				rf.setUnitPrice(rs.getDouble(6));
-				rf.setFuelAmount(rs.getDouble(7));
-				rf.setPayment(new PaymentMethodModel(rs.getInt(8)));
-				rf.setAmount(rs.getDouble(9));
-			}
-
-		} catch (Exception e) {
-			logger.logException("getRefuel()", e);
-		} finally {
-			closeConnection();
-		}
-		return rf;
-	}
-
-	/**
-	 * Returns a {@link List} of refuel entries from the database identified by user
-	 * ID
-	 * 
-	 * @param id int the user's ID
-	 * @return a {@link List} of {@link RefuelModel} objects if found, empty list
-	 *         otherwise
-	 */
-	public List<RefuelModel> getRefuels(int user_id) {
-		List<RefuelModel> refuels = new ArrayList<RefuelModel>();
-
-		try {
-			con = ds.getConnection();
-			ps = con.prepareStatement(DBCommands.SQL_S_REFUELS);
-			ps.setInt(1, user_id);
-
-			rs = ps.executeQuery();
-
-			RefuelModel refuel = null;
-			while (rs.next()) {
-				refuel = new RefuelModel(rs.getInt(1));
-				refuel.setCar(new CarModel(rs.getInt(2), rs.getString(12), rs.getString(11)));
-				refuel.setPlace(new PlaceModel(rs.getInt(3), rs.getString(13), null, 0, 0, 1));
-				refuel.setRefuelDate(rs.getTimestamp(4));
-				refuel.setOdometer(rs.getDouble(5));
-				refuel.setFuelAmount(rs.getDouble(7));
-				refuel.setAmount(rs.getDouble(9));
-				refuel.setUnitPrice(rs.getDouble(6));
-				refuel.setDistance(rs.getDouble(15));
-				refuel.setPayment(new PaymentMethodModel(rs.getInt(8), rs.getString(14), null));
-
-				refuels.add(refuel);
-			}
-		} catch (Exception e) {
-			logger.logException("getRefuels()", e);
-		} finally {
-			closeConnection();
-		}
-
-		return refuels;
-	}
-
-	/**
-	 * Checks whether the user exists in the DB or not
-	 * 
-	 * @param username {@link String} the username provided upon sign in
-	 * @return true if yes, false otherwise
-	 */
-	private boolean checkUserProfile(String username) {
-		boolean status = false;
-		try {
-			con = ds.getConnection();
-			ps = con.prepareStatement(DBCommands.SQL_S_CHECK_USER);
-			ps.setString(1, username);
-
-			rs = ps.executeQuery();
-
-			if (rs.next()) {
-				status = rs.getInt(1) == 1 ? true : false;
-			}
-		} catch (Exception e) {
-			logger.logException("checkUserProfile()", e);
-		} finally {
-			closeConnection();
-		}
-		return status;
-	}
-
-	/**
-	 * Creates a user profile for the user after the very first login
-	 * 
-	 * @param username {@link String} the username provided upon sign in
-	 * @return true on success, false otherwise
-	 */
-	private boolean createUserProfile(String username) {
-		boolean status = false;
-		try {
-			con = ds.getConnection();
-			ps = con.prepareStatement(DBCommands.SQL_I_USER);
-			ps.setString(1, username);
-			status = ps.executeUpdate() == 1 ? true : false;
-		} catch (Exception e) {
-			logger.logException("createUserProfile()", e);
-		} finally {
-			closeConnection();
-		}
-		return status;
 	}
 
 	/**

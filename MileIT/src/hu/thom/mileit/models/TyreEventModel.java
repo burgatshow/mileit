@@ -3,6 +3,12 @@ package hu.thom.mileit.models;
 import java.util.Date;
 import java.util.Map;
 
+/**
+ * Model file representing all attributes of a tyre event
+ * 
+ * @author thom <tamas.bures@protonmail.com>
+ *
+ */
 public class TyreEventModel extends Model {
 	private static final long serialVersionUID = 736208459104609557L;
 
