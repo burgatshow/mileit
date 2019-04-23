@@ -24,9 +24,9 @@ public class RefuelModel extends Model {
 	}
 
 	public RefuelModel(Map<String, String[]> params, UserModel user) {
-		this.getCar().setId(params.get("car")[0]);
-		this.getPlace().setId(params.get("place")[0]);
-		this.getPayment().setId(params.get("paymentMethod")[0]);
+		setCar(new CarModel(params.get("car")[0]));
+		setPlace(new PlaceModel(params.get("place")[0]));
+		setPayment(new PaymentMethodModel(params.get("paymentMethod")[0]));
 		setRefuelTimestamp(params.get("refuelTimestamp")[0]);
 		setOdometer(params.get("odometer")[0]);
 		setUnitPrice(params.get("unitPrice")[0]);
