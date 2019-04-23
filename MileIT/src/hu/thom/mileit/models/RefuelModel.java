@@ -32,7 +32,7 @@ public class RefuelModel extends Model {
 		setUnitPrice(params.get("unitPrice")[0]);
 		setAmount(params.get("amount")[0]);
 
-		this.setUser(user);
+		setUser(user);
 	}
 
 	public RefuelModel(int id) {

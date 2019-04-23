@@ -140,7 +140,7 @@ public class TyreModel extends Model {
 		setType(params.get("type")[0]);
 		setAxis(params.get("axis")[0]);
 		setPurchaseDate(params.get("purchaseDate")[0]);
-		this.setUser(user);
+		setUser(user);
 	}
 
 	public TyreType getType() {

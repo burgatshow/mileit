@@ -20,7 +20,7 @@ public class PaymentMethodModel extends Model {
 	public PaymentMethodModel(Map<String, String[]> params, UserModel user) {
 		this.name = params.get("name")[0];
 		this.description = params.get("description")[0];
-		this.setUser(user);
+		setUser(user);
 	}
 
 	public PaymentMethodModel(int id) {
