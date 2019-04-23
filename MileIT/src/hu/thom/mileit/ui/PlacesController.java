@@ -83,6 +83,7 @@ public class PlacesController extends Controller {
 		case UIKeys.MODE_:
 		case UIKeys.MODE_CANCEL:
 		default:
+			assignedObjects.remove(UIKeys.STATUS);
 			renderPage(PLACES, request, response);
 			break;
 		}

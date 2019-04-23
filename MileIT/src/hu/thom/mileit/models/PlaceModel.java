@@ -37,23 +37,23 @@ public class PlaceModel extends Model {
 		this.setUser(user);
 	}
 
-	public PlaceModel(int id, String name, String address, int userId, double longitude, double latitude, boolean fuelStation) {
+	public PlaceModel(int id, String name, String address, int userId, double longitude, double latitude, int fuelStation) {
 		setId(id);
 		this.name = name;
 		this.address = address;
 		this.setUser(new UserModel(userId));
 		this.latitude = latitude;
 		this.longitude = longitude;
-		this.fuelStation = fuelStation;
+		setFuelStation(fuelStation);
 	}
 
-	public PlaceModel(int id, String name, String address, double longitude, double latitude, boolean fuelStation) {
+	public PlaceModel(int id, String name, String address, double longitude, double latitude, int fuelStation) {
 		setId(id);
 		this.name = name;
 		this.address = address;
 		this.longitude = longitude;
 		this.latitude = latitude;
-		this.fuelStation = fuelStation;
+		setFuelStation(fuelStation);
 	}
 
 	public String getName() {
@@ -70,6 +70,10 @@ public class PlaceModel extends Model {
 
 	public void setFuelStation(boolean fuelStation) {
 		this.fuelStation = fuelStation;
+	}
+
+	public void setFuelStation(int fuelStation) {
+		setFuelStation(Integer.toString(fuelStation));
 	}
 
 	public void setFuelStation(String fuelStation) {

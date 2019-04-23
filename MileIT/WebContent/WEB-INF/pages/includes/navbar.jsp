@@ -47,7 +47,6 @@
 							<fmt:param value="${user.username}" />
 						</fmt:message>
 				</a></li>
-				<li class="nav-item"><a class="nav-link"><span class="badge badge-light"><c:out value="${v}" /></span></a></li>
 				<li class="nav-item"><a class="nav-link" href="logout"> <fmt:message key="menu.logout" />
 				</a></li>
 			</ul>

@@ -72,7 +72,6 @@ public class CarModel extends Model {
 	private Date endDate;
 	private String description;
 	private String friendlyName;
-	private boolean active;
 
 	public CarModel() {
 	}
@@ -310,34 +309,10 @@ public class CarModel extends Model {
 		this.friendlyName = friendlyName;
 	}
 
-	public boolean isActive() {
-		return active;
-	}
-
-	public void setActive(boolean active) {
-		this.active = active;
-	}
-
-	public void setActive(String active) {
-		switch (active.toLowerCase()) {
-		case "1":
-		case "true":
-			this.active = true;
-			break;
-
-		case "0":
-		case "false":
-		default:
-			this.active = false;
-			break;
-		}
-	}
-
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + (active ? 1231 : 1237);
 		result = prime * result + ((color == null) ? 0 : color.hashCode());
 		result = prime * result + ((description == null) ? 0 : description.hashCode());
 		result = prime * result + ((endDate == null) ? 0 : endDate.hashCode());
@@ -365,8 +340,6 @@ public class CarModel extends Model {
 		if (getClass() != obj.getClass())
 			return false;
 		CarModel other = (CarModel) obj;
-		if (active != other.active)
-			return false;
 		if (color == null) {
 			if (other.color != null)
 				return false;
@@ -431,7 +404,7 @@ public class CarModel extends Model {
 		return "CarModel [manufacturer=" + manufacturer + ", manufacturerName=" + manufacturerName + ", model=" + model + ", manufacturerDate="
 				+ manufacturerDate + ", color=" + color + ", vin=" + vin + ", plateNumber=" + plateNumber + ", fuel=" + fuel + ", fuelCapacity="
 				+ fuelCapacity + ", startDate=" + startDate + ", endDate=" + endDate + ", description=" + description + ", friendlyName="
-				+ friendlyName + ", active=" + active + ", toString()=" + super.toString() + "]";
+				+ friendlyName + ", toString()=" + super.toString() + "]";
 	}
 
 }

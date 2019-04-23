@@ -146,6 +146,30 @@ public class DBManager implements Serializable {
 		}
 		return false;
 	}
+	
+	/**
+	 * Method to be able to archive a payment method when the user decided to.
+	 * 
+	 * @param id int the payment method's ID
+	 * @return true on success, false otherwise
+	 */
+	public boolean archivePaymentMethod(int id) {
+		try {
+			con = ds.getConnection();
+			ps = con.prepareStatement(DBCommands.SQL_U_PAYMENT_ARCHIVE);
+			ps.setInt(1, id);
+
+			if (ps.executeUpdate() >= 1) {
+				return true;
+			}
+
+		} catch (Exception e) {
+			logger.logException("archivePaymentMethod()", e);
+		} finally {
+			closeConnection();
+		}
+		return false;
+	}
 
 	/**
 	 * Closes the {@link Connection}, {@link PreparedStatement} or {@link ResultSet}
@@ -467,7 +491,8 @@ public class DBManager implements Serializable {
 				car.setEndDate(rs.getTimestamp(11));
 				car.setDescription(rs.getString(12));
 				car.setFriendlyName(rs.getString(13));
-				car.setActive(rs.getInt(14) == 1 ? true : false);
+				car.setActive(rs.getInt(14));
+				car.setArchived(rs.getInt(0));
 			}
 
 		} catch (Exception e) {
@@ -511,8 +536,9 @@ public class DBManager implements Serializable {
 				car.setEndDate(rs.getTimestamp(11));
 				car.setDescription(rs.getString(12));
 				car.setFriendlyName(rs.getString(13));
-				car.setActive(rs.getInt(14) == 1 ? true : false);
+				car.setActive(rs.getInt(14));
 				car.setManufacturerName(rs.getString(16));
+				car.setArchived(rs.getInt(17));
 				cars.add(car);
 			}
 		} catch (Exception e) {
@@ -573,7 +599,7 @@ public class DBManager implements Serializable {
 
 			if (rs.next()) {
 				tyre = new TyreModel(rs.getInt(1), rs.getInt(2), (byte) rs.getInt(3), rs.getInt(4), rs.getInt(5), rs.getInt(6), rs.getInt(7),
-						rs.getString(8), rs.getString(9), (byte) rs.getInt(10), rs.getTimestamp(11));
+						rs.getString(8), rs.getString(9), (byte) rs.getInt(10), rs.getTimestamp(11), rs.getInt(12));
 			}
 
 		} catch (Exception e) {
@@ -613,10 +639,11 @@ public class DBManager implements Serializable {
 				t.setType(TyreType.fromCode((byte) rs.getInt(6)));
 				t.setAxis(Axis.fromCode((byte) rs.getInt(7)));
 				t.setPurchaseDate(rs.getTimestamp(8));
-				t.setModel(rs.getString(10));
 				t.setManufacturerName(rs.getString(9));
-				t.setCar(new CarModel(rs.getInt(16), rs.getString(17), rs.getString(18)));
+				t.setModel(rs.getString(10));
 				t.setTyreEvent(new TyreEventModel(rs.getTimestamp(13), rs.getTimestamp(14), rs.getDouble(15), rs.getDouble(11), rs.getDouble(12)));
+				t.setCar(new CarModel(rs.getInt(16), rs.getString(17), rs.getString(18)));
+				t.setArchived(rs.getInt(19));
 
 				tyres.add(t);
 			}
@@ -742,8 +769,7 @@ public class DBManager implements Serializable {
 			rs = ps.executeQuery();
 
 			if (rs.next()) {
-				l = new PlaceModel(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getInt(4), rs.getDouble(5), rs.getDouble(6),
-						rs.getInt(7) == 0 ? false : true);
+				l = new PlaceModel(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getInt(4), rs.getDouble(5), rs.getDouble(6), rs.getInt(7));
 			}
 		} catch (Exception e) {
 			logger.logException("getPlace()", e);
@@ -772,8 +798,7 @@ public class DBManager implements Serializable {
 			rs = ps.executeQuery();
 
 			while (rs.next()) {
-				ls.add(new PlaceModel(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getDouble(4), rs.getDouble(5),
-						rs.getInt(6) == 0 ? false : true));
+				ls.add(new PlaceModel(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getDouble(4), rs.getDouble(5), rs.getInt(6)));
 			}
 		} catch (Exception e) {
 			logger.logException("getPlaces()", e);
@@ -972,7 +997,7 @@ public class DBManager implements Serializable {
 			while (rs.next()) {
 				refuel = new RefuelModel(rs.getInt(1));
 				refuel.setCar(new CarModel(rs.getInt(2), rs.getString(12), rs.getString(11)));
-				refuel.setPlace(new PlaceModel(rs.getInt(3), rs.getString(13), null, 0, 0, true));
+				refuel.setPlace(new PlaceModel(rs.getInt(3), rs.getString(13), null, 0, 0, 1));
 				refuel.setRefuelDate(rs.getTimestamp(4));
 				refuel.setOdometer(rs.getDouble(5));
 				refuel.setFuelAmount(rs.getDouble(7));

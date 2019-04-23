@@ -39,6 +39,7 @@ CREATE TABLE IF NOT EXISTS `payment_method` (
   `name` VARCHAR(50) COLLATE utf8mb4_hungarian_ci NOT NULL,
   `user_id` INT(11) UNSIGNED NOT NULL,
   `description` VARCHAR(100) COLLATE utf8mb4_hungarian_ci DEFAULT NULL,
+  chived` TINYINT(1) UNSIGNED NOT NULL DEFAULT 0,
   PRIMARY KEY (`pm_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 

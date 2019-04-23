@@ -101,6 +101,7 @@ public class TyreController extends Controller {
 		case UIKeys.MODE_:
 		case UIKeys.MODE_CANCEL:
 		default:
+			assignedObjects.remove(UIKeys.STATUS);
 			renderPage(TYRES, request, response);
 			break;
 		}
@@ -168,7 +169,6 @@ public class TyreController extends Controller {
 
 			renderPage(TYRES, request, response);
 		} else {
-			System.out.println(validationMessages);
 			assignedObjects.put(UIKeys.STATUS, -2);
 
 			if (m.equalsIgnoreCase(UIKeys.MODE_NEW) || m.equalsIgnoreCase(UIKeys.MODE_UPDATE)) {

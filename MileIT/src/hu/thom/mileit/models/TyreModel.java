@@ -109,7 +109,7 @@ public class TyreModel extends Model {
 	}
 
 	public TyreModel(int tyre_id, int user_id, byte tyreType, int sizeW, int sizeH, int sizeR, int manufacturerId, String manufacturerName,
-			String model, byte axis, Timestamp purchaseDate) {
+			String model, byte axis, Timestamp purchaseDate, int archived) {
 		setId(tyre_id);
 		setUser(new UserModel(user_id));
 		this.type = TyreType.fromCode(tyreType);
@@ -121,6 +121,7 @@ public class TyreModel extends Model {
 		this.model = model;
 		this.axis = Axis.fromCode(axis);
 		this.purchaseDate = purchaseDate;
+		setArchived(archived);
 	}
 
 	public TyreModel(Map<String, String[]> params, UserModel user) {

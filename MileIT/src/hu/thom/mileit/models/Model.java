@@ -19,6 +19,7 @@ public class Model extends DateModel {
 	private TyreEventModel tyreEvent;
 	private RefuelModel refuel;
 
+	private boolean active;
 	private boolean archived;
 
 	public boolean isArchived() {
@@ -27,6 +28,56 @@ public class Model extends DateModel {
 
 	public void setArchived(boolean archived) {
 		this.archived = archived;
+	}
+
+	public void setArchived(String archived) {
+		switch (archived.toLowerCase()) {
+		case "1":
+		case "yes":
+		case "true":
+			this.archived = true;
+			break;
+
+		case "0":
+		case "no":
+		case "false":
+		default:
+			this.archived = false;
+			break;
+		}
+	}
+
+	public void setArchived(int archived) {
+		setArchived(Integer.toString(archived));
+	}
+
+	public boolean isActive() {
+		return active;
+	}
+
+	public void setActive(boolean active) {
+		this.active = active;
+	}
+
+	public void setActive(int active) {
+		setActive(Integer.toString(active));
+	}
+
+	public void setActive(String active) {
+		switch (active.toLowerCase()) {
+		case "1":
+		case "yes":
+		case "true":
+			this.archived = true;
+			break;
+
+		case "0":
+		case "no":
+		case "false":
+		default:
+			this.archived = false;
+			break;
+		}
 	}
 
 	public int getId() {
@@ -112,6 +163,7 @@ public class Model extends DateModel {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + (active ? 1231 : 1237);
 		result = prime * result + (archived ? 1231 : 1237);
 		result = prime * result + ((car == null) ? 0 : car.hashCode());
 		result = prime * result + id;
@@ -134,6 +186,8 @@ public class Model extends DateModel {
 		if (getClass() != obj.getClass())
 			return false;
 		Model other = (Model) obj;
+		if (active != other.active)
+			return false;
 		if (archived != other.archived)
 			return false;
 		if (car == null) {
@@ -181,8 +235,8 @@ public class Model extends DateModel {
 	@Override
 	public String toString() {
 		return "Model [id=" + id + ", operation=" + operation + ", car=" + car + ", user=" + user + ", payment=" + payment + ", place=" + place
-				+ ", tyre=" + tyre + ", tyreEvent=" + tyreEvent + ", refuel=" + refuel + ", archived=" + archived + ", toString()=" + super.toString()
-				+ "]";
+				+ ", tyre=" + tyre + ", tyreEvent=" + tyreEvent + ", refuel=" + refuel + ", active=" + active + ", archived=" + archived
+				+ ", toString()=" + super.toString() + "]";
 	}
 
 }
