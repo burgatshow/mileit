@@ -76,6 +76,7 @@ public class MaintenanceController extends Controller {
 		case UIKeys.MODE_:
 		case UIKeys.MODE_CANCEL:
 		default:
+			assignedObjects.remove(UIKeys.STATUS);
 			renderPage(MAINTENANCES, request, response);
 			break;
 		}

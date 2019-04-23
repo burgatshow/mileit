@@ -58,6 +58,15 @@ public class PaymentMethodController extends Controller {
 			assignedObjects.remove(UIKeys.PMS);
 			renderPage(PAYMENT_METHODS_FORM, request, response);
 			break;
+			
+		case UIKeys.MODE_ARCHIVE:
+			parseId(request);
+
+			assignedObjects.put(UIKeys.STATUS, dbm.archivePaymentMethod(id) ? 1 : -1);
+			assignedObjects.put(UIKeys.PMS, dbm.getPaymentMethods(user.getId()));
+			renderPage(PAYMENT_METHODS, request, response);
+
+			break;
 
 		case UIKeys.MODE_UPDATE:
 			parseId(request);
@@ -74,6 +83,7 @@ public class PaymentMethodController extends Controller {
 		case UIKeys.MODE_:
 		case UIKeys.MODE_CANCEL:
 		default:
+			assignedObjects.remove(UIKeys.STATUS);
 			renderPage(PAYMENT_METHODS, request, response);
 			break;
 		}

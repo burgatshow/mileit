@@ -76,6 +76,7 @@ public class RefuelController extends Controller {
 		case UIKeys.MODE_:
 		case UIKeys.MODE_CANCEL:
 		default:
+			assignedObjects.remove(UIKeys.STATUS);
 			renderPage(REFUELS, request, response);
 			break;
 		}

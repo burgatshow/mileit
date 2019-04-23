@@ -62,6 +62,7 @@ public class IndexController extends Controller {
 		assignedObjects.put(UIKeys.STAT_KEY, fuelStatKeys);
 		assignedObjects.put(UIKeys.STAT_VAL, fuelStatValues);
 		assignedObjects.put(UIKeys.STAT_PAID_AMOUNT, fuelPaidAmount);
+		assignedObjects.remove(UIKeys.STATUS);
 
 		renderPage(HOME, request, response);
 	}

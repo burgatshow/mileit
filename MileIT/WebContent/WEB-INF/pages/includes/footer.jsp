@@ -10,7 +10,9 @@
 	<div class="container mt-3">
 		<div class="row">
 			<div class="col-md-12 text-center">
-				<fmt:message key="copyright" />
+				<fmt:message key="copyright">
+					<fmt:param value="${v}" />
+				</fmt:message>
 			</div>
 		</div>
 		<div class="row">
