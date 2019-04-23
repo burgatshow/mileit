@@ -30,9 +30,9 @@ public class MaintenanceModel extends Model {
 	}
 
 	public MaintenanceModel(Map<String, String[]> params, UserModel user) {
-		this.setCar(new CarModel(params.get("car")[0]));
-		this.setUser(user);
-		this.setPayment(new PaymentMethodModel(params.get("paymentMethod")[0]));
+		setCar(new CarModel(params.get("car")[0]));
+		setUser(user);
+		setPayment(new PaymentMethodModel(params.get("paymentMethod")[0]));
 		setMaintenanceDate(params.get("maintenanceDate")[0]);
 		setOdometer(params.get("odometer")[0]);
 		setAmount(params.get("amount")[0]);

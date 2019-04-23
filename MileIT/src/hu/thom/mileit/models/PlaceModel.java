@@ -34,14 +34,14 @@ public class PlaceModel extends Model {
 		setLongitude(params.get("longitude")[0]);
 		setLatitude(params.get("latitude")[0]);
 		setFuelStation(params.get("fuelStation")[0]);
-		this.setUser(user);
+		setUser(user);
 	}
 
 	public PlaceModel(int id, String name, String address, int userId, double longitude, double latitude, int fuelStation) {
 		setId(id);
 		this.name = name;
 		this.address = address;
-		this.setUser(new UserModel(userId));
+		setUser(new UserModel(userId));
 		this.latitude = latitude;
 		this.longitude = longitude;
 		setFuelStation(fuelStation);

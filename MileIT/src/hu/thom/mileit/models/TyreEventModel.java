@@ -31,12 +31,12 @@ public class TyreEventModel extends Model {
 	}
 
 	public TyreEventModel(Map<String, String[]> params, UserModel user) {
-		this.setCar(new CarModel(params.get("car")[0]));
-		this.setTyre(new TyreModel(params.get("id")[0]));
+		setCar(new CarModel(params.get("car")[0]));
+		setTyre(new TyreModel(params.get("id")[0]));
 		setOdometerStart(params.get("odometer_start")[0]);
 		setOdometerEnd(params.get("odometer_end")[0]);
 		setEventDate(params.get("changeDate")[0]);
-		this.setUser(user);
+		setUser(user);
 	}
 
 	public double getOdometerStart() {

@@ -105,7 +105,7 @@ public class CarModel extends Model {
 		this.friendlyName = params.get("friendlyName")[0];
 		setActive(params.get("status")[0]);
 
-		this.setUser(user);
+		setUser(user);
 	}
 
 	public String getManufacturerName() {
