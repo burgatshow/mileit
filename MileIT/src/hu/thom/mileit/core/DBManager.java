@@ -1196,10 +1196,10 @@ public class DBManager implements Serializable {
 	 * Returns the user profile
 	 * 
 	 * @param user {@link String} username of the user
-	 * @return the completed {@link UserModel}
+	 * @return the completed {@link UserModel} on success, null otherwise
 	 */
 	public UserModel getUserProfile(String username) {
-		UserModel user = new UserModel();
+		UserModel user = null;
 		try {
 			con = ds.getConnection();
 			ps = con.prepareStatement(DBCommands.SQL_S_PROFILE);
@@ -1208,6 +1208,7 @@ public class DBManager implements Serializable {
 			rs = ps.executeQuery();
 
 			if (rs.next()) {
+				user = new UserModel();
 				user.setCurrency(rs.getString(1));
 				user.setLocale(rs.getString(2));
 				user.setId(rs.getInt(3));

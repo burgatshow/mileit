@@ -107,7 +107,7 @@ public class RouteModel extends Model {
 	public Date getRouteDatetime() {
 		return routeDatetime;
 	}
-	
+
 	public Timestamp getRouteDatetimeAsTimestamp() {
 		if (routeDatetime == null) {
 			return null;
@@ -158,6 +158,69 @@ public class RouteModel extends Model {
 		} catch (Exception e) {
 			this.distance = 0;
 		}
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + ((car == null) ? 0 : car.hashCode());
+		long temp;
+		temp = Double.doubleToLongBits(distance);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		result = prime * result + ((endPlace == null) ? 0 : endPlace.hashCode());
+		result = prime * result + ((routeDatetime == null) ? 0 : routeDatetime.hashCode());
+		result = prime * result + ((routeType == null) ? 0 : routeType.hashCode());
+		result = prime * result + ((startPlace == null) ? 0 : startPlace.hashCode());
+		result = prime * result + ((user == null) ? 0 : user.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		RouteModel other = (RouteModel) obj;
+		if (car == null) {
+			if (other.car != null)
+				return false;
+		} else if (!car.equals(other.car))
+			return false;
+		if (Double.doubleToLongBits(distance) != Double.doubleToLongBits(other.distance))
+			return false;
+		if (endPlace == null) {
+			if (other.endPlace != null)
+				return false;
+		} else if (!endPlace.equals(other.endPlace))
+			return false;
+		if (routeDatetime == null) {
+			if (other.routeDatetime != null)
+				return false;
+		} else if (!routeDatetime.equals(other.routeDatetime))
+			return false;
+		if (routeType != other.routeType)
+			return false;
+		if (startPlace == null) {
+			if (other.startPlace != null)
+				return false;
+		} else if (!startPlace.equals(other.startPlace))
+			return false;
+		if (user == null) {
+			if (other.user != null)
+				return false;
+		} else if (!user.equals(other.user))
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "RouteModel [user=" + user + ", car=" + car + ", startPlace=" + startPlace + ", endPlace=" + endPlace + ", routeDatetime="
+				+ routeDatetime + ", routeType=" + routeType + ", distance=" + distance + ", toString()=" + super.toString() + "]";
 	}
 
 }

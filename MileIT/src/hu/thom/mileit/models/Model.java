@@ -21,7 +21,7 @@ public class Model extends DateModel {
 
 	private boolean active;
 	private boolean archived;
-
+	
 	public boolean isArchived() {
 		return archived;
 	}
@@ -68,14 +68,14 @@ public class Model extends DateModel {
 		case "1":
 		case "yes":
 		case "true":
-			this.archived = true;
+			this.active = true;
 			break;
 
 		case "0":
 		case "no":
 		case "false":
 		default:
-			this.archived = false;
+			this.active = false;
 			break;
 		}
 	}
