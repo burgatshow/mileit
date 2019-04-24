@@ -57,6 +57,7 @@ public class MaintenanceController extends Controller {
 
 		switch (m) {
 		case UIKeys.MODE_NEW:
+			validationMessages.clear();
 			assignedObjects.remove(UIKeys.MAINTENANCES);
 			renderPage(MAINTENANCES_FORM, request, response);
 			break;

@@ -21,7 +21,7 @@
 
 <body>
 	<jsp:include page="includes/navbar.jsp" />
-	<div class="container mt-3">
+	<div class="container-fluid">
 		<div class="row">
 			<div class="col-md-12">
 				<c:if test="${status eq -2}">
@@ -33,7 +33,7 @@
 		</div>
 		<div class="row">
 			<div class="col-md-12">
-				<h1>
+				<h1 class="display-4">
 					<c:if test="${not empty places}">
 						<fmt:message key="places.title.edit" />
 					</c:if>
@@ -60,7 +60,8 @@
 				</div>
 				<div class="col-md-6">
 					<label for="fuelStation"><fmt:message key="places.form.fuel_station" /><span class="ml-1 badge badge-pill badge-primary"> <fmt:message
-								key="form.mandatory" /></span></label><select id="fuelStation" class="form-control" name="fuelStation">
+								key="form.mandatory" /></span></label><select id="fuelStation"
+						class="form-control  <c:if test="${validationMessages.contains('fuelStation') }">is-invalid</c:if>" name="fuelStation">
 						<option value="0" <c:if test="${not places.fuelStation}">selected="selected"</c:if>><fmt:message key="places.form.fuel_station.alt_no" /></option>
 						<option value="1" <c:if test="${places.fuelStation}">selected="selected"</c:if>><fmt:message key="places.form.fuel_station.alt_yes" /></option>
 					</select>

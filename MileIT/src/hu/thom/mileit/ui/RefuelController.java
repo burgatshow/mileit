@@ -57,6 +57,7 @@ public class RefuelController extends Controller {
 
 		switch (m) {
 		case UIKeys.MODE_NEW:
+			validationMessages.clear();
 			assignedObjects.remove(UIKeys.REFUELS);
 			renderPage(REFUELS_FORM, request, response);
 			break;

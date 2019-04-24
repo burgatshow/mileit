@@ -16,8 +16,8 @@ public class UIKeys implements Serializable {
 	public static final String[] FORM_ME_MAINTENANCE = { "car", "odometer", "paymentMethod", "amount", "maintenanceDate" };
 	public static final String[] FORM_ME_TYRE = { "manufacturer", "model", "width", "height", "radius", "axis", "type" };
 	public static final String[] FORM_ME_TYRE_EVENT = { "car", "odometer_start" };
-	public static final String[] FORM_ME_REFUEL = { "car", "unitPrice", "amount" };
-	public static final String[] FORM_ME_PLACE = { "name" };
+	public static final String[] FORM_ME_REFUEL = { "car", "place", "paymentMethod", "unitPrice", "amount" };
+	public static final String[] FORM_ME_PLACE = { "name", "fuelStation" };
 	public static final String[] FORM_ME_PAYMENT_METHOD = { "name" };
 	public static final String[] FORM_ME_ROUTE = { "car", "type", "startPlace", "endPlace", "routeDatetime" };
 

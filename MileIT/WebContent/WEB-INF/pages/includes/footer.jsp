@@ -7,7 +7,7 @@
 <fmt:setBundle basename="hu.thom.mileit.i18n.mileit" />
 
 <footer class="footer">
-	<div class="container mt-3">
+	<div class="container-fluid">
 		<div class="row">
 			<div class="col-md-12 text-center">
 				<small> <fmt:message key="copyright">

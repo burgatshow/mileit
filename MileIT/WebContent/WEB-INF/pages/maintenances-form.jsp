@@ -21,7 +21,7 @@
 
 <body>
 	<jsp:include page="includes/navbar.jsp" />
-	<div class="container mt-3">
+	<div class="container-fluid">
 		<div class="row">
 			<div class="col-md-12">
 				<c:if test="${status eq -2}">
@@ -33,7 +33,7 @@
 		</div>
 		<div class="row">
 			<div class="col-md-12">
-				<h1>
+				<h1 class="display-4">
 					<c:if test="${not empty maintenances}">
 						<fmt:message key="mntnc.title.edit" />
 					</c:if>
@@ -75,7 +75,6 @@
 			</div>
 			<div class="row">
 				<div class="col-md-6">
-
 					<div class="form-group">
 						<label for="paymentMethod"><fmt:message key="mntnc.form.payment" /><span class="ml-1 badge badge-pill badge-primary"> <fmt:message
 									key="form.mandatory" /></span></label> <select id="paymentMethod"
@@ -99,7 +98,7 @@
 				</div>
 			</div>
 			<div class="row">
-				<div class="col-md-12">
+				<div class="col-md-6">
 					<div class="form-group">
 						<c:if test="${not empty param.maintenanceDate}">
 							<fmt:parseDate value="${param.maintenanceDate}" var="maintenanceDate" pattern="yyyy-MM-dd" />
@@ -113,9 +112,7 @@
 							placeholder="<fmt:message key="mntnc.form.date" />" value="<fmt:formatDate value="${maintenanceDate}" pattern="yyyy-MM-dd"/>">
 					</div>
 				</div>
-			</div>
-			<div class="row">
-				<div class="col-md-12">
+				<div class="col-md-6">
 					<div class="form-group">
 						<div class="form-group">
 							<label for="description"><fmt:message key="mntnc.form.desc" /></label> <input name="description" type="text" class="form-control"

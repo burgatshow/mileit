@@ -55,6 +55,7 @@ public class PaymentMethodController extends Controller {
 
 		switch (m) {
 		case UIKeys.MODE_NEW:
+			validationMessages.clear();
 			assignedObjects.remove(UIKeys.PMS);
 			renderPage(PAYMENT_METHODS_FORM, request, response);
 			break;

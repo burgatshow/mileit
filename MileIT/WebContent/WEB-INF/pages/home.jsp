@@ -21,14 +21,19 @@
 
 <body>
 	<jsp:include page="includes/navbar.jsp" />
-	<div class="container mt-3">
+	<div class="container-fluid">
 		<div class="row">
 			<div class="col-md-12">
-				<h1>
-					<fmt:message key="index.stat.title">
-						<fmt:formatDate type="both" value="${lr.refuelDate}" pattern="yyyy. MM. dd." var="formatted_LR" />
-						<fmt:param value="${formatted_LR}" />
-					</fmt:message>
+				<h1 class="display-4">
+					<c:if test="${empty lr.refuelDate}">
+						<fmt:message key="index.stat.title.na" />
+					</c:if>
+					<c:if test="${not empty lr.refuelDate}">
+						<fmt:message key="index.stat.title">
+							<fmt:formatDate type="both" value="${lr.refuelDate}" pattern="yyyy. MM. dd." var="formatted_LR" />
+							<fmt:param value="${formatted_LR}" />
+						</fmt:message>
+					</c:if>
 				</h1>
 			</div>
 		</div>
@@ -40,7 +45,7 @@
 					</p>
 					<p class="text-right display-4">
 						<strong><fmt:formatNumber type="number" pattern="###,##" minFractionDigits="0" maxFractionDigits="${user.rounded eq 1 ? '0' : '2'}"
-								value="${lr.fuelAmount}" /></strong>
+								value="${not empty lr.fuelAmount ? lr.fuelAmount : 0}" /></strong>
 					</p>
 				</div>
 			</div>
@@ -52,7 +57,7 @@
 						</fmt:message>
 					</p>
 					<p class="text-right display-4">
-						<strong><fmt:formatNumber value="${lr.unitPrice}" type="number" pattern="###.###" minFractionDigits="0"
+						<strong><fmt:formatNumber value="${not empty lr.unitPrice ? lr.unitPrice : 0}" type="number" pattern="###.###" minFractionDigits="0"
 								maxFractionDigits="${user.rounded eq 1 ? '0' : '2'}" currencySymbol="" /></strong>
 					</p>
 				</div>
@@ -65,14 +70,15 @@
 						</fmt:message>
 					</p>
 					<p class="text-right display-4">
-						<strong><fmt:formatNumber value="${lr.amount}" type="number" minFractionDigits="0" maxFractionDigits="${user.rounded eq 1 ? '0' : '2'}" /></strong>
+						<strong><fmt:formatNumber value="${not empty lr.amount ? lr.amount : 0}" type="number" minFractionDigits="0"
+								maxFractionDigits="${user.rounded eq 1 ? '0' : '2'}" /></strong>
 					</p>
 				</div>
 			</div>
 		</div>
 		<div class="row">
 			<div class="col-md-12">
-				<h1>
+				<h1 class="display-4">
 					<fmt:message key="index.fuel.price.stat.title" />
 				</h1>
 			</div>
@@ -84,7 +90,8 @@
 		</div>
 		<div class="row">
 			<div class="col-md-12">
-				<h1>
+				<hr>
+				<h1 class="display-4">
 					<fmt:message key="index.fuel.amount.stat.title" />
 				</h1>
 			</div>
