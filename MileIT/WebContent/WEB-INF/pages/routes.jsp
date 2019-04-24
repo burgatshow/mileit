@@ -21,7 +21,7 @@
 
 <body>
 	<jsp:include page="includes/navbar.jsp" />
-	<div class="container-fluid">
+	<div class="container-fluid mt-3">
 		<div class="row">
 			<div class="col-md-12">
 				<c:if test="${status eq '0'}">
