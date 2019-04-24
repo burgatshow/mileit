@@ -102,36 +102,5 @@
 		</div>
 	</div>
 	<jsp:include page="includes/appScripts.jsp" />
-	<script type="text/javascript">
-		var ctx = document.getElementById('priceChart').getContext('2d');
-		var myChart = new Chart(ctx,
-				{
-					type : 'line',
-					data : {
-						labels : [ ${fuelStatsKey} ],
-						datasets : [ {
-							label : 'Fuel prices',
-							data : [ ${fuelStatsVal} ],
-							borderColor : "rgba(0, 123, 255, 1)",
-							backgroundColor : "rgba(0,0,0,0)"
-						} ]
-					}
-				});
-
-		var ctx = document.getElementById('amountChart').getContext('2d');
-		var myChart = new Chart(ctx,
-				{
-					type : 'line',
-					data : {
-						labels : [ ${fuelStatsKey} ],
-						datasets : [ {
-							label : 'Paid',
-							data : [ ${fuelPaidAmount} ],
-							borderColor : "rgba(86, 61, 124, 1)",
-							backgroundColor : "rgba(0,0,0,0)"
-						} ]
-					}
-				});
-	</script>
 </body>
 </html>
