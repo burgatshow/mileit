@@ -13,15 +13,14 @@ import java.text.SimpleDateFormat;
 public class DateModel implements Serializable {
 	private static final long serialVersionUID = 1541291534338945726L;
 
-	private final DateFormat sdfManufacturerDate = new SimpleDateFormat("yyyy");
-	private final DateFormat sdfDates = new SimpleDateFormat("yyyy-MM-dd");
+	public final String DATE_YEAR_ONLY = "yyyy";
+	public final String DATE = "yyyy-MM-dd";
+	public final String DATETIME = "yyyy-MM-dd HH:mm";
 
-	public DateFormat getSdfManufacturerDate() {
-		return sdfManufacturerDate;
+	public DateFormat getDateFormatter(String... pattern) {
+		if ("".equalsIgnoreCase(pattern[0]) || pattern[0] == null) {
+			return new SimpleDateFormat(DATE);
+		}
+		return new SimpleDateFormat(pattern[0]);
 	}
-
-	public DateFormat getSdfDates() {
-		return sdfDates;
-	}
-
 }

@@ -5,55 +5,24 @@ $(document).ready(
 					"format" : "hex"
 				});
 			});
-
-			$('#startDate').datepicker({
-				format : "yyyy-mm-dd",
-				startDate : "2000-01-01",
-				todayHighlight : true,
-				weekStart: 1
-			});
-
-			$('#endDate').datepicker({
-				format : "yyyy-mm-dd",
-				startDate : "2000-01-01",
-				todayHighlight : true,
-				weekStart: 1
-			});
-
-			$('#refuelDate').datepicker({
-				format : "yyyy-mm-dd",
-				todayHighlight : true,
-				endDate: new Date(),
-				weekStart: 1
-			});
 			
-			$('#maintenanceDate').datepicker({
-				format : "yyyy-mm-dd",
-				todayHighlight : true,
-				endDate: new Date(),
-				weekStart: 1
-			});
+			var dateFields = ["#startDate", "#endDate", "#refuelDate", "#maintenanceDate", "#purchaseDate", "#changeDate" ];
+			var dateTimeFields = [ "#routeDatetime" ];
 			
-			$('#purchaseDate').datepicker({
-				format : "yyyy-mm-dd",
-				todayHighlight : true,
-				endDate: new Date(),
-				weekStart: 1
-			});
+			dateFields.forEach(renderDatepicker);
+			dateTimeFields.forEach(renderDateTimePicker);
 			
-			$('#changeDate').datepicker({
-				format : "yyyy-mm-dd",
-				todayHighlight : true,
-				endDate: new Date(),
-				weekStart: 1
-			});
+			function renderDatepicker(data, index) {
+				$(data).datetimepicker({
+					format : "YYYY-MM-DD"
+				});
+			}
 			
-			$('#routeDatetime').datepicker({
-				format : "yyyy-mm-dd",
-				todayHighlight : true,
-				endDate: new Date(),
-				weekStart: 1
-			});
+			function renderDateTimePicker(data, index) {
+				$(data).datetimepicker({
+					format : "YYYY-MM-DD HH:mm"
+				});
+			}
 
 			$('#confirm-archive').on(
 					'show.bs.modal',
@@ -61,7 +30,7 @@ $(document).ready(
 						$(this).find('.btn-ok').attr('href',
 								$(e.relatedTarget).data('href'));
 					});
-			
+
 			$('#confirm-delete').on(
 					'show.bs.modal',
 					function(e) {

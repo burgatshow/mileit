@@ -57,7 +57,7 @@ public class MaintenanceModel extends Model {
 
 	public void setMaintenanceDate(String maintenanceDate) {
 		try {
-			this.maintenanceDate = this.getSdfDates().parse(maintenanceDate);
+			this.maintenanceDate = this.getDateFormatter().parse(maintenanceDate);
 		} catch (Exception e) {
 			this.maintenanceDate = new Date();
 		}

@@ -88,7 +88,7 @@
 										class="ml-1 badge badge-pill badge-info">?</span><br> <span class="badge badge-danger"><fmt:message key="routes.form.route.to" /></span>&nbsp;<c:out
 											value="${r.endPlace.name}" /><span data-toggle="tooltip" title="<c:out value="${r.endPlace.address}" />"
 										class="ml-1 badge badge-pill badge-info">?</span></td>
-									<td class="align-middle text-center"><fmt:formatDate type="both" value="${r.routeDatetime}" pattern="yyyy. MM. dd." /></td>
+									<td class="align-middle text-center"><fmt:formatDate type="both" value="${r.routeDatetime}" pattern="yyyy. MM. dd. HH:mm" /></td>
 									<td class="align-middle text-center"><fmt:message key="routes.form.type.${r.routeType eq 'BUSINESS' ? 'business' : 'private' }" /></td>
 									<td class="align-middle text-right"><fmt:formatNumber value="${r.distance}" pattern="#,##0.00" type="number" minFractionDigits="0"
 											maxFractionDigits="${user.rounded eq 1 ? 0 : 2}" /></td>

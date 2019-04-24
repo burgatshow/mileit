@@ -195,7 +195,7 @@ public class CarModel extends Model {
 
 	public void setManufacturerDate(String manufacturerDate) {
 		try {
-			this.manufacturerDate = this.getSdfManufacturerDate().parse(manufacturerDate);
+			this.manufacturerDate = this.getDateFormatter(DATE_YEAR_ONLY).parse(manufacturerDate);
 		} catch (Exception e) {
 			this.manufacturerDate = null;
 		}
@@ -263,7 +263,7 @@ public class CarModel extends Model {
 
 	public void setStartDate(String startDate) {
 		try {
-			this.startDate = this.getSdfDates().parse(startDate);
+			this.startDate = this.getDateFormatter().parse(startDate);
 		} catch (Exception e) {
 			this.startDate = null;
 		}
@@ -287,7 +287,7 @@ public class CarModel extends Model {
 
 	public void setEndDate(String endDate) {
 		try {
-			this.endDate = this.getSdfDates().parse(endDate);
+			this.endDate = this.getDateFormatter().parse(endDate);
 		} catch (Exception e) {
 			this.endDate = null;
 		}

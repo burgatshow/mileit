@@ -17,6 +17,7 @@
 	integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 <script src="http://www.openlayers.org/api/OpenLayers.js"></script>
 <script src="<c:out value="${ctxRoot}" />/js/colorpicker.js" type="text/javascript"></script>
-<script src="<c:out value="${ctxRoot}" />/js/bootstrap-datepicker.min.js" type="text/javascript"></script>
+<script src="<c:out value="${ctxRoot}" />/js/moment.min.js" type="text/javascript"></script>
+<script src="<c:out value="${ctxRoot}" />/js/bootstrap-datetimepicker.min.js" type="text/javascript"></script>
 <script src="<c:out value="${ctxRoot}" />/js/Chart.min.js" type="text/javascript"></script>
 <script src="<c:out value="${ctxRoot}" />/js/mileit.js" type="text/javascript"></script>

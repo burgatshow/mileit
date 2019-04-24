@@ -54,10 +54,11 @@ public class RouteModel extends Model {
 	private Date routeDatetime;
 	private RouteType routeType;
 	private double distance;
+	private boolean roundTrip;
 
 	public RouteModel() {
 	}
-
+	
 	public RouteModel(int id) {
 		setId(id);
 	}
@@ -107,7 +108,7 @@ public class RouteModel extends Model {
 	public Date getRouteDatetime() {
 		return routeDatetime;
 	}
-	
+
 	public Timestamp getRouteDatetimeAsTimestamp() {
 		if (routeDatetime == null) {
 			return null;
@@ -122,7 +123,7 @@ public class RouteModel extends Model {
 
 	public void setRouteDatetime(String routeDatetime) {
 		try {
-			this.routeDatetime = this.getSdfDates().parse(routeDatetime);
+			this.routeDatetime = this.getDateFormatter(DATETIME).parse(routeDatetime);
 		} catch (Exception e) {
 			this.routeDatetime = new Date();
 		}
@@ -141,6 +142,28 @@ public class RouteModel extends Model {
 			this.routeType = RouteType.fromCode((byte) Integer.parseInt(routeType));
 		} catch (Exception e) {
 			this.routeType = RouteType.PRIVATE;
+		}
+	}
+
+	public boolean isRoundTrip() {
+		return roundTrip;
+	}
+
+	public void setRoundTrip(boolean roundTrip) {
+		this.roundTrip = roundTrip;
+	}
+	
+	public void setRoundTrip(String roundTrip) {
+		switch (roundTrip.toLowerCase()) {
+		case "1":
+		case "yes":
+		case "true":
+			this.roundTrip = true;
+			break;
+
+		default:
+			this.roundTrip = false;
+			break;
 		}
 	}
 

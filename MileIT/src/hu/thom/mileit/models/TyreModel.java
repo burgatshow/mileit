@@ -265,7 +265,7 @@ public class TyreModel extends Model {
 
 	public void setPurchaseDate(String purchaseDate) {
 		try {
-			this.purchaseDate = this.getSdfDates().parse(purchaseDate);
+			this.purchaseDate = this.getDateFormatter().parse(purchaseDate);
 		} catch (Exception e) {
 			this.purchaseDate = new Date();
 		}
