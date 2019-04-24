@@ -21,7 +21,7 @@
 
 <body>
 	<jsp:include page="includes/navbar.jsp" />
-	<div class="container mt-3">
+	<div class="container-fluid">
 		<div class="row">
 			<div class="col-md-12">
 				<c:if test="${status eq -2}">
@@ -33,7 +33,7 @@
 		</div>
 		<div class="row">
 			<div class="col-md-12">
-				<h1>
+				<h1 class="display-4">
 					<c:if test="${not empty refuels}">
 						<fmt:message key="refuels.title.edit" />
 					</c:if>
@@ -64,7 +64,8 @@
 				</div>
 				<div class="col-md-6">
 					<div class="form-group">
-						<label for="place"><fmt:message key="refuels.form.place" /></label> <select id="place" class="form-control" name="place">
+						<label for="place"><fmt:message key="refuels.form.place" /></label> <select id="place"
+							class="form-control  <c:if test="${validationMessages.contains('place') }">is-invalid</c:if>" name="place">
 							<option value="" <c:if test="${empty refuels}">selected="selected"</c:if>>---</option>
 							<c:forEach items="${places}" var="p">
 								<c:if test="${p.fuelStation}">
@@ -89,7 +90,8 @@
 				</div>
 				<div class="col-md-6">
 					<div class="form-group">
-						<label for="paymentMethod"><fmt:message key="refuels.form.pm" /></label> <select id="paymentMethod" class="form-control" name="paymentMethod">
+						<label for="paymentMethod"><fmt:message key="refuels.form.pm" /></label> <select id="paymentMethod"
+							class="form-control  <c:if test="${validationMessages.contains('paymentMethod') }">is-invalid</c:if>" name="paymentMethod">
 							<c:forEach items="${pms}" var="pm">
 								<option <c:if test="${refuels.payment.id eq pm.id}">selected="selected"</c:if> value="<c:out value="${pm.id}" />"><c:out
 										value="${pm.name}" /></option>

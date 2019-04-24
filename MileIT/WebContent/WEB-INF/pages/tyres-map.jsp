@@ -21,7 +21,7 @@
 
 <body>
 	<jsp:include page="includes/navbar.jsp" />
-	<div class="container mt-3">
+	<div class="container-fluid">
 		<div class="row">
 			<div class="col-md-12">
 				<c:if test="${status eq -2}">
@@ -33,7 +33,7 @@
 		</div>
 		<div class="row">
 			<div class="col-md-12">
-				<h1>
+				<h1 class="display-4">
 					<fmt:message key="tyres.title.map" />
 				</h1>
 			</div>

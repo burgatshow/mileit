@@ -9,3 +9,4 @@
 <link href="<c:out value="${ctxRoot}" />/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 <link href="<c:out value="${ctxRoot}" />/css/bootstrap-datetimepicker.min.css" rel="stylesheet" type="text/css">
 <link href="<c:out value="${ctxRoot}" />/css/mileit.css" rel="stylesheet" type="text/css">
+<link href="<c:out value="${ctxRoot}" />/img/favicon.ico" rel="icon" >

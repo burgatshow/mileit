@@ -21,7 +21,7 @@
 
 <body>
 	<jsp:include page="includes/navbar.jsp" />
-	<div class="container mt-3">
+	<div class="container-fluid">
 		<div class="row">
 			<div class="col-md-12">
 				<c:if test="${status eq 0}">
@@ -38,7 +38,7 @@
 		</div>
 		<div class="row">
 			<div class="col-md-12">
-				<h1>
+				<h1 class="display-4">
 					<fmt:message key="profile.title" />
 				</h1>
 			</div>
@@ -51,14 +51,16 @@
 							class="form-control" id="name" placeholder="<fmt:message key="profile.form.username" />" value="<c:out value="${user.username}" />">
 					</div>
 				</div>
-				<div class="col-md-12">
+			</div>
+			<div class="row">
+				<div class="col-md-6">
 					<div class="form-group">
 						<label for="currency"><fmt:message key="profile.form.locale" /><span data-toggle="tooltip"
 							title="<fmt:message key="profile.form.locale.tooltip" />" class="ml-1 badge badge-pill badge-info">?</span></label> <input name="locale" type="text"
 							class="form-control" id="locale" placeholder="<fmt:message key="profile.form.locale" />" value="<c:out value="${user.locale}" />">
 					</div>
 				</div>
-				<div class="col-md-12">
+				<div class="col-md-6">
 					<div class="form-group">
 						<label for="currency"><fmt:message key="profile.form.currency" /><span data-toggle="tooltip"
 							title="<fmt:message key="profile.form.currency.tooltip" />" class="ml-1 badge badge-pill badge-info">?</span></label> <input name="currency"
@@ -66,7 +68,9 @@
 							value="<c:out value="${user.currency}" />">
 					</div>
 				</div>
-				<div class="col-md-12">
+			</div>
+			<div class="row">
+				<div class="col-md-6">
 					<div class="form-group">
 						<label for="distance"><fmt:message key="profile.form.distance" /></label> <select id="distance" name="distance" class="form-control"
 							name="distance">
@@ -75,10 +79,9 @@
 						</select>
 					</div>
 				</div>
-				<div class="col-md-12">
+				<div class="col-md-6">
 					<div class="form-group">
-						<label for="rounded"><fmt:message key="profile.form.rounded" /></label> <select id="rounded" name="rounded" class="form-control"
-							name="rounded">
+						<label for="rounded"><fmt:message key="profile.form.rounded" /></label> <select id="rounded" name="rounded" class="form-control" name="rounded">
 							<option value="0" <c:if test="${user.rounded eq '0'}">selected="selected"</c:if>><fmt:message key="no" /></option>
 							<option value="1" <c:if test="${user.rounded eq '1'}">selected="selected"</c:if>><fmt:message key="yes" /></option>
 						</select>

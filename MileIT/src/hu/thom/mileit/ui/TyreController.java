@@ -59,6 +59,7 @@ public class TyreController extends Controller {
 
 		switch (m) {
 		case UIKeys.MODE_NEW:
+			validationMessages.clear();
 			assignedObjects.remove(UIKeys.TYRES);
 			renderPage(TYRES_FORM, request, response);
 			break;

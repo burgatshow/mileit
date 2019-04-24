@@ -56,6 +56,7 @@ public class CarController extends Controller {
 
 		switch (m) {
 		case UIKeys.MODE_NEW:
+			validationMessages.clear();
 			assignedObjects.remove(UIKeys.CARS);
 			renderPage(CARS_FORM, request, response);
 			break;

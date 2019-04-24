@@ -55,6 +55,7 @@ public class PlacesController extends Controller {
 
 		switch (m) {
 		case UIKeys.MODE_NEW:
+			validationMessages.clear();
 			assignedObjects.remove(UIKeys.PLACES);
 			renderPage(PLACES_FORM, request, response);
 			break;
