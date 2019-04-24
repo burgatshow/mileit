@@ -5,19 +5,20 @@ $(document).ready(
 					"format" : "hex"
 				});
 			});
-			
-			var dateFields = ["#startDate", "#endDate", "#refuelDate", "#maintenanceDate", "#purchaseDate", "#changeDate" ];
+
+			var dateFields = [ "#startDate", "#endDate", "#refuelDate",
+					"#maintenanceDate", "#purchaseDate", "#changeDate" ];
 			var dateTimeFields = [ "#routeDatetime" ];
-			
+
 			dateFields.forEach(renderDatepicker);
 			dateTimeFields.forEach(renderDateTimePicker);
-			
+
 			function renderDatepicker(data, index) {
 				$(data).datetimepicker({
 					format : "YYYY-MM-DD"
 				});
 			}
-			
+
 			function renderDateTimePicker(data, index) {
 				$(data).datetimepicker({
 					format : "YYYY-MM-DD HH:mm"
@@ -40,8 +41,82 @@ $(document).ready(
 
 			$(function() {
 				$('[data-toggle="tooltip"]').tooltip()
-			})
+			});
 
+			// FIXME add user id from data-field on canvas
+			$.ajax({
+				url : "./rest/v1/statistics/fuel/pricechanges/1",
+				method : "GET",
+				success : function(data) {
+					var date = [];
+					var unitPrice = [];
+
+					for ( var i in data) {
+						date.push(data[i].date);
+						unitPrice.push(data[i].unitPrice);
+					}
+
+					var chartdata = {
+						labels : date,
+						datasets : [ {
+							backgroundColor : 'rgba(0, 0, 0, 0)',
+							borderColor : 'rgba(255, 101, 80, 1)',
+							data : unitPrice
+						} ]
+					};
+
+					var priceChart = $("#priceChart");
+					var barGraph = new Chart(priceChart, {
+						type : 'line',
+						data : chartdata,
+						options: {
+							legend: {
+								display: false
+							}
+						},
+					});
+				},
+				error : function(data) {
+				}
+			});
+			
+			$.ajax({
+				url : "./rest/v1/statistics/fuel/amountpaid/1",
+				method : "GET",
+				success : function(data) {
+					var date = [];
+					var paid = [];
+
+					for ( var i in data) {
+						date.push(data[i].date);
+						paid.push(data[i].paid);
+					}
+
+					var chartdata = {
+						labels : date,
+						datasets : [ {
+							backgroundColor : 'rgba(0, 0, 0, 0)',
+							borderColor : 'rgba(152, 83, 204, 1)',
+							data : paid
+						} ]
+					};
+
+					var amountChart = $("#amountChart");
+					var barGraph = new Chart(amountChart, {
+						type : 'line',
+						data : chartdata,
+						options: {
+							legend: {
+								display: false
+							}
+						},
+					});
+				},
+				error : function(data) {
+				}
+			});
+
+			// Open maps
 			var mapObject = $('div#map');
 			$('#mapCol').ready(
 					function() {
