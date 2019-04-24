@@ -2,6 +2,7 @@ package hu.thom.mileit.models;
 
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -106,6 +107,27 @@ public class CarModel extends Model {
 		setActive(params.get("status")[0]);
 
 		this.setUser(user);
+	}
+	
+	public Map<String, Object> getCarForRest() {
+		Map<String, Object> cm = new HashMap<String, Object>(1);
+		
+		cm.put("car_id", getId());
+		cm.put("manufacturer", manufacturerName);
+		cm.put("model", model);
+		cm.put("manufacturerDate", manufacturerDate);
+		cm.put("startDate", startDate);
+		cm.put("endDate", endDate);
+		cm.put("plateNumber", plateNumber);
+		cm.put("friendlyName", friendlyName);
+		cm.put("color", color);
+		cm.put("fuelCapacity", fuelCapacity);
+		cm.put("fuel", Fuel.toCode(fuel));
+		cm.put("vin", vin);
+		cm.put("active", isActive());
+		cm.put("description", description);
+		
+		return cm;
 	}
 
 	public String getManufacturerName() {
@@ -308,7 +330,7 @@ public class CarModel extends Model {
 	public void setFriendlyName(String friendlyName) {
 		this.friendlyName = friendlyName;
 	}
-
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
