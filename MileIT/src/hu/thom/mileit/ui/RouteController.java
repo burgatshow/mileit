@@ -127,7 +127,7 @@ public class RouteController extends Controller {
 				break;
 			}
 
-			assignedObjects.put(UIKeys.STATUS, dbm.createUpdateRoute(r) ? 1 : -1);
+			assignedObjects.put(UIKeys.STATUS, dbm.createUpdateRoute(r) ? 0 : -1);
 			assignedObjects.put(UIKeys.ROUTES, dbm.getRoutes(user.getId()));
 			renderPage(ROUTES, request, response);
 		} else {

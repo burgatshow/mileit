@@ -21,7 +21,7 @@
 
 <body>
 	<jsp:include page="includes/navbar.jsp" />
-	<div class="container-fluid">
+	<div class="container-fluid mt-3">
 		<div class="row">
 			<div class="col-md-12">
 				<h1 class="display-4">
@@ -76,7 +76,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="row">
+		<div class="row mt-3">
 			<div class="col-md-12">
 				<h1 class="display-4">
 					<fmt:message key="index.fuel.price.stat.title" />
@@ -88,9 +88,8 @@
 				<canvas id="priceChart" height="50"></canvas>
 			</div>
 		</div>
-		<div class="row">
+		<div class="row mt-3">
 			<div class="col-md-12">
-				<hr>
 				<h1 class="display-4">
 					<fmt:message key="index.fuel.amount.stat.title" />
 				</h1>
