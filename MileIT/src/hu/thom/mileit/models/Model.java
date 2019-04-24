@@ -38,9 +38,6 @@ public class Model extends DateModel {
 			this.archived = true;
 			break;
 
-		case "0":
-		case "no":
-		case "false":
 		default:
 			this.archived = false;
 			break;
@@ -71,9 +68,6 @@ public class Model extends DateModel {
 			this.active = true;
 			break;
 
-		case "0":
-		case "no":
-		case "false":
 		default:
 			this.active = false;
 			break;

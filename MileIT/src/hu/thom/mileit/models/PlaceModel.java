@@ -83,10 +83,7 @@ public class PlaceModel extends Model {
 		case "yes":
 			this.fuelStation = true;
 			break;
-		case "0":
-		case "false":
-		case "no":
-		case "":
+
 		default:
 			this.fuelStation = false;
 			break;

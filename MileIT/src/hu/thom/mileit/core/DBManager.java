@@ -454,6 +454,24 @@ public class DBManager implements Serializable {
 				ps.setInt(7, r.getOperation() == 0 ? r.getUser().getId() : r.getId());
 
 				if (ps.executeUpdate() == 1) {
+					if (r.isRoundTrip()) {
+						RouteModel rr = new RouteModel();
+						rr.setCar(r.getCar());
+						rr.setStartPlace(r.getEndPlace());
+						rr.setEndPlace(r.getStartPlace());
+						rr.setRouteType(r.getRouteType());
+						rr.setRouteDatetime(r.getRouteDatetime());
+						rr.setDistance(r.getDistance());
+						rr.setUser(r.getUser());
+						rr.setOperation(0);
+						rr.setRoundTrip(false);
+
+						if (createUpdateRoute(rr)) {
+							return true;
+						} else {
+							return false;
+						}
+					}
 					return true;
 				}
 			} catch (Exception e) {

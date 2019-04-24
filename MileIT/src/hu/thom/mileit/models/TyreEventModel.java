@@ -81,7 +81,7 @@ public class TyreEventModel extends Model {
 
 	public void setEventDate(String eventDate) {
 		try {
-			this.eventDate = this.getSdfDates().parse(eventDate);
+			this.eventDate = this.getDateFormatter().parse(eventDate);
 		} catch (Exception e) {
 			this.eventDate = new Date();
 		}

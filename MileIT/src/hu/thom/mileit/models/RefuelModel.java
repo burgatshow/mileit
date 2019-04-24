@@ -68,7 +68,7 @@ public class RefuelModel extends Model {
 
 	public void setRefuelTimestamp(String refuelDate) {
 		try {
-			this.refuelDate = this.getSdfDates().parse(refuelDate);
+			this.refuelDate = this.getDateFormatter().parse(refuelDate);
 		} catch (Exception e) {
 			this.refuelDate = new Date();
 		}

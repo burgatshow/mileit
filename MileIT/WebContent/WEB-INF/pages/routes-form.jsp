@@ -118,7 +118,7 @@
 				<div class="col-md-6">
 					<div class="form-group">
 						<c:if test="${not empty param.routeDatetime}">
-							<fmt:parseDate value="${param.routeDatetime}" var="routeDatetime" pattern="yyyy-MM-dd" />
+							<fmt:parseDate value="${param.routeDatetime}" var="routeDatetime" pattern="yyyy-MM-dd HH:mm" />
 						</c:if>
 						<c:if test="${not empty routes}">
 							<c:set var="routeDatetime" value="${routes.routeDatetime}" />
@@ -126,10 +126,22 @@
 						<label for="routeDatetime"><fmt:message key="routes.form.date" /><span class="ml-1 badge badge-pill badge-primary"> <fmt:message
 									key="form.mandatory" /></span></label> <input type="text" id="routeDatetime" name="routeDatetime"
 							class="form-control <c:if test="${validationMessages.contains('routeDatetime') }">is-invalid</c:if>"
-							placeholder="<fmt:message key="routes.form.date" />" value="<fmt:formatDate value="${routeDatetime}" pattern="yyyy-MM-dd"/>">
+							placeholder="<fmt:message key="routes.form.date" />" value="<fmt:formatDate value="${routeDatetime}" pattern="yyyy-MM-dd HH:mm"/>">
 					</div>
 				</div>
 			</div>
+			<c:if test="${empty routes.id}">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="form-check">
+							<input class="form-check-input" type="checkbox" value="1" name="roundTrip" id="roundTrip"> <label class="form-check-label"
+								for="roundTrip"> <fmt:message key="routes.form.roundtrip" />
+							</label> <small id="roundTripHelp" class="form-text text-muted"> <fmt:message key="routes.form.roundtrip.help" />
+							</small>
+						</div>
+					</div>
+				</div>
+			</c:if>
 			<div class="row">
 				<div class="col-md-12 text-right">
 					<input type="submit" class="btn btn-primary" value="<fmt:message key="button.save" />"> <a class="btn btn-danger" href="routes"

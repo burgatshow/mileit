@@ -112,6 +112,8 @@ public class RouteController extends Controller {
 
 			switch (m) {
 			case UIKeys.MODE_NEW:
+				System.out.println("Round-trip: " + request.getParameter("roundTrip") != null ? true : false);
+				r.setRoundTrip(request.getParameter("roundTrip") != null ? true : false);
 				r.setOperation(0);
 				break;
 			case UIKeys.MODE_UPDATE:
