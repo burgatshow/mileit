@@ -34,6 +34,8 @@ public class UIKeys implements Serializable {
 	public static final String MODE_UPDATE = "update";
 	public static final String MODE_CANCEL = "cancel";
 	public static final String MODE_DELETE = "delete";
+	public static final String MODE_AJAX_FUELSTAT = "afs";
+	public static final String MODE_AJAX_AMOUNTPAID = "aap";
 
 	// IndexController
 	public static final String LAST_REFUEL = "lr";

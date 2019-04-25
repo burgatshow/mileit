@@ -35,6 +35,7 @@
 			<url-pattern>/css/*</url-pattern>
 			<url-pattern>/img/*</url-pattern>
 			<url-pattern>/fonts/*</url-pattern>
+			<url-pattern>/ajax</url-pattern>
 		</web-resource-collection>
 	</security-constraint>
 	<security-role>

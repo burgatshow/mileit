@@ -65,7 +65,7 @@ public class Controller extends HttpServlet {
 		if (dbm == null) {
 			dbm = new DBManager();
 		}
-		
+
 		assignedObjects.put(UIKeys.VERSION, VERSION);
 		assignedObjects.put(UIKeys.PAGE, "index");
 
@@ -81,12 +81,16 @@ public class Controller extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
 
-		if (request.getUserPrincipal() != null) {
-			this.user = dbm.getUserProfile(new UserModel(request.getUserPrincipal().getName()));
-			assignedObjects.put(UIKeys.USER, user);
-
+		if (request.getSession().getAttribute("user") == null) {
+			if (request.getUserPrincipal() != null) {
+				user = dbm.getUserProfile(new UserModel(request.getUserPrincipal().getName()));
+				request.getSession().setAttribute("user", user);
+			}
+		} else {
+			user = (UserModel) request.getSession().getAttribute("user");
 		}
 
+		assignedObjects.put(UIKeys.USER, user);
 	}
 
 	/**
@@ -98,10 +102,16 @@ public class Controller extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
 
-		if (request.getUserPrincipal() != null) {
-			this.user = dbm.getUserProfile(new UserModel(request.getUserPrincipal().getName()));
-			assignedObjects.put(UIKeys.USER, user);
+		if (request.getSession().getAttribute("user") == null) {
+			if (request.getUserPrincipal() != null) {
+				user = dbm.getUserProfile(new UserModel(request.getUserPrincipal().getName()));
+				request.getSession().setAttribute("user", user);
+			}
+		} else {
+			user = (UserModel) request.getSession().getAttribute("user");
 		}
+
+		assignedObjects.put(UIKeys.USER, user);
 	}
 
 	/**

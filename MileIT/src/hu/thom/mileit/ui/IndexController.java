@@ -1,16 +1,15 @@
 package hu.thom.mileit.ui;
 
 import java.io.IOException;
-import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import hu.thom.mileit.core.UIKeys;
-import hu.thom.mileit.models.RefuelModel;
 
 /**
  * Servlet class to manage homepage
@@ -41,27 +40,11 @@ public class IndexController extends Controller {
 
 		assignedObjects.put(UIKeys.LAST_REFUEL, dbm.getLastRefuel(user.getId()));
 
-		List<RefuelModel> fuelStats = dbm.getFuelPriceStats(user.getId());
-		StringBuffer fuelStatKeys = new StringBuffer();
-		StringBuffer fuelStatValues = new StringBuffer();
-		StringBuffer fuelPaidAmount = new StringBuffer();
-		int i = 1;
-		for (RefuelModel rm : fuelStats) {
-			fuelStatKeys.append("'").append(df.format(rm.getRefuelDate())).append("'");
-			fuelStatValues.append(rm.getUnitPrice());
-			fuelPaidAmount.append(rm.getAmount());
-
-			if (i != fuelStats.size()) {
-				fuelStatKeys.append(", ");
-				fuelStatValues.append(", ");
-				fuelPaidAmount.append(", ");
-			}
-			i++;
+		HttpSession session = request.getSession();
+		if (session.getAttribute("fuelStats") == null) {
+			session.setAttribute("fuelStats", dbm.getFuelPriceStats(user.getId()));
 		}
 
-		assignedObjects.put(UIKeys.STAT_KEY, fuelStatKeys);
-		assignedObjects.put(UIKeys.STAT_VAL, fuelStatValues);
-		assignedObjects.put(UIKeys.STAT_PAID_AMOUNT, fuelPaidAmount);
 		assignedObjects.remove(UIKeys.STATUS);
 
 		renderPage(HOME, request, response);
