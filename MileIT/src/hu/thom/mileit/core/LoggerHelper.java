@@ -62,4 +62,12 @@ public final class LoggerHelper implements Serializable {
 			logger.logp(Level.FINEST, loggingClass.getCanonicalName(), method, LOG_EXCEPTION, t);
 		}
 	}
+	
+	public void logEnter(String method) {
+		logger.entering(logger.getName(), method);
+	}
+	
+	public void logExit(String method) {
+		logger.exiting(logger.getName(), method);
+	}
 }

@@ -285,7 +285,7 @@ public class CarModel extends Model {
 
 	public void setStartDate(String startDate) {
 		try {
-			this.startDate = this.getDateFormatter().parse(startDate);
+			this.startDate = this.getDateFormatter(null).parse(startDate);
 		} catch (Exception e) {
 			this.startDate = null;
 		}
@@ -309,7 +309,7 @@ public class CarModel extends Model {
 
 	public void setEndDate(String endDate) {
 		try {
-			this.endDate = this.getDateFormatter().parse(endDate);
+			this.endDate = this.getDateFormatter(null).parse(endDate);
 		} catch (Exception e) {
 			this.endDate = null;
 		}

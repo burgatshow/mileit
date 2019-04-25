@@ -52,9 +52,11 @@ public class DBManager implements Serializable {
 	 * Constructor
 	 */
 	public DBManager() {
+		logger.logEnter("DBManager()");
 		if (ds == null) {
 			forceObtainDS();
 		}
+		logger.logExit("DBManager()");
 	}
 
 	/**
@@ -64,21 +66,24 @@ public class DBManager implements Serializable {
 	 * @return true on success, false otherwise
 	 */
 	public boolean archiveCar(int id) {
+		logger.logEnter("archiveCar()");
+
+		boolean status = false;
+
 		try {
 			con = ds.getConnection();
 			ps = con.prepareStatement(DBCommands.SQL_U_CAR_ARCHIVE);
 			ps.setInt(1, id);
 
-			if (ps.executeUpdate() >= 1) {
-				return true;
-			}
+			status = ps.executeUpdate() >= 1 ? true : false;
 
 		} catch (Exception e) {
 			logger.logException("archiveCar()", e);
 		} finally {
 			closeConnection();
 		}
-		return false;
+		logger.logExit("archiveCar()");
+		return status;
 	}
 
 	/**
@@ -88,21 +93,23 @@ public class DBManager implements Serializable {
 	 * @return true on success, false otherwise
 	 */
 	public boolean archivePaymentMethod(int id) {
+		logger.logEnter("archivePaymentMethod()");
+		boolean status = false;
+
 		try {
 			con = ds.getConnection();
 			ps = con.prepareStatement(DBCommands.SQL_U_PAYMENT_ARCHIVE);
 			ps.setInt(1, id);
 
-			if (ps.executeUpdate() >= 1) {
-				return true;
-			}
+			status = ps.executeUpdate() >= 1 ? true : false;
 
 		} catch (Exception e) {
 			logger.logException("archivePaymentMethod()", e);
 		} finally {
 			closeConnection();
 		}
-		return false;
+		logger.logExit("archivePaymentMethod()");
+		return status;
 	}
 
 	/**
@@ -112,21 +119,22 @@ public class DBManager implements Serializable {
 	 * @return true on success, false otherwise
 	 */
 	public boolean archivePlace(int id) {
+		logger.logEnter("archivePlace()");
+		boolean status = false;
 		try {
 			con = ds.getConnection();
 			ps = con.prepareStatement(DBCommands.SQL_U_PLACE_ARCHIVE);
 			ps.setInt(1, id);
 
-			if (ps.executeUpdate() >= 1) {
-				return true;
-			}
+			status = ps.executeUpdate() >= 1 ? true : false;
 
 		} catch (Exception e) {
 			logger.logException("archivePlace()", e);
 		} finally {
 			closeConnection();
 		}
-		return false;
+		logger.logExit("archivePlace()");
+		return status;
 	}
 
 	/**
@@ -136,46 +144,21 @@ public class DBManager implements Serializable {
 	 * @return true on success, false otherwise
 	 */
 	public boolean archiveTyre(int id) {
+		logger.logEnter("archiveTyre()");
+		boolean status = false;
 		try {
 			con = ds.getConnection();
 			ps = con.prepareStatement(DBCommands.SQL_U_TYRE_ARCHIVE);
 			ps.setInt(1, id);
 
-			if (ps.executeUpdate() >= 1) {
-				return true;
-			}
+			status = ps.executeUpdate() >= 1 ? true : false;
 
 		} catch (Exception e) {
 			logger.logException("archiveTyre()", e);
 		} finally {
 			closeConnection();
 		}
-		return false;
-	}
-
-	/**
-	 * Checks whether the user exists in the DB or not
-	 * 
-	 * @param username {@link String} the username provided upon sign in
-	 * @return true if yes, false otherwise
-	 */
-	private boolean checkUserProfile(String username) {
-		boolean status = false;
-		try {
-			con = ds.getConnection();
-			ps = con.prepareStatement(DBCommands.SQL_S_CHECK_USER);
-			ps.setString(1, username);
-
-			rs = ps.executeQuery();
-
-			if (rs.next()) {
-				status = rs.getInt(1) == 1 ? true : false;
-			}
-		} catch (Exception e) {
-			logger.logException("checkUserProfile()", e);
-		} finally {
-			closeConnection();
-		}
+		logger.logExit("archiveTyre()");
 		return status;
 	}
 
@@ -185,6 +168,7 @@ public class DBManager implements Serializable {
 	 * 
 	 */
 	private void closeConnection() {
+		logger.logEnter("closeConnection()");
 		if (rs != null) {
 			try {
 				if (!rs.isClosed()) {
@@ -214,6 +198,7 @@ public class DBManager implements Serializable {
 				logger.logException("closeConnection()", e);
 			}
 		}
+		logger.logExit("closeConnection()");
 	}
 
 	/**
@@ -223,6 +208,8 @@ public class DBManager implements Serializable {
 	 * @return true on success, false otherwise
 	 */
 	public boolean createTyreEvent(TyreEventModel tyreEvent) {
+		logger.logEnter("createTyreEvent()");
+		boolean status = false;
 		if (tyreEvent != null) {
 			try {
 				con = ds.getConnection();
@@ -235,9 +222,7 @@ public class DBManager implements Serializable {
 				ps.setDouble(5, tyreEvent.getOdometerEnd());
 				ps.setTimestamp(6, new Timestamp(tyreEvent.getEventDate().getTime()));
 
-				if (ps.executeUpdate() == 1) {
-					return true;
-				}
+				status = ps.executeUpdate() == 1 ? true : false;
 			} catch (Exception e) {
 				logger.logException("createTyreEvent()", e);
 			} finally {
@@ -245,7 +230,8 @@ public class DBManager implements Serializable {
 			}
 		}
 
-		return false;
+		logger.logExit("createTyreEvent()");
+		return status;
 	}
 
 	/**
@@ -255,6 +241,8 @@ public class DBManager implements Serializable {
 	 * @return true on success, false otherwise
 	 */
 	public boolean createUpdateCar(CarModel car) {
+		logger.logEnter("createUpdateCar()");
+		boolean status = false;
 		if (car != null) {
 			try {
 				con = ds.getConnection();
@@ -279,9 +267,7 @@ public class DBManager implements Serializable {
 
 				if (ps.executeUpdate() == 1) {
 					if (setPrimaryCar(car.getUser().getId(), car.getId(), car.getOperation() == 0 ? true : false)) {
-						return true;
-					} else {
-						return false;
+						status = true;
 					}
 				}
 			} catch (Exception e) {
@@ -291,7 +277,8 @@ public class DBManager implements Serializable {
 			}
 		}
 
-		return false;
+		logger.logExit("createUpdateMaintenance()");
+		return status;
 
 	}
 
@@ -302,6 +289,8 @@ public class DBManager implements Serializable {
 	 * @return true on success, false otherwise
 	 */
 	public boolean createUpdateMaintenance(MaintenanceModel m) {
+		logger.logEnter("createUpdateMaintenance()");
+		boolean status = false;
 		if (m != null) {
 			try {
 				con = ds.getConnection();
@@ -321,16 +310,16 @@ public class DBManager implements Serializable {
 					ps.setInt(10, m.getId());
 				}
 
-				if (ps.executeUpdate() == 1) {
-					return true;
-				}
+				status = ps.executeUpdate() == 1 ? true : false;
 			} catch (Exception e) {
 				logger.logException("createUpdateMaintenance()", e);
 			} finally {
 				closeConnection();
 			}
 		}
-		return false;
+
+		logger.logExit("createUpdateMaintenance()");
+		return status;
 	}
 
 	/**
@@ -340,6 +329,8 @@ public class DBManager implements Serializable {
 	 * @return true on success, false otherwise
 	 */
 	public boolean createUpdatePaymentMethod(PaymentMethodModel pm) {
+		logger.logEnter("createUpdatePaymentMethod()");
+		boolean status = false;
 		if (pm != null) {
 			try {
 				con = ds.getConnection();
@@ -349,9 +340,7 @@ public class DBManager implements Serializable {
 				ps.setString(2, pm.getDescription());
 				ps.setInt(3, pm.getOperation() == 0 ? pm.getUser().getId() : pm.getId());
 
-				if (ps.executeUpdate() == 1) {
-					return true;
-				}
+				status = ps.executeUpdate() == 1 ? true : false;
 			} catch (Exception e) {
 				logger.logException("createUpdatePaymentMethod()", e);
 			} finally {
@@ -359,7 +348,8 @@ public class DBManager implements Serializable {
 			}
 		}
 
-		return false;
+		logger.logExit("createUpdatePaymentMethod()");
+		return status;
 	}
 
 	/**
@@ -369,6 +359,8 @@ public class DBManager implements Serializable {
 	 * @return true on success, false otherwise
 	 */
 	public boolean createUpdatePlace(PlaceModel l) {
+		logger.logEnter("createUpdatePlace()");
+		boolean status = false;
 		if (l != null) {
 			try {
 				con = ds.getConnection();
@@ -381,17 +373,15 @@ public class DBManager implements Serializable {
 				ps.setInt(5, l.isFuelStation() ? 1 : 0);
 				ps.setInt(6, l.getOperation() == 0 ? l.getUser().getId() : l.getId());
 
-				if (ps.executeUpdate() == 1) {
-					return true;
-				}
+				status = ps.executeUpdate() == 1 ? true : false;
 			} catch (Exception e) {
 				logger.logException("createUpdatePlace()", e);
 			} finally {
 				closeConnection();
 			}
 		}
-
-		return false;
+		logger.logExit("createUpdatePlace()");
+		return status;
 	}
 
 	/**
@@ -401,6 +391,9 @@ public class DBManager implements Serializable {
 	 * @return true on success, false otherwise
 	 */
 	public boolean createUpdateRefuel(RefuelModel rf) {
+		logger.logEnter("createUpdateRefuel()");
+		boolean status = false;
+
 		if (rf != null) {
 			try {
 				con = ds.getConnection();
@@ -420,9 +413,7 @@ public class DBManager implements Serializable {
 
 				ps.setInt(11, rf.getOperation() == 0 ? rf.getUser().getId() : rf.getId());
 
-				if (ps.executeUpdate() == 1) {
-					return true;
-				}
+				status = ps.executeUpdate() == 1 ? true : false;
 			} catch (Exception e) {
 				logger.logException("createUpdateRefuel()", e);
 			} finally {
@@ -430,7 +421,8 @@ public class DBManager implements Serializable {
 			}
 		}
 
-		return false;
+		logger.logExit("createUpdateRefuel()");
+		return status;
 	}
 
 	/**
@@ -440,6 +432,8 @@ public class DBManager implements Serializable {
 	 * @return true on success, false otherwise
 	 */
 	public boolean createUpdateRoute(RouteModel r) {
+		logger.logEnter("createUpdateRoute()");
+		boolean status = false;
 		if (r != null) {
 			try {
 				con = ds.getConnection();
@@ -466,13 +460,10 @@ public class DBManager implements Serializable {
 						rr.setOperation(0);
 						rr.setRoundTrip(false);
 
-						if (createUpdateRoute(rr)) {
-							return true;
-						} else {
-							return false;
-						}
+						status = createUpdateRoute(rr) ? true : false;
 					}
-					return true;
+
+					status = true;
 				}
 			} catch (Exception e) {
 				logger.logException("createUpdateRoute()", e);
@@ -481,7 +472,8 @@ public class DBManager implements Serializable {
 			}
 		}
 
-		return false;
+		logger.logExit("createUpdateRoute()");
+		return status;
 	}
 
 	/**
@@ -491,8 +483,8 @@ public class DBManager implements Serializable {
 	 * @return true on success, false otherwise
 	 */
 	public boolean createUpdateTyre(TyreModel tyre) {
+		logger.logEnter("createUpdateTyre()");
 		if (tyre != null) {
-			System.out.println(tyre);
 			try {
 				con = ds.getConnection();
 				ps = con.prepareStatement(tyre.getOperation() == 0 ? DBCommands.SQL_I_TYRE : DBCommands.SQL_U_TYRE);
@@ -517,6 +509,7 @@ public class DBManager implements Serializable {
 			}
 		}
 
+		logger.logExit("createUpdateTyre()");
 		return false;
 	}
 
@@ -527,6 +520,7 @@ public class DBManager implements Serializable {
 	 * @return true on success, false otherwise
 	 */
 	private boolean createUserProfile(String username) {
+		logger.logEnter("createUserProfile()");
 		boolean status = false;
 		try {
 			con = ds.getConnection();
@@ -538,6 +532,8 @@ public class DBManager implements Serializable {
 		} finally {
 			closeConnection();
 		}
+
+		logger.logExit("createUserProfile()");
 		return status;
 	}
 
@@ -548,6 +544,7 @@ public class DBManager implements Serializable {
 	 * @return true on success, false otherwise
 	 */
 	public boolean deleteRoute(int id) {
+		logger.logEnter("deleteRoute()");
 		boolean status = false;
 		try {
 			con = ds.getConnection();
@@ -559,6 +556,8 @@ public class DBManager implements Serializable {
 		} finally {
 			closeConnection();
 		}
+
+		logger.logExit("deleteRoute()");
 		return status;
 	}
 
@@ -569,6 +568,7 @@ public class DBManager implements Serializable {
 	 * @return {@link DataSource} if obtained, null otherwise
 	 */
 	private void forceObtainDS() {
+		logger.logEnter("forceObtainDS()");
 		InitialContext ctx = null;
 		try {
 			ctx = new InitialContext();
@@ -580,6 +580,7 @@ public class DBManager implements Serializable {
 				logger.logException("forceObtainDS()", e);
 			}
 		}
+		logger.logExit("forceObtainDS()");
 	}
 
 	/**
@@ -589,6 +590,7 @@ public class DBManager implements Serializable {
 	 * @return {@link CarModel} if found, null otherwise
 	 */
 	public CarModel getCar(int id) {
+		logger.logEnter("getCar()");
 		CarModel car = null;
 		try {
 			con = ds.getConnection();
@@ -621,6 +623,8 @@ public class DBManager implements Serializable {
 		} finally {
 			closeConnection();
 		}
+
+		logger.logExit("getCar()");
 		return car;
 	}
 
@@ -632,6 +636,7 @@ public class DBManager implements Serializable {
 	 *         otherwise
 	 */
 	public List<CarModel> getCars(int user_id) {
+		logger.logEnter("getCars()");
 		List<CarModel> cars = new ArrayList<CarModel>();
 
 		try {
@@ -668,6 +673,7 @@ public class DBManager implements Serializable {
 			closeConnection();
 		}
 
+		logger.logExit("getCars()");
 		return cars;
 	}
 
@@ -678,6 +684,7 @@ public class DBManager implements Serializable {
 	 *         as value of the available car vendors, or empty {@link Map} otherwise
 	 */
 	public Map<Integer, String> getCarVendors() {
+		logger.logEnter("getCarVendors()");
 		Map<Integer, String> carVendors = null;
 
 		try {
@@ -700,6 +707,7 @@ public class DBManager implements Serializable {
 			closeConnection();
 		}
 
+		logger.logExit("getCarVendors()");
 		return carVendors;
 	}
 
@@ -712,6 +720,7 @@ public class DBManager implements Serializable {
 	 *         otherwise
 	 */
 	public List<RefuelModel> getFuelPriceStats(int user_id) {
+		logger.logEnter("getFuelPriceStats()");
 		List<RefuelModel> statData = new ArrayList<RefuelModel>();
 		try {
 			con = ds.getConnection();
@@ -729,6 +738,7 @@ public class DBManager implements Serializable {
 			closeConnection();
 		}
 
+		logger.logExit("getFuelPriceStats()");
 		return statData;
 	}
 
@@ -739,6 +749,7 @@ public class DBManager implements Serializable {
 	 * @return {@link RefuelModel} if found, null otherwise
 	 */
 	public RefuelModel getLastRefuel(int user_id) {
+		logger.logEnter("getLastRefuel()");
 		RefuelModel rf = null;
 		try {
 			con = ds.getConnection();
@@ -765,6 +776,8 @@ public class DBManager implements Serializable {
 		} finally {
 			closeConnection();
 		}
+
+		logger.logExit("getLastRefuel()");
 		return rf;
 	}
 
@@ -775,6 +788,7 @@ public class DBManager implements Serializable {
 	 * @return {@link MaintenanceModel} if found, null otherwise
 	 */
 	public MaintenanceModel getMaintenance(int id) {
+		logger.logEnter("getMaintenance()");
 		MaintenanceModel mm = null;
 		try {
 			con = ds.getConnection();
@@ -799,6 +813,7 @@ public class DBManager implements Serializable {
 		} finally {
 			closeConnection();
 		}
+		logger.logExit("getMaintenance()");
 		return mm;
 	}
 
@@ -811,6 +826,7 @@ public class DBManager implements Serializable {
 	 *         list otherwise
 	 */
 	public List<MaintenanceModel> getMaintenances(int id) {
+		logger.logEnter("getMaintenances()");
 		List<MaintenanceModel> ms = new ArrayList<MaintenanceModel>();
 
 		try {
@@ -840,6 +856,7 @@ public class DBManager implements Serializable {
 			closeConnection();
 		}
 
+		logger.logExit("getMaintenances()");
 		return ms;
 	}
 
@@ -850,6 +867,7 @@ public class DBManager implements Serializable {
 	 * @return {@link PaymentMethodModel} if found, null otherwise
 	 */
 	public PaymentMethodModel getPaymentMethod(int id) {
+		logger.logEnter("getPaymentMethod()");
 		PaymentMethodModel pm = null;
 		try {
 			con = ds.getConnection();
@@ -866,6 +884,7 @@ public class DBManager implements Serializable {
 		} finally {
 			closeConnection();
 		}
+		logger.logExit("getPaymentMethod()");
 		return pm;
 	}
 
@@ -878,6 +897,7 @@ public class DBManager implements Serializable {
 	 *         list otherwise
 	 */
 	public List<PaymentMethodModel> getPaymentMethods(int id) {
+		logger.logEnter("getPaymentMethods()");
 		List<PaymentMethodModel> pms = new ArrayList<PaymentMethodModel>();
 
 		try {
@@ -896,6 +916,7 @@ public class DBManager implements Serializable {
 			closeConnection();
 		}
 
+		logger.logExit("getPaymentMethods()");
 		return pms;
 	}
 
@@ -906,6 +927,7 @@ public class DBManager implements Serializable {
 	 * @return {@link PlaceModel} if found, null otherwise
 	 */
 	public PlaceModel getPlace(int id) {
+		logger.logEnter("getPlace()");
 		PlaceModel l = null;
 		try {
 			con = ds.getConnection();
@@ -922,6 +944,8 @@ public class DBManager implements Serializable {
 		} finally {
 			closeConnection();
 		}
+
+		logger.logExit("getPlace()");
 		return l;
 	}
 
@@ -934,6 +958,7 @@ public class DBManager implements Serializable {
 	 *         otherwise
 	 */
 	public List<PlaceModel> getPlaces(int id) {
+		logger.logEnter("getPlaces()");
 		List<PlaceModel> ls = new ArrayList<PlaceModel>();
 
 		try {
@@ -952,6 +977,7 @@ public class DBManager implements Serializable {
 			closeConnection();
 		}
 
+		logger.logExit("getPlaces()");
 		return ls;
 	}
 
@@ -962,6 +988,7 @@ public class DBManager implements Serializable {
 	 * @return {@link RefuelModel} if found, null otherwise
 	 */
 	public RefuelModel getRefuel(int id) {
+		logger.logEnter("getRefuel()");
 		RefuelModel rf = null;
 		try {
 			con = ds.getConnection();
@@ -987,6 +1014,8 @@ public class DBManager implements Serializable {
 		} finally {
 			closeConnection();
 		}
+
+		logger.logExit("getRefuel()");
 		return rf;
 	}
 
@@ -999,6 +1028,7 @@ public class DBManager implements Serializable {
 	 *         otherwise
 	 */
 	public List<RefuelModel> getRefuels(int user_id) {
+		logger.logEnter("getRefuels()");
 		List<RefuelModel> refuels = new ArrayList<RefuelModel>();
 
 		try {
@@ -1029,6 +1059,7 @@ public class DBManager implements Serializable {
 			closeConnection();
 		}
 
+		logger.logExit("getRefuels()");
 		return refuels;
 	}
 
@@ -1040,6 +1071,7 @@ public class DBManager implements Serializable {
 	 * @return a {@link RouteModel} object if found, null otherwise
 	 */
 	public RouteModel getRoute(int route_id) {
+		logger.logEnter("getRoute()");
 		RouteModel r = null;
 		try {
 			con = ds.getConnection();
@@ -1062,6 +1094,8 @@ public class DBManager implements Serializable {
 		} finally {
 			closeConnection();
 		}
+
+		logger.logExit("getRoute()");
 		return r;
 	}
 
@@ -1074,6 +1108,7 @@ public class DBManager implements Serializable {
 	 *         otherwise
 	 */
 	public List<RouteModel> getRoutes(int user_id) {
+		logger.logEnter("getRoutes()");
 		List<RouteModel> routes = new ArrayList<RouteModel>();
 
 		try {
@@ -1101,6 +1136,7 @@ public class DBManager implements Serializable {
 			closeConnection();
 		}
 
+		logger.logExit("getRoutes()");
 		return routes;
 	}
 
@@ -1111,6 +1147,7 @@ public class DBManager implements Serializable {
 	 * @return {@link TyreModel} if found, null otherwise
 	 */
 	public TyreModel getTyre(int id) {
+		logger.logEnter("getTyre()");
 		TyreModel tyre = null;
 		try {
 			con = ds.getConnection();
@@ -1129,6 +1166,8 @@ public class DBManager implements Serializable {
 		} finally {
 			closeConnection();
 		}
+
+		logger.logExit("getTyre()");
 		return tyre;
 	}
 
@@ -1141,6 +1180,7 @@ public class DBManager implements Serializable {
 	 *         otherwise
 	 */
 	public List<TyreModel> getTyres(int user_id) {
+		logger.logEnter("getTyres()");
 		List<TyreModel> tyres = new ArrayList<TyreModel>();
 
 		try {
@@ -1175,6 +1215,7 @@ public class DBManager implements Serializable {
 			closeConnection();
 		}
 
+		logger.logExit("getTyres()");
 		return tyres;
 	}
 
@@ -1185,6 +1226,7 @@ public class DBManager implements Serializable {
 	 *         as value of the available car vendors, or empty {@link Map} otherwise
 	 */
 	public Map<Integer, String> getTyreVendors() {
+		logger.logEnter("getTyreVendors()");
 		Map<Integer, String> tyreVendors = null;
 
 		try {
@@ -1207,6 +1249,8 @@ public class DBManager implements Serializable {
 			closeConnection();
 		}
 
+		logger.logExit("getTyreVendors()");
+
 		return tyreVendors;
 	}
 
@@ -1217,6 +1261,7 @@ public class DBManager implements Serializable {
 	 * @return the completed {@link UserModel} on success, null otherwise
 	 */
 	public UserModel getUserProfile(String username) {
+		logger.logEnter("getUserProfile()");
 		UserModel user = null;
 		try {
 			con = ds.getConnection();
@@ -1239,6 +1284,7 @@ public class DBManager implements Serializable {
 		} finally {
 			closeConnection();
 		}
+		logger.logExit("getUserProfile()");
 		return user;
 	}
 
@@ -1249,9 +1295,7 @@ public class DBManager implements Serializable {
 	 * @return the completed {@link UserModel}
 	 */
 	public UserModel getUserProfile(UserModel user) {
-		if (!checkUserProfile(user.getUsername())) {
-			createUserProfile(user.getUsername());
-		}
+		createUserProfile(user.getUsername());
 		return getUserProfile(user.getUsername());
 	}
 
@@ -1265,6 +1309,7 @@ public class DBManager implements Serializable {
 	 * @return true on success, false otherwise
 	 */
 	private boolean setPrimaryCar(int user_id, int car_id, boolean isNewCar) {
+		logger.logEnter("setPrimaryCar()");
 		boolean status = false;
 
 		try {
@@ -1278,16 +1323,14 @@ public class DBManager implements Serializable {
 
 			ps.setInt(2, user_id);
 
-			if (ps.executeUpdate() > 0) {
-				status = true;
-			}
-
+			status = ps.executeUpdate() > 0 ? true : false;
 		} catch (Exception e) {
 			logger.logException("setPrimaryCar()", e);
 		} finally {
 			closeConnection();
 		}
 
+		logger.logExit("setPrimaryCar()");
 		return status;
 	}
 
@@ -1298,6 +1341,8 @@ public class DBManager implements Serializable {
 	 * @return boolean true on success, false otherwise
 	 */
 	public boolean updateUserProfile(UserModel user) {
+		logger.logEnter("updateUserProfile()");
+		boolean status = false;
 		if (user.getUsername() != null && !"".equalsIgnoreCase(user.getUsername())) {
 			try {
 				con = ds.getConnection();
@@ -1309,9 +1354,7 @@ public class DBManager implements Serializable {
 				ps.setInt(4, user.getRounded());
 				ps.setInt(5, user.getId());
 
-				if (ps.executeUpdate() == 1) {
-					return true;
-				}
+				status = ps.executeUpdate() == 1 ? true : false;
 			} catch (Exception e) {
 				logger.logException("updateUserProfile()", e);
 			} finally {
@@ -1319,6 +1362,7 @@ public class DBManager implements Serializable {
 			}
 		}
 
-		return false;
+		logger.logExit("updateUserProfile()");
+		return status;
 	}
 }

@@ -17,10 +17,10 @@ public class DateModel implements Serializable {
 	public final String DATE = "yyyy-MM-dd";
 	public final String DATETIME = "yyyy-MM-dd HH:mm";
 
-	public DateFormat getDateFormatter(String... pattern) {
-		if ("".equalsIgnoreCase(pattern[0]) || pattern[0] == null) {
+	public DateFormat getDateFormatter(String pattern) {
+		if ("".equalsIgnoreCase(pattern) || pattern == null) {
 			return new SimpleDateFormat(DATE);
 		}
-		return new SimpleDateFormat(pattern[0]);
+		return new SimpleDateFormat(pattern);
 	}
 }

@@ -51,9 +51,9 @@ CREATE TABLE IF NOT EXISTS `places` (
   `longitude` DOUBLE DEFAULT NULL,
   `latitude` DOUBLE DEFAULT NULL,
   `fuel_station` TINYINT(1) UNSIGNED NULL DEFAULT 1,
-  `archived` TINYINT(1) UNSIGNED NULL DEFAULT 0
-  PRIMARY KEY (`place_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
+  `archived` TINYINT(1) UNSIGNED NULL DEFAULT 0,
+  PRIMARY KEY (`place_id`))
+ ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
 CREATE TABLE IF NOT EXISTS `refuels` (
   `refuel_id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -76,10 +76,9 @@ CREATE TABLE IF NOT EXISTS `users` (
   `locale` VARCHAR(2) NOT NULL COLLATE utf8mb4_hungarian_ci DEFAULT 'hu',
   `distance` TINYINT(1) UNSIGNED NOT NULL DEFAULT 1,
   `rounded` TINYINT(1) UNSIGNED NOT NULL DEFAULT 1,
-  `archived` TINYINT(1) UNSIGNED NOT NULL DEFAULT 0
-  PRIMARY KEY (`user_id`),
-  UNIQUE KEY `username` (`username`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
+  `archived` TINYINT(1) UNSIGNED NOT NULL DEFAULT 0,
+  PRIMARY KEY (`user_id`), UNIQUE KEY `username` (`username`)) 
+  ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
 CREATE TABLE IF NOT EXISTS `sup_car_manufacturers` (
   `manufacturer_id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -235,9 +234,8 @@ CREATE TABLE IF NOT EXISTS `tyres` (
   `size_h` INT(11) UNSIGNED NOT NULL,
   `size_w` INT(11) UNSIGNED NOT NULL,
   `purchase_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `archived` TINYINT(1) UNSIGNED NOT NULL DEFAULT 0
-  PRIMARY KEY (`tyre_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
+  `archived` TINYINT(1) UNSIGNED NOT NULL DEFAULT 0,
+  PRIMARY KEY (`tyre_id`)) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
 CREATE TABLE IF NOT EXISTS `sup_tyre_manufacturers` (
   `manufacturer_id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -321,3 +319,4 @@ CREATE TABLE IF NOT EXISTS `routes` (
 	`archived` TINYINT(1) UNSIGNED NOT NULL DEFAULT 0,
 	PRIMARY KEY (`route_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
+

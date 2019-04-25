@@ -45,7 +45,7 @@ $(document).ready(
 
 			// FIXME add user id from data-field on canvas
 			$.ajax({
-				url : "./rest/v1/statistics/fuel/pricechanges/1",
+				url : "./ajax?m=afs",
 				method : "GET",
 				success : function(data) {
 					var date = [];
@@ -81,7 +81,7 @@ $(document).ready(
 			});
 			
 			$.ajax({
-				url : "./rest/v1/statistics/fuel/amountpaid/1",
+				url : "./ajax?m=aap",
 				method : "GET",
 				success : function(data) {
 					var date = [];
