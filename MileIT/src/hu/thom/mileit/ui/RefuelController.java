@@ -114,6 +114,8 @@ public class RefuelController extends Controller {
 			default:
 				break;
 			}
+			
+			request.getSession().removeAttribute("fuelStats");
 
 			assignedObjects.put(UIKeys.STATUS, dbm.createUpdateRefuel(rf) ? 1 : -1);
 			assignedObjects.put(UIKeys.REFUELS, dbm.getRefuels(user.getId()));
