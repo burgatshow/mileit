@@ -27,6 +27,7 @@ public class IndexController extends Controller {
 	public IndexController() {
 		super();
 		assignedObjects.put(UIKeys.PAGE, "index");
+		assignedObjects.put(UIKeys.LOAD_CHARTS, 1);
 	}
 
 	/**
@@ -38,13 +39,16 @@ public class IndexController extends Controller {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		super.doGet(request, response);
 
-		assignedObjects.put(UIKeys.LAST_REFUEL, dbm.getLastRefuel(user.getId()));
-
 		HttpSession session = request.getSession();
-		if (session.getAttribute("fuelStats") == null) {
-			session.setAttribute("fuelStats", dbm.getFuelPriceStats(user.getId()));
+		if (session.getAttribute(UIKeys.FUEL_STATS) == null) {
+			session.setAttribute(UIKeys.FUEL_STATS, dbm.getFuelPriceStats(user.getId()));
 		}
 
+		if (session.getAttribute(UIKeys.LAST_REFUEL) == null) {
+			session.setAttribute(UIKeys.LAST_REFUEL, dbm.getLastRefuel(user.getId()));
+		}
+
+		assignedObjects.put(UIKeys.LAST_REFUEL, session.getAttribute(UIKeys.LAST_REFUEL));
 		assignedObjects.remove(UIKeys.STATUS);
 
 		renderPage(HOME, request, response);

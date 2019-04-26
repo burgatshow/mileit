@@ -14,9 +14,16 @@
 	integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
 	integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-<script src="http://www.openlayers.org/api/OpenLayers.js"></script>
 <script src="<c:out value="${ctxRoot}" />/js/colorpicker.js" type="text/javascript"></script>
 <script src="<c:out value="${ctxRoot}" />/js/moment.min.js" type="text/javascript"></script>
 <script src="<c:out value="${ctxRoot}" />/js/bootstrap-datetimepicker.min.js" type="text/javascript"></script>
-<script src="<c:out value="${ctxRoot}" />/js/Chart.min.js" type="text/javascript"></script>
 <script src="<c:out value="${ctxRoot}" />/js/mileit.js" type="text/javascript"></script>
+
+<c:if test="${loadCharts eq 1}">
+	<script src="<c:out value="${ctxRoot}" />/js/Chart.min.js" type="text/javascript"></script>
+	<script src="<c:out value="${ctxRoot}" />/js/mileit.charts.js" type="text/javascript"></script>
+</c:if>
+<c:if test="${loadMap eq 1}">
+	<script src="http://www.openlayers.org/api/OpenLayers.js"></script>
+	<script src="<c:out value="${ctxRoot}" />/js/mileit.maps.js" type="text/javascript"></script>
+</c:if>

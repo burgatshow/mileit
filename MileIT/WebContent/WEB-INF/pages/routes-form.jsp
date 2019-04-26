@@ -54,10 +54,12 @@
 									key="form.mandatory" /></span></label> <select id="car" class="form-control <c:if test="${validationMessages.contains('car') }">is-invalid</c:if>"
 							name="car">
 							<c:forEach items="${cars}" var="car">
-								<option <c:if test="${routes.car.id eq car.id}">selected="selected"</c:if> value="<c:out value="${car.id}" />"><c:out
-										value="${car.friendlyName}" /> (
-									<c:out value="${car.plateNumber}" />)
-								</option>
+								<c:if test="${not car.archived}">
+									<option <c:if test="${routes.car.id eq car.id}">selected="selected"</c:if> value="<c:out value="${car.id}" />"><c:out
+											value="${car.friendlyName}" /> (
+										<c:out value="${car.plateNumber}" />)
+									</option>
+								</c:if>
 							</c:forEach>
 						</select>
 					</div>

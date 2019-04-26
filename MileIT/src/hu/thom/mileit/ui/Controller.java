@@ -12,6 +12,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import hu.thom.mileit.core.DBManager;
 import hu.thom.mileit.core.UIKeys;
@@ -187,6 +188,12 @@ public class Controller extends HttpServlet {
 					validationMessages.remove(key);
 				}
 			}
+		}
+	}
+
+	public void invalidateSessionAttribute(HttpSession session, String attributeKey) {
+		if (session != null && attributeKey != null && !"".equalsIgnoreCase(attributeKey)) {
+			session.removeAttribute(attributeKey);
 		}
 	}
 }

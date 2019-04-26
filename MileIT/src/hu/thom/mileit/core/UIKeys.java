@@ -31,17 +31,18 @@ public class UIKeys implements Serializable {
 	public static final String MODE_ = "";
 	public static final String MODE_MAP = "map";
 	public static final String MODE_ARCHIVE = "archive";
+	public static final String MODE_ACTIVATE = "activate";
 	public static final String MODE_UPDATE = "update";
 	public static final String MODE_CANCEL = "cancel";
 	public static final String MODE_DELETE = "delete";
 	public static final String MODE_AJAX_FUELSTAT = "afs";
 	public static final String MODE_AJAX_AMOUNTPAID = "aap";
+	public static final String LOAD_MAPS = "loadMap";
+	public static final String LOAD_CHARTS = "loadCharts";
 
 	// IndexController
 	public static final String LAST_REFUEL = "lr";
-	public static final String STAT_KEY = "fuelStatsKey";
-	public static final String STAT_VAL = "fuelStatsVal";
-	public static final String STAT_PAID_AMOUNT = "fuelPaidAmount";
+	public static final String FUEL_STATS = "fs";
 
 	// CarController
 	public static final String CAR_VENDORS = "carVendors";
