@@ -60,7 +60,13 @@
 				</a>
 			</div>
 		</div>
-
+		<div class="row mt-3">
+			<div class="col-md-12">
+				<h1>
+					<fmt:message key="cars.cars.title.active" />
+				</h1>
+			</div>
+		</div>
 		<div class="row">
 			<div class="col-md-12">
 				<table class="mt-3 table table-bordered table-striped table-condensed table-hover" id="cars">
@@ -77,22 +83,24 @@
 					<tbody>
 						<c:if test="${not empty cars}">
 							<c:forEach items="${cars}" var="car">
-								<tr>
-									<td class="text-center align-middle"><c:if test="${not empty car.color}">
-											<span class="dot" style="background-color: <c:out value="${car.color}" />;"></span>
-										</c:if> <c:if test="${empty car.color}">
-											<span class="dot" style="background-color: #ddd;"></span>
-										</c:if></td>
-									<td class="align-middle"><c:out value="${car.friendlyName}" /> <c:if test="${car.active}">
-											<span class="badge ml-1 badge-success"> <fmt:message key="cars.form.status.primary" /></span>
-										</c:if><br><span class="badge badge-dark"><c:out value="${car.description}" /></span></td>
-									<td class="align-middle"><c:out value="${car.manufacturerName}" /></td>
-									<td class="align-middle"><c:out value="${car.model}" /></td>
-									<td class="text-center align-middle"><c:out value="${car.plateNumber}" /></td>
-									<td class="align-middle text-center"><a href="?m=update&amp;id=<c:out value="${car.id}" />" class="btn btn-primary" role="button"><fmt:message
-												key="button.edit" /></a><a href="#" data-href="?m=archive&amp;id=<c:out value="${car.id}" />" class="btn btn-danger ml-2"
-										data-toggle="modal" data-target="#confirm-archive" role="button"><fmt:message key="button.archive" /></a></td>
-								</tr>
+								<c:if test="${not car.archived}">
+									<tr>
+										<td class="text-center align-middle"><c:if test="${not empty car.color}">
+												<span class="dot" style="background-color: <c:out value="${car.color}" />;"></span>
+											</c:if> <c:if test="${empty car.color}">
+												<span class="dot" style="background-color: #ddd;"></span>
+											</c:if></td>
+										<td class="align-middle"><c:out value="${car.friendlyName}" /> <c:if test="${car.active}">
+												<span class="badge ml-1 badge-success"> <fmt:message key="cars.form.status.primary" /></span>
+											</c:if><br> <span class="badge badge-dark"><c:out value="${car.description}" /></span></td>
+										<td class="align-middle"><c:out value="${car.manufacturerName}" /></td>
+										<td class="align-middle"><c:out value="${car.model}" /></td>
+										<td class="text-center align-middle"><c:out value="${car.plateNumber}" /></td>
+										<td class="align-middle text-center"><a href="?m=update&amp;id=<c:out value="${car.id}" />" class="btn btn-primary" role="button"><fmt:message
+													key="button.edit" /></a><a href="#" data-href="?m=archive&amp;id=<c:out value="${car.id}" />" class="btn btn-danger ml-2"
+											data-toggle="modal" data-target="#confirm-archive" role="button"><fmt:message key="button.archive" /></a></td>
+									</tr>
+								</c:if>
 							</c:forEach>
 						</c:if>
 						<c:if test="${empty cars}">
@@ -104,8 +112,64 @@
 				</table>
 			</div>
 		</div>
+		<div class="row mt-3">
+			<div class="col-md-12">
+				<h1>
+					<fmt:message key="cars.cars.title.archived" />
+				</h1>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12">
+				<table class="mt-3 table table-bordered table-striped table-condensed table-hover" id="cars_archived">
+					<thead class="thead-light">
+						<tr>
+							<th class="text-center" data-field="color" data-sortable="false"><fmt:message key="cars.form.color" /></th>
+							<th><fmt:message key="cars.form.friendlyname" /></th>
+							<th><fmt:message key="cars.form.manufacturer" /></th>
+							<th><fmt:message key="cars.form.model" /></th>
+							<th class="text-center"><fmt:message key="cars.form.platenumber" /></th>
+							<th class="text-center"><fmt:message key="table.actions" /></th>
+						</tr>
+					</thead>
+					<tbody>
+						<c:if test="${not empty cars}">
+							<c:set var="archivedCarsNum" scope="page" value="0" />
+							<c:forEach items="${cars}" var="car">
+								<c:if test="${car.archived}">
+									<c:set var="archivedCarsNum" scope="page" value="${archivedCarsNum + 1}" />
+									<tr>
+										<td class="text-center align-middle"><c:if test="${not empty car.color}">
+												<span class="dot" style="background-color: <c:out value="${car.color}" />;"></span>
+											</c:if> <c:if test="${empty car.color}">
+												<span class="dot" style="background-color: #ddd;"></span>
+											</c:if></td>
+										<td class="align-middle"><c:out value="${car.friendlyName}" /> <c:if test="${car.active}">
+												<span class="badge ml-1 badge-success"> <fmt:message key="cars.form.status.primary" /></span>
+											</c:if><br> <span class="badge badge-dark"><c:out value="${car.description}" /></span></td>
+										<td class="align-middle"><c:out value="${car.manufacturerName}" /></td>
+										<td class="align-middle"><c:out value="${car.model}" /></td>
+										<td class="text-center align-middle"><c:out value="${car.plateNumber}" /></td>
+										<td class="align-middle text-center"><a href="?m=update&amp;id=<c:out value="${car.id}" />" class="btn btn-primary" role="button"><fmt:message
+													key="button.edit" /></a><a href="#" data-href="?m=activate&amp;id=<c:out value="${car.id}" />" class="btn btn-success ml-2"
+											data-toggle="modal" data-target="#confirm-activate" role="button"><fmt:message key="button.activate" /></a></td>
+									</tr>
+								</c:if>
+							</c:forEach>
+						</c:if>
+
+						<c:if test="${empty cars or (not empty cars and archivedCarsNum eq 0)}">
+							<tr>
+								<td colspan="6" class="align-middle text-center"><fmt:message key="nodata" /></td>
+							</tr>
+						</c:if>
+					</tbody>
+				</table>
+			</div>
+		</div>
 	</div>
 	<jsp:include page="includes/archiveModal.jsp" />
+	<jsp:include page="includes/activateModal.jsp" />
 	<jsp:include page="includes/appScripts.jsp" />
 </body>
 </html>

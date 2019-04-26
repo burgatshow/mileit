@@ -65,24 +65,25 @@ public class DBManager implements Serializable {
 	 * @param id int the car's id
 	 * @return true on success, false otherwise
 	 */
-	public boolean archiveCar(int id) {
-		logger.logEnter("archiveCar()");
+	public boolean archiveOrActivateCar(int id, int value) {
+		logger.logEnter("archiveOrActivateCar()");
 
 		boolean status = false;
 
 		try {
 			con = ds.getConnection();
-			ps = con.prepareStatement(DBCommands.SQL_U_CAR_ARCHIVE);
-			ps.setInt(1, id);
+			ps = con.prepareStatement(DBCommands.SQL_U_CAR_ARCHIVE_OR_ACTIVATE);
+			ps.setInt(1, value);
+			ps.setInt(2, id);
 
 			status = ps.executeUpdate() >= 1 ? true : false;
 
 		} catch (Exception e) {
-			logger.logException("archiveCar()", e);
+			logger.logException("archiveOrActivateCar()", e);
 		} finally {
 			closeConnection();
 		}
-		logger.logExit("archiveCar()");
+		logger.logExit("archiveOrActivateCar()");
 		return status;
 	}
 
@@ -560,7 +561,7 @@ public class DBManager implements Serializable {
 		logger.logExit("deleteRoute()");
 		return status;
 	}
-	
+
 	/**
 	 * Deletes a refuel from the database
 	 * 
@@ -639,7 +640,7 @@ public class DBManager implements Serializable {
 				car.setDescription(rs.getString(12));
 				car.setFriendlyName(rs.getString(13));
 				car.setActive(rs.getInt(14));
-				car.setArchived(rs.getInt(0));
+				car.setArchived(rs.getInt(15));
 			}
 
 		} catch (Exception e) {

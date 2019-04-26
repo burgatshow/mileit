@@ -183,7 +183,8 @@
 					<div class="form-group">
 						<label for="status"><fmt:message key="cars.form.status" /></label> <select id="status"
 							class="form-control <c:if test="${validationMessages.contains('status') }">is-invalid</c:if>" name="status">
-							<option value="1" <c:if test="${not empty cars and cars.active}">selected="selected"</c:if>><fmt:message key="cars.form.status.primary" /></option>
+							<option value="1" <c:if test="${not empty cars and cars.active}">selected="selected"</c:if>><fmt:message
+									key="cars.form.status.primary" /></option>
 							<option value="0" <c:if test="${not empty cars and not cars.active}">selected="selected"</c:if>><fmt:message
 									key="cars.form.status.notprimary" /></option>
 						</select>

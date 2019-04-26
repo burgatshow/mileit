@@ -60,7 +60,7 @@ public class AjaxController extends Controller {
 		PrintWriter w = response.getWriter();
 
 		@SuppressWarnings("unchecked")
-		List<RefuelModel> fuelStats = (List<RefuelModel>) request.getSession().getAttribute("fuelStats");
+		List<RefuelModel> fuelStats = (List<RefuelModel>) request.getSession().getAttribute(UIKeys.FUEL_STATS);
 
 		if (fuelStats != null && fuelStats.size() > 0) {
 			response.setContentType("application/json");

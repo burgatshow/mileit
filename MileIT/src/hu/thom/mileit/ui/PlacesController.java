@@ -74,6 +74,7 @@ public class PlacesController extends Controller {
 
 			PlaceModel l = dbm.getPlace(id);
 			if (l != null) {
+				assignedObjects.put(UIKeys.LOAD_MAPS, 1);
 				assignedObjects.put(UIKeys.PLACES, l);
 				renderPage(PLACES_FORM, request, response);
 			} else {
@@ -126,6 +127,7 @@ public class PlacesController extends Controller {
 			assignedObjects.put(UIKeys.PLACES, dbm.getPlaces(user.getId()));
 			renderPage(PLACES, request, response);
 		} else {
+			assignedObjects.put(UIKeys.LOAD_MAPS, 1);
 			assignedObjects.put(UIKeys.STATUS, -2);
 			renderPage(PLACES_FORM, request, response);
 		}
