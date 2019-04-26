@@ -560,6 +560,30 @@ public class DBManager implements Serializable {
 		logger.logExit("deleteRoute()");
 		return status;
 	}
+	
+	/**
+	 * Deletes a refuel from the database
+	 * 
+	 * @param id ID of the refuel entry
+	 * @return true on success, false otherwise
+	 */
+	public boolean deleteRefuel(int id) {
+		logger.logEnter("deleteRefuel()");
+		boolean status = false;
+		try {
+			con = ds.getConnection();
+			ps = con.prepareStatement(DBCommands.SQL_D_REFUEL);
+			ps.setInt(1, id);
+			status = ps.executeUpdate() == 1 ? true : false;
+		} catch (Exception e) {
+			logger.logException("deleteRefuel()", e);
+		} finally {
+			closeConnection();
+		}
+
+		logger.logExit("deleteRefuel()");
+		return status;
+	}
 
 	/**
 	 * This is for to obtain the datasource from the application server because

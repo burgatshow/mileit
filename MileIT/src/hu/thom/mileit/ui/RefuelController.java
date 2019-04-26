@@ -61,6 +61,15 @@ public class RefuelController extends Controller {
 			assignedObjects.remove(UIKeys.REFUELS);
 			renderPage(REFUELS_FORM, request, response);
 			break;
+			
+		case UIKeys.MODE_DELETE:
+			parseId(request);
+
+			assignedObjects.put(UIKeys.STATUS, dbm.deleteRefuel(id) ? 2 : -1);
+			assignedObjects.put(UIKeys.REFUELS, dbm.getRefuels(user.getId()));
+			renderPage(REFUELS, request, response);
+
+			break;
 
 		case UIKeys.MODE_UPDATE:
 			parseId(request);

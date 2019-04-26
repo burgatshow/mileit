@@ -34,6 +34,11 @@
 						<fmt:message key="status.edit" />
 					</div>
 				</c:if>
+				<c:if test="${status eq '2'}">
+					<div class="alert alert-dismissible alert-success">
+						<fmt:message key="status.delete" />
+					</div>
+				</c:if>
 				<c:if test="${status eq -1}">
 					<div class="alert alert-dismissible alert-danger mt-4">
 						<fmt:message key="status.error" />
@@ -98,7 +103,8 @@
 									<td class="text-right align-middle"><fmt:formatNumber value="${r.distance}" pattern="#,##0.00" type="number" minFractionDigits="0"
 											maxFractionDigits="${user.rounded eq 1 ? 0 : 2}" /></td>
 									<td class="align-middle text-center"><a href="?m=update&amp;id=<c:out value="${r.id}" />" class="btn btn-primary" role="button"><fmt:message
-												key="button.edit" /></a></td>
+												key="button.edit" /></a><a href="#" data-href="?m=delete&amp;id=<c:out value="${r.id}" />" class="btn btn-danger ml-2" data-toggle="modal"
+										data-target="#confirm-delete" role="button"><fmt:message key="button.delete" /></a></td>
 								</tr>
 							</c:forEach>
 						</c:if>
@@ -112,6 +118,7 @@
 			</div>
 		</div>
 	</div>
+	<jsp:include page="includes/deleteModal.jsp" />
 	<jsp:include page="includes/appScripts.jsp" />
 </body>
 </html>
