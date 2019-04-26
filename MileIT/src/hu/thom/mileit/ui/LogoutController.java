@@ -32,6 +32,7 @@ public class LogoutController extends Controller {
 			throws ServletException, IOException {
 		super.doGet(request, response);
 
+		request.getSession().invalidate();
 		request.logout();
 		response.sendRedirect("index");
 		return;

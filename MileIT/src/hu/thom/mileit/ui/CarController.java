@@ -64,7 +64,7 @@ public class CarController extends Controller {
 		case UIKeys.MODE_ARCHIVE:
 			parseId(request);
 
-			assignedObjects.put(UIKeys.STATUS, dbm.archiveCar(id) ? 1 : -1);
+			assignedObjects.put(UIKeys.STATUS, dbm.archiveCar(id) ? 2 : -1);
 			assignedObjects.put(UIKeys.CARS, dbm.getCars(user.getId()));
 			renderPage(CARS, request, response);
 
@@ -126,7 +126,7 @@ public class CarController extends Controller {
 				break;
 			}
 
-			assignedObjects.put(UIKeys.STATUS, dbm.createUpdateCar(car) ? 1 : -1);
+			assignedObjects.put(UIKeys.STATUS, dbm.createUpdateCar(car) ? 0 : -1);
 			assignedObjects.put(UIKeys.CARS, dbm.getCars(user.getId()));
 			renderPage(CARS, request, response);
 		} else {
