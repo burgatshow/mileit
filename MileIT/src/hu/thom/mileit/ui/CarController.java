@@ -110,6 +110,7 @@ public class CarController extends Controller {
 		if (validationMessages.isEmpty()) {
 			CarModel car = new CarModel(request.getParameterMap(), user);
 
+			int status = 0;
 			switch (m) {
 			case UIKeys.MODE_NEW:
 				car.setOperation(0);
@@ -118,6 +119,7 @@ public class CarController extends Controller {
 				parseId(request);
 				car.setId(id);
 				car.setOperation(1);
+				status = 1;
 				break;
 
 			case UIKeys.MODE_:
@@ -126,7 +128,7 @@ public class CarController extends Controller {
 				break;
 			}
 
-			assignedObjects.put(UIKeys.STATUS, dbm.createUpdateCar(car) ? 0 : -1);
+			assignedObjects.put(UIKeys.STATUS, dbm.createUpdateCar(car) ? status : -1);
 			assignedObjects.put(UIKeys.CARS, dbm.getCars(user.getId()));
 			renderPage(CARS, request, response);
 		} else {

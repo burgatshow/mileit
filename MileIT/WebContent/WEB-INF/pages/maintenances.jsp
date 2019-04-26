@@ -24,12 +24,12 @@
 	<div class="container-fluid mt-3">
 		<div class="row">
 			<div class="col-md-12">
-				<c:if test="${status eq '0'}">
+				<c:if test="${status eq 0}">
 					<div class="alert alert-dismissible alert-success">
 						<fmt:message key="status.new" />
 					</div>
 				</c:if>
-				<c:if test="${status eq '1'}">
+				<c:if test="${status eq 1}">
 					<div class="alert alert-dismissible alert-success">
 						<fmt:message key="status.edit" />
 					</div>
