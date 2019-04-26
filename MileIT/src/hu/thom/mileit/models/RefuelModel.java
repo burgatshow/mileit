@@ -27,7 +27,6 @@ public class RefuelModel extends Model {
 		setCar(new CarModel(params.get("car")[0]));
 		setPlace(new PlaceModel(params.get("place")[0]));
 		setPayment(new PaymentMethodModel(params.get("paymentMethod")[0]));
-		System.out.println("from: " + params.get("refuelTimestamp")[0]);
 		setRefuelTimestamp(params.get("refuelTimestamp")[0]);
 		setOdometer(params.get("odometer")[0]);
 		setUnitPrice(params.get("unitPrice")[0]);
@@ -69,7 +68,7 @@ public class RefuelModel extends Model {
 
 	public void setRefuelTimestamp(String refuelDate) {
 		try {
-			this.refuelDate = this.getDateFormatter(null).parse(refuelDate);
+			this.refuelDate = this.getDateFormatter(DATETIME).parse(refuelDate);
 		} catch (Exception e) {
 			this.refuelDate = new Date();
 		}

@@ -6,9 +6,9 @@ $(document).ready(
 				});
 			});
 
-			var dateFields = [ "#startDate", "#endDate", "#refuelDate",
-					"#maintenanceDate", "#purchaseDate", "#changeDate" ];
-			var dateTimeFields = [ "#routeDatetime" ];
+			var dateFields = [ "#startDate", "#endDate", "#maintenanceDate",
+					"#purchaseDate", "#changeDate" ];
+			var dateTimeFields = [ "#routeDatetime", "#refuelDate" ];
 
 			dateFields.forEach(renderDatepicker);
 			dateTimeFields.forEach(renderDateTimePicker);
@@ -69,9 +69,9 @@ $(document).ready(
 					var barGraph = new Chart(priceChart, {
 						type : 'line',
 						data : chartdata,
-						options: {
-							legend: {
-								display: false
+						options : {
+							legend : {
+								display : false
 							}
 						},
 					});
@@ -79,7 +79,7 @@ $(document).ready(
 				error : function(data) {
 				}
 			});
-			
+
 			$.ajax({
 				url : "./ajax?m=aap",
 				method : "GET",
@@ -105,9 +105,9 @@ $(document).ready(
 					var barGraph = new Chart(amountChart, {
 						type : 'line',
 						data : chartdata,
-						options: {
-							legend: {
-								display: false
+						options : {
+							legend : {
+								display : false
 							}
 						},
 					});
