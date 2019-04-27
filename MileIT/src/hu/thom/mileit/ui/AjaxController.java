@@ -2,10 +2,7 @@ package hu.thom.mileit.ui;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -13,7 +10,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.google.gson.Gson;
+import com.ibm.json.java.JSONArray;
+import com.ibm.json.java.JSONObject;
 
 import hu.thom.mileit.core.UIKeys;
 import hu.thom.mileit.models.RefuelModel;
@@ -27,8 +25,6 @@ import hu.thom.mileit.models.RefuelModel;
 @WebServlet("/ajax")
 public class AjaxController extends Controller {
 	private static final long serialVersionUID = -1790582648465801733L;
-
-	private Gson gson = new Gson();
 
 	/**
 	 * Constructor
@@ -54,26 +50,28 @@ public class AjaxController extends Controller {
 	 *      response)
 	 */
 	@Override
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		super.doGet(request, response);
 
 		PrintWriter w = response.getWriter();
 
-		@SuppressWarnings("unchecked")
-		List<RefuelModel> fuelStats = (List<RefuelModel>) request.getSession().getAttribute(UIKeys.FUEL_STATS);
+		//FIXME convert it to dynacache
+		List<RefuelModel> fuelStats = (List<RefuelModel>) dbm.getFuelPriceStats(user.getId());
 
 		if (fuelStats != null && fuelStats.size() > 0) {
 			response.setContentType("application/json");
 
 			parseMode(request);
+			
+			JSONArray chartData = new JSONArray();
 
-			List<Map<String, Object>> chartData = new ArrayList<Map<String, Object>>();
-			Map<String, Object> item = null;
+			JSONObject item = null;
 
 			switch (m) {
 			case UIKeys.MODE_AJAX_FUELSTAT:
 				for (RefuelModel rm : fuelStats) {
-					item = new HashMap<String, Object>(1);
+					item = new JSONObject();
 					item.put("date", df.format(rm.getRefuelDate()));
 					item.put("unitPrice", rm.getUnitPrice());
 
@@ -84,7 +82,7 @@ public class AjaxController extends Controller {
 
 			case UIKeys.MODE_AJAX_AMOUNTPAID:
 				for (RefuelModel rm : fuelStats) {
-					item = new HashMap<String, Object>(1);
+					item = new JSONObject();
 					item.put("date", df.format(rm.getRefuelDate()));
 					item.put("paid", rm.getAmount());
 
@@ -97,7 +95,7 @@ public class AjaxController extends Controller {
 				break;
 			}
 
-			w.write(gson.toJson(chartData));
+			w.write(chartData.serialize());
 
 		} else {
 			// FIXME bibi van

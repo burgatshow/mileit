@@ -17,17 +17,7 @@ public class PaymentMethodModel extends Model {
 	public PaymentMethodModel() {
 	}
 	
-	public PaymentMethodModel(Map<String, String[]> params, UserModel user) {
-		this.name = params.get("name")[0];
-		this.description = params.get("description")[0];
-		setUser(user);
-	}
-
 	public PaymentMethodModel(int id) {
-		setId(id);
-	}
-
-	public PaymentMethodModel(String id) {
 		setId(id);
 	}
 
@@ -37,29 +27,14 @@ public class PaymentMethodModel extends Model {
 		this.description = description;
 	}
 
-	public String getName() {
-		return name;
+	public PaymentMethodModel(Map<String, String[]> params, UserModel user) {
+		this.name = params.get("name")[0];
+		this.description = params.get("description")[0];
+		setUser(user);
 	}
 
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = super.hashCode();
-		result = prime * result + ((description == null) ? 0 : description.hashCode());
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		return result;
+	public PaymentMethodModel(String id) {
+		setId(id);
 	}
 
 	@Override
@@ -82,6 +57,31 @@ public class PaymentMethodModel extends Model {
 		} else if (!name.equals(other.name))
 			return false;
 		return true;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + ((description == null) ? 0 : description.hashCode());
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		return result;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	@Override

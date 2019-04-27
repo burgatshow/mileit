@@ -295,7 +295,8 @@ public class DBManager implements Serializable {
 		if (m != null) {
 			try {
 				con = ds.getConnection();
-				ps = con.prepareStatement(m.getOperation() == 0 ? DBCommands.SQL_I_MAINTENANCE : DBCommands.SQL_U_MAINTENANCE);
+				ps = con.prepareStatement(
+						m.getOperation() == 0 ? DBCommands.SQL_I_MAINTENANCE : DBCommands.SQL_U_MAINTENANCE);
 
 				ps.setInt(1, m.getCar().getId());
 				ps.setInt(2, m.getPayment().getId());
@@ -411,8 +412,9 @@ public class DBManager implements Serializable {
 				ps.setDouble(8, rf.getAmount() / rf.getUnitPrice());
 				ps.setInt(9, rf.getPayment().getId());
 				ps.setDouble(10, rf.getAmount());
+				ps.setInt(11, rf.isPartialRefuel() ? 1 : 0);
 
-				ps.setInt(11, rf.getOperation() == 0 ? rf.getUser().getId() : rf.getId());
+				ps.setInt(12, rf.getOperation() == 0 ? rf.getUser().getId() : rf.getId());
 
 				status = ps.executeUpdate() == 1 ? true : false;
 			} catch (Exception e) {
@@ -723,8 +725,8 @@ public class DBManager implements Serializable {
 				cvTmp.put(rs.getInt(1), rs.getString(2));
 			}
 
-			carVendors = cvTmp.entrySet().stream().sorted(Map.Entry.comparingByValue())
-					.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+			carVendors = cvTmp.entrySet().stream().sorted(Map.Entry.comparingByValue()).collect(
+					Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
 
 		} catch (Exception e) {
 			logger.logException("getCarVendors()", e);
@@ -962,7 +964,8 @@ public class DBManager implements Serializable {
 			rs = ps.executeQuery();
 
 			if (rs.next()) {
-				l = new PlaceModel(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getInt(4), rs.getDouble(5), rs.getDouble(6), rs.getInt(7));
+				l = new PlaceModel(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getInt(4), rs.getDouble(5),
+						rs.getDouble(6), rs.getInt(7));
 			}
 		} catch (Exception e) {
 			logger.logException("getPlace()", e);
@@ -994,7 +997,8 @@ public class DBManager implements Serializable {
 			rs = ps.executeQuery();
 
 			while (rs.next()) {
-				ls.add(new PlaceModel(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getDouble(4), rs.getDouble(5), rs.getInt(6)));
+				ls.add(new PlaceModel(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getDouble(4), rs.getDouble(5),
+						rs.getInt(6)));
 			}
 		} catch (Exception e) {
 			logger.logException("getPlaces()", e);
@@ -1032,6 +1036,7 @@ public class DBManager implements Serializable {
 				rf.setFuelAmount(rs.getDouble(7));
 				rf.setPayment(new PaymentMethodModel(rs.getInt(8)));
 				rf.setAmount(rs.getDouble(9));
+				rf.setPartialRefuel(rs.getInt(11));
 			}
 
 		} catch (Exception e) {
@@ -1182,8 +1187,9 @@ public class DBManager implements Serializable {
 			rs = ps.executeQuery();
 
 			if (rs.next()) {
-				tyre = new TyreModel(rs.getInt(1), rs.getInt(2), (byte) rs.getInt(3), rs.getInt(4), rs.getInt(5), rs.getInt(6), rs.getInt(7),
-						rs.getString(8), rs.getString(9), (byte) rs.getInt(10), rs.getTimestamp(11), rs.getInt(12));
+				tyre = new TyreModel(rs.getInt(1), rs.getInt(2), (byte) rs.getInt(3), rs.getInt(4), rs.getInt(5),
+						rs.getInt(6), rs.getInt(7), rs.getString(8), rs.getString(9), (byte) rs.getInt(10),
+						rs.getTimestamp(11), rs.getInt(12));
 			}
 
 		} catch (Exception e) {
@@ -1228,7 +1234,8 @@ public class DBManager implements Serializable {
 				t.setPurchaseDate(rs.getTimestamp(8));
 				t.setManufacturerName(rs.getString(9));
 				t.setModel(rs.getString(10));
-				t.setTyreEvent(new TyreEventModel(rs.getTimestamp(13), rs.getTimestamp(14), rs.getDouble(15), rs.getDouble(11), rs.getDouble(12)));
+				t.setTyreEvent(new TyreEventModel(rs.getTimestamp(13), rs.getTimestamp(14), rs.getDouble(15),
+						rs.getDouble(11), rs.getDouble(12)));
 				t.setCar(new CarModel(rs.getInt(16), rs.getString(17), rs.getString(18)));
 				t.setArchived(rs.getInt(19));
 
@@ -1265,8 +1272,8 @@ public class DBManager implements Serializable {
 				tvTmp.put(rs.getInt(1), rs.getString(2));
 			}
 
-			tyreVendors = tvTmp.entrySet().stream().sorted(Map.Entry.comparingByValue())
-					.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+			tyreVendors = tvTmp.entrySet().stream().sorted(Map.Entry.comparingByValue()).collect(
+					Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
 
 		} catch (Exception e) {
 			logger.logException("getTyreVendors()", e);

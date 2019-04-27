@@ -64,8 +64,6 @@ public class CarController extends Controller {
 		case UIKeys.MODE_ARCHIVE:
 			parseId(request);
 			
-			invalidateSessionAttribute(request.getSession(), UIKeys.CARS);
-
 			assignedObjects.put(UIKeys.STATUS, dbm.archiveOrActivateCar(id, 1) ? 2 : -1);
 			assignedObjects.put(UIKeys.CARS, dbm.getCars(user.getId()));
 			renderPage(CARS, request, response);
@@ -75,8 +73,6 @@ public class CarController extends Controller {
 		case UIKeys.MODE_ACTIVATE:
 			parseId(request);
 			
-			invalidateSessionAttribute(request.getSession(), UIKeys.CARS);
-
 			assignedObjects.put(UIKeys.STATUS, dbm.archiveOrActivateCar(id, 0) ? 2 : -1);
 			assignedObjects.put(UIKeys.CARS, dbm.getCars(user.getId()));
 			renderPage(CARS, request, response);
@@ -140,8 +136,6 @@ public class CarController extends Controller {
 			default:
 				break;
 			}
-
-			invalidateSessionAttribute(request.getSession(), UIKeys.CARS);
 
 			assignedObjects.put(UIKeys.STATUS, dbm.createUpdateCar(car) ? status : -1);
 			assignedObjects.put(UIKeys.CARS, dbm.getCars(user.getId()));

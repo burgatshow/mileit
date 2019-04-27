@@ -7,7 +7,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import hu.thom.mileit.core.UIKeys;
 
@@ -36,19 +35,11 @@ public class IndexController extends Controller {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
 	 *      response)
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		super.doGet(request, response);
 
-		HttpSession session = request.getSession();
-		if (session.getAttribute(UIKeys.FUEL_STATS) == null) {
-			session.setAttribute(UIKeys.FUEL_STATS, dbm.getFuelPriceStats(user.getId()));
-		}
-
-		if (session.getAttribute(UIKeys.LAST_REFUEL) == null) {
-			session.setAttribute(UIKeys.LAST_REFUEL, dbm.getLastRefuel(user.getId()));
-		}
-
-		assignedObjects.put(UIKeys.LAST_REFUEL, session.getAttribute(UIKeys.LAST_REFUEL));
+		assignedObjects.put(UIKeys.LAST_REFUEL, dbm.getLastRefuel(user.getId()));
 		assignedObjects.remove(UIKeys.STATUS);
 
 		renderPage(HOME, request, response);

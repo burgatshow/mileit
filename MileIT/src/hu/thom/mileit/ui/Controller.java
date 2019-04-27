@@ -1,5 +1,6 @@
 package hu.thom.mileit.ui;
 
+
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -12,7 +13,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import hu.thom.mileit.core.DBManager;
 import hu.thom.mileit.core.UIKeys;
@@ -79,7 +79,8 @@ public class Controller extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
 	 *      response)
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
 
 		if (request.getSession().getAttribute("user") == null) {
@@ -100,7 +101,8 @@ public class Controller extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
 	 *      response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
 
 		if (request.getSession().getAttribute("user") == null) {
@@ -148,7 +150,8 @@ public class Controller extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
 	 *      response)
 	 */
-	public void renderPage(String targetJSP, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public void renderPage(String targetJSP, HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		if (assignedObjects != null && assignedObjects.size() > 0) {
 			for (Map.Entry<String, Object> entry : assignedObjects.entrySet()) {
 				request.setAttribute(entry.getKey(), entry.getValue());
@@ -179,7 +182,8 @@ public class Controller extends HttpServlet {
 		}
 	}
 
-	public void checkValidationMessages(String[] mustElements, final Set<String> validationMessages, HttpServletRequest request) {
+	public void checkValidationMessages(String[] mustElements, final Set<String> validationMessages,
+			HttpServletRequest request) {
 		if (mustElements != null && mustElements.length != 0 && request != null && validationMessages != null) {
 			for (String key : mustElements) {
 				if (request.getParameter(key) == null || "".equalsIgnoreCase(request.getParameter(key))) {
@@ -188,12 +192,6 @@ public class Controller extends HttpServlet {
 					validationMessages.remove(key);
 				}
 			}
-		}
-	}
-
-	public void invalidateSessionAttribute(HttpSession session, String attributeKey) {
-		if (session != null && attributeKey != null && !"".equalsIgnoreCase(attributeKey)) {
-			session.removeAttribute(attributeKey);
 		}
 	}
 }

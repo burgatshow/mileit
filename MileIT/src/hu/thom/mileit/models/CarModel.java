@@ -12,20 +12,8 @@ import java.util.Map;
  *
  */
 public class CarModel extends Model {
-	private static final long serialVersionUID = -5197813796132584702L;
-
 	public static enum Fuel {
 		PETROL((byte) 1), DIESEL((byte) 2), ELECTRIC((byte) 3), BIOETHANOL((byte) 4), OTHER((byte) 5);
-
-		private final byte code;
-
-		private Fuel(byte code) {
-			this.code = code;
-		}
-
-		public byte getCode() {
-			return code;
-		}
 
 		public static Fuel fromCode(byte code) {
 			switch (code) {
@@ -58,7 +46,19 @@ public class CarModel extends Model {
 				return 5;
 			}
 		}
+
+		private final byte code;
+
+		private Fuel(byte code) {
+			this.code = code;
+		}
+
+		public byte getCode() {
+			return code;
+		}
 	}
+
+	private static final long serialVersionUID = -5197813796132584702L;
 
 	private int manufacturer;
 	private String manufacturerName;
@@ -78,10 +78,6 @@ public class CarModel extends Model {
 	}
 
 	public CarModel(int id) {
-		setId(id);
-	}
-
-	public CarModel(String id) {
 		setId(id);
 	}
 
@@ -108,251 +104,11 @@ public class CarModel extends Model {
 
 		setUser(user);
 	}
-	
-	public Map<String, Object> getCarForRest() {
-		Map<String, Object> cm = new HashMap<String, Object>(1);
-		
-		cm.put("car_id", getId());
-		cm.put("manufacturer", manufacturerName);
-		cm.put("model", model);
-		cm.put("manufacturerDate", manufacturerDate);
-		cm.put("startDate", startDate);
-		cm.put("endDate", endDate);
-		cm.put("plateNumber", plateNumber);
-		cm.put("friendlyName", friendlyName);
-		cm.put("color", color);
-		cm.put("fuelCapacity", fuelCapacity);
-		cm.put("fuel", Fuel.toCode(fuel));
-		cm.put("vin", vin);
-		cm.put("active", isActive());
-		cm.put("description", description);
-		
-		return cm;
-	}
 
-	public String getManufacturerName() {
-		return manufacturerName;
-	}
-
-	public void setManufacturerName(String manufacturerName) {
-		this.manufacturerName = manufacturerName;
-	}
-
-	public int getManufacturer() {
-		return manufacturer;
-	}
-
-	public void setManufacturer(int manufacturer) {
-		this.manufacturer = manufacturer;
-	}
-
-	public void setManufacturer(String manufacturer) {
-		try {
-			this.manufacturer = Integer.parseInt(manufacturer);
-		} catch (Exception e) {
-			this.manufacturer = 0;
-		}
-	}
-
-	public String getModel() {
-		return model;
-	}
-
-	public void setModel(String model) {
-		this.model = model;
-	}
-
-	public Fuel getFuel() {
-		return fuel;
-	}
-
-	public void setFuel(Fuel fuel) {
-		this.fuel = fuel;
-	}
-
-	public void setFuel(int fuel) {
-		setFuel(String.valueOf(fuel));
-	}
-
-	public void setFuel(String fuel) {
-		switch (fuel) {
-		case "1":
-			this.fuel = Fuel.PETROL;
-			break;
-
-		case "2":
-			this.fuel = Fuel.DIESEL;
-			break;
-
-		case "3":
-			this.fuel = Fuel.ELECTRIC;
-			break;
-
-		case "4":
-			this.fuel = Fuel.BIOETHANOL;
-			break;
-
-		case "5":
-		default:
-			this.fuel = Fuel.OTHER;
-			break;
-		}
-	}
-
-	public Date getManufacturerDate() {
-		return manufacturerDate;
-	}
-
-	public void setManufacturerDate(Date manufacturerDate) {
-		this.manufacturerDate = manufacturerDate;
-	}
-
-	public Timestamp getManufacturerDateAsTimestamp() {
-		if (manufacturerDate == null) {
-			return null;
-		}
-
-		return new Timestamp(manufacturerDate.getTime());
-	}
-
-	public void setManufacturerDate(String manufacturerDate) {
-		try {
-			this.manufacturerDate = this.getDateFormatter(DATE_YEAR_ONLY).parse(manufacturerDate);
-		} catch (Exception e) {
-			this.manufacturerDate = null;
-		}
-	}
-
-	public String getColor() {
-		return color;
-	}
-
-	public void setColor(String color) {
-		this.color = color;
-	}
-
-	public String getVin() {
-		return vin;
-	}
-
-	public void setVin(String vin) {
-		this.vin = vin;
-	}
-
-	public String getPlateNumber() {
-		return plateNumber;
-	}
-
-	public void setPlateNumber(String plateNumber) {
-		this.plateNumber = plateNumber;
-	}
-
-	public Double getFuelCapacity() {
-		return fuelCapacity;
-	}
-
-	public void setFuelCapacity(Double fuelCapacity) {
-		this.fuelCapacity = fuelCapacity;
-	}
-
-	public void setFuelCapacity(int fuelCapacity) {
-		this.fuelCapacity = (double) fuelCapacity;
-	}
-
-	public void setFuelCapacity(String fuelCapacity) {
-		try {
-			this.fuelCapacity = Double.parseDouble(fuelCapacity);
-		} catch (Exception e) {
-			this.fuelCapacity = 0;
-		}
-	}
-
-	public Date getStartDate() {
-		return startDate;
-	}
-
-	public Timestamp getStartDateAsTimestamp() {
-		if (startDate == null) {
-			return null;
-		}
-
-		return new Timestamp(startDate.getTime());
-	}
-
-	public void setStartDate(Date startDate) {
-		this.startDate = startDate;
-	}
-
-	public void setStartDate(String startDate) {
-		try {
-			this.startDate = this.getDateFormatter(null).parse(startDate);
-		} catch (Exception e) {
-			this.startDate = null;
-		}
-	}
-
-	public Date getEndDate() {
-		return endDate;
-	}
-
-	public Timestamp getEndDateAsTimestamp() {
-		if (endDate == null) {
-			return null;
-		}
-
-		return new Timestamp(endDate.getTime());
-	}
-
-	public void setEndDate(Date endDate) {
-		this.endDate = endDate;
-	}
-
-	public void setEndDate(String endDate) {
-		try {
-			this.endDate = this.getDateFormatter(null).parse(endDate);
-		} catch (Exception e) {
-			this.endDate = null;
-		}
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public String getFriendlyName() {
-		return friendlyName;
-	}
-
-	public void setFriendlyName(String friendlyName) {
-		this.friendlyName = friendlyName;
+	public CarModel(String id) {
+		setId(id);
 	}
 	
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = super.hashCode();
-		result = prime * result + ((color == null) ? 0 : color.hashCode());
-		result = prime * result + ((description == null) ? 0 : description.hashCode());
-		result = prime * result + ((endDate == null) ? 0 : endDate.hashCode());
-		result = prime * result + ((friendlyName == null) ? 0 : friendlyName.hashCode());
-		result = prime * result + ((fuel == null) ? 0 : fuel.hashCode());
-		long temp;
-		temp = Double.doubleToLongBits(fuelCapacity);
-		result = prime * result + (int) (temp ^ (temp >>> 32));
-		result = prime * result + manufacturer;
-		result = prime * result + ((manufacturerDate == null) ? 0 : manufacturerDate.hashCode());
-		result = prime * result + ((manufacturerName == null) ? 0 : manufacturerName.hashCode());
-		result = prime * result + ((model == null) ? 0 : model.hashCode());
-		result = prime * result + ((plateNumber == null) ? 0 : plateNumber.hashCode());
-		result = prime * result + ((startDate == null) ? 0 : startDate.hashCode());
-		result = prime * result + ((vin == null) ? 0 : vin.hashCode());
-		return result;
-	}
-
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -419,6 +175,250 @@ public class CarModel extends Model {
 		} else if (!vin.equals(other.vin))
 			return false;
 		return true;
+	}
+
+	public Map<String, Object> getCarForRest() {
+		Map<String, Object> cm = new HashMap<String, Object>(1);
+		
+		cm.put("car_id", getId());
+		cm.put("manufacturer", manufacturerName);
+		cm.put("model", model);
+		cm.put("manufacturerDate", manufacturerDate);
+		cm.put("startDate", startDate);
+		cm.put("endDate", endDate);
+		cm.put("plateNumber", plateNumber);
+		cm.put("friendlyName", friendlyName);
+		cm.put("color", color);
+		cm.put("fuelCapacity", fuelCapacity);
+		cm.put("fuel", Fuel.toCode(fuel));
+		cm.put("vin", vin);
+		cm.put("active", isActive());
+		cm.put("description", description);
+		
+		return cm;
+	}
+
+	public String getColor() {
+		return color;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public Date getEndDate() {
+		return endDate;
+	}
+
+	public Timestamp getEndDateAsTimestamp() {
+		if (endDate == null) {
+			return null;
+		}
+
+		return new Timestamp(endDate.getTime());
+	}
+
+	public String getFriendlyName() {
+		return friendlyName;
+	}
+
+	public Fuel getFuel() {
+		return fuel;
+	}
+
+	public Double getFuelCapacity() {
+		return fuelCapacity;
+	}
+
+	public int getManufacturer() {
+		return manufacturer;
+	}
+
+	public Date getManufacturerDate() {
+		return manufacturerDate;
+	}
+
+	public Timestamp getManufacturerDateAsTimestamp() {
+		if (manufacturerDate == null) {
+			return null;
+		}
+
+		return new Timestamp(manufacturerDate.getTime());
+	}
+
+	public String getManufacturerName() {
+		return manufacturerName;
+	}
+
+	public String getModel() {
+		return model;
+	}
+
+	public String getPlateNumber() {
+		return plateNumber;
+	}
+
+	public Date getStartDate() {
+		return startDate;
+	}
+
+	public Timestamp getStartDateAsTimestamp() {
+		if (startDate == null) {
+			return null;
+		}
+
+		return new Timestamp(startDate.getTime());
+	}
+
+	public String getVin() {
+		return vin;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + ((color == null) ? 0 : color.hashCode());
+		result = prime * result + ((description == null) ? 0 : description.hashCode());
+		result = prime * result + ((endDate == null) ? 0 : endDate.hashCode());
+		result = prime * result + ((friendlyName == null) ? 0 : friendlyName.hashCode());
+		result = prime * result + ((fuel == null) ? 0 : fuel.hashCode());
+		long temp;
+		temp = Double.doubleToLongBits(fuelCapacity);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		result = prime * result + manufacturer;
+		result = prime * result + ((manufacturerDate == null) ? 0 : manufacturerDate.hashCode());
+		result = prime * result + ((manufacturerName == null) ? 0 : manufacturerName.hashCode());
+		result = prime * result + ((model == null) ? 0 : model.hashCode());
+		result = prime * result + ((plateNumber == null) ? 0 : plateNumber.hashCode());
+		result = prime * result + ((startDate == null) ? 0 : startDate.hashCode());
+		result = prime * result + ((vin == null) ? 0 : vin.hashCode());
+		return result;
+	}
+
+	public void setColor(String color) {
+		this.color = color;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
+	}
+
+	public void setEndDate(String endDate) {
+		try {
+			this.endDate = this.getDateFormatter(null).parse(endDate);
+		} catch (Exception e) {
+			this.endDate = null;
+		}
+	}
+
+	public void setFriendlyName(String friendlyName) {
+		this.friendlyName = friendlyName;
+	}
+
+	public void setFuel(Fuel fuel) {
+		this.fuel = fuel;
+	}
+
+	public void setFuel(int fuel) {
+		setFuel(String.valueOf(fuel));
+	}
+
+	public void setFuel(String fuel) {
+		switch (fuel) {
+		case "1":
+			this.fuel = Fuel.PETROL;
+			break;
+
+		case "2":
+			this.fuel = Fuel.DIESEL;
+			break;
+
+		case "3":
+			this.fuel = Fuel.ELECTRIC;
+			break;
+
+		case "4":
+			this.fuel = Fuel.BIOETHANOL;
+			break;
+
+		case "5":
+		default:
+			this.fuel = Fuel.OTHER;
+			break;
+		}
+	}
+
+	public void setFuelCapacity(Double fuelCapacity) {
+		this.fuelCapacity = fuelCapacity;
+	}
+
+	public void setFuelCapacity(int fuelCapacity) {
+		this.fuelCapacity = (double) fuelCapacity;
+	}
+
+	public void setFuelCapacity(String fuelCapacity) {
+		try {
+			this.fuelCapacity = Double.parseDouble(fuelCapacity);
+		} catch (Exception e) {
+			this.fuelCapacity = 0;
+		}
+	}
+
+	public void setManufacturer(int manufacturer) {
+		this.manufacturer = manufacturer;
+	}
+
+	public void setManufacturer(String manufacturer) {
+		try {
+			this.manufacturer = Integer.parseInt(manufacturer);
+		} catch (Exception e) {
+			this.manufacturer = 0;
+		}
+	}
+
+	public void setManufacturerDate(Date manufacturerDate) {
+		this.manufacturerDate = manufacturerDate;
+	}
+
+	public void setManufacturerDate(String manufacturerDate) {
+		try {
+			this.manufacturerDate = this.getDateFormatter(DATE_YEAR_ONLY).parse(manufacturerDate);
+		} catch (Exception e) {
+			this.manufacturerDate = null;
+		}
+	}
+
+	public void setManufacturerName(String manufacturerName) {
+		this.manufacturerName = manufacturerName;
+	}
+
+	public void setModel(String model) {
+		this.model = model;
+	}
+
+	public void setPlateNumber(String plateNumber) {
+		this.plateNumber = plateNumber;
+	}
+
+	public void setStartDate(Date startDate) {
+		this.startDate = startDate;
+	}
+	
+	public void setStartDate(String startDate) {
+		try {
+			this.startDate = this.getDateFormatter(null).parse(startDate);
+		} catch (Exception e) {
+			this.startDate = null;
+		}
+	}
+
+	public void setVin(String vin) {
+		this.vin = vin;
 	}
 
 	@Override

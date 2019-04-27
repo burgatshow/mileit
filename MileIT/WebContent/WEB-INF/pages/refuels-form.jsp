@@ -139,6 +139,16 @@
 				</div>
 			</div>
 			<div class="row">
+				<div class="col-md-12">
+					<div class="form-check">
+						<input class="form-check-input" type="checkbox" value="1" name="partialRefuel" id="partialRefuel" <c:if test="${not empty param.partialRefuel ? param.partialRefuel : not empty refuels ? refuels.partialRefuel : ''}">checked="checked"</c:if>> <label class="form-check-label"
+							for="partialRefuel"> <fmt:message key="refuels.form.partial" />
+						</label> <small id="partialRefuelHelp" class="form-text text-muted"> <fmt:message key="refuels.form.partial.desc" />
+						</small>
+					</div>
+				</div>
+			</div>
+			<div class="row">
 				<div class="col-md-12 text-right">
 					<input type="submit" class="btn btn-primary" value="<fmt:message key="button.save" />"> <a class="btn btn-danger" href="refuels"
 						role="button"> <fmt:message key="button.cancel" />
