@@ -65,6 +65,7 @@ CREATE TABLE IF NOT EXISTS `refuels` (
   `fuel_amount` DOUBLE UNSIGNED NOT NULL,
   `pm_id` INT(11) UNSIGNED DEFAULT NULL,
   `amount` DOUBLE UNSIGNED NOT NULL,
+  `partial_refuel` TINYINT(1) UNSIGNED NOT NULL DEFAULT 0, 
   `user_id` INT(11) UNSIGNED NOT NULL,
   PRIMARY KEY (`refuel_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;

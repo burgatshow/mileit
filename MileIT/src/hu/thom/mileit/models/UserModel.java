@@ -22,14 +22,6 @@ public class UserModel extends Model {
 		setId(id);
 	}
 
-	public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
 	public UserModel(String username) {
 		this.setUsername(username);
 	}
@@ -37,66 +29,6 @@ public class UserModel extends Model {
 	public UserModel(String currency, String locale) {
 		this.currency = currency;
 		this.locale = locale;
-	}
-
-	public String getCurrency() {
-		return (currency == null || "".equalsIgnoreCase(currency)) ? "Ft" : currency;
-	}
-
-	public void setCurrency(String currency) {
-		this.currency = currency;
-	}
-
-	public String getLocale() {
-		return (locale == null || "".equalsIgnoreCase(locale)) ? "hu" : locale;
-	}
-
-	public void setLocale(String locale) {
-		this.locale = locale;
-	}
-
-	public int getDistance() {
-		return distance;
-	}
-
-	public void setDistance(int distance) {
-		this.distance = distance;
-	}
-
-	public void setDistance(String distance) {
-		try {
-			this.distance = Integer.parseInt(distance);
-		} catch (Exception e) {
-			this.distance = 1;
-		}
-	}
-
-	public int getRounded() {
-		return rounded;
-	}
-
-	public void setRounded(int rounded) {
-		this.rounded = rounded;
-	}
-	
-	public void setRounded(String rounded) {
-		try {
-			this.rounded = Integer.parseInt(rounded);
-		} catch (Exception e) {
-			this.rounded = 1;
-		}
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = super.hashCode();
-		result = prime * result + ((currency == null) ? 0 : currency.hashCode());
-		result = prime * result + distance;
-		result = prime * result + ((locale == null) ? 0 : locale.hashCode());
-		result = prime * result + rounded;
-		result = prime * result + ((username == null) ? 0 : username.hashCode());
-		return result;
 	}
 
 	@Override
@@ -128,6 +60,74 @@ public class UserModel extends Model {
 		} else if (!username.equals(other.username))
 			return false;
 		return true;
+	}
+
+	public String getCurrency() {
+		return (currency == null || "".equalsIgnoreCase(currency)) ? "Ft" : currency;
+	}
+
+	public int getDistance() {
+		return distance;
+	}
+
+	public String getLocale() {
+		return (locale == null || "".equalsIgnoreCase(locale)) ? "hu" : locale;
+	}
+
+	public int getRounded() {
+		return rounded;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + ((currency == null) ? 0 : currency.hashCode());
+		result = prime * result + distance;
+		result = prime * result + ((locale == null) ? 0 : locale.hashCode());
+		result = prime * result + rounded;
+		result = prime * result + ((username == null) ? 0 : username.hashCode());
+		return result;
+	}
+
+	public void setCurrency(String currency) {
+		this.currency = currency;
+	}
+
+	public void setDistance(int distance) {
+		this.distance = distance;
+	}
+
+	public void setDistance(String distance) {
+		try {
+			this.distance = Integer.parseInt(distance);
+		} catch (Exception e) {
+			this.distance = 1;
+		}
+	}
+
+	public void setLocale(String locale) {
+		this.locale = locale;
+	}
+	
+	public void setRounded(int rounded) {
+		this.rounded = rounded;
+	}
+
+	public void setRounded(String rounded) {
+		try {
+			this.rounded = Integer.parseInt(rounded);
+		} catch (Exception e) {
+			this.rounded = 1;
+		}
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
 	@Override

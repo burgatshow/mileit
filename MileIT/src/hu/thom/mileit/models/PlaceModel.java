@@ -24,17 +24,13 @@ public class PlaceModel extends Model {
 		setId(id);
 	}
 
-	public PlaceModel(String id) {
+	public PlaceModel(int id, String name, String address, double longitude, double latitude, int fuelStation) {
 		setId(id);
-	}
-
-	public PlaceModel(Map<String, String[]> params, UserModel user) {
-		this.name = params.get("name")[0];
-		this.address = params.get("address")[0];
-		setLongitude(params.get("longitude")[0]);
-		setLatitude(params.get("latitude")[0]);
-		setFuelStation(params.get("fuelStation")[0]);
-		setUser(user);
+		this.name = name;
+		this.address = address;
+		this.longitude = longitude;
+		this.latitude = latitude;
+		setFuelStation(fuelStation);
 	}
 
 	public PlaceModel(int id, String name, String address, int userId, double longitude, double latitude, int fuelStation) {
@@ -47,101 +43,17 @@ public class PlaceModel extends Model {
 		setFuelStation(fuelStation);
 	}
 
-	public PlaceModel(int id, String name, String address, double longitude, double latitude, int fuelStation) {
+	public PlaceModel(Map<String, String[]> params, UserModel user) {
+		this.name = params.get("name")[0];
+		this.address = params.get("address")[0];
+		setLongitude(params.get("longitude")[0]);
+		setLatitude(params.get("latitude")[0]);
+		setFuelStation(params.get("fuelStation")[0]);
+		setUser(user);
+	}
+
+	public PlaceModel(String id) {
 		setId(id);
-		this.name = name;
-		this.address = address;
-		this.longitude = longitude;
-		this.latitude = latitude;
-		setFuelStation(fuelStation);
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public boolean isFuelStation() {
-		return fuelStation;
-	}
-
-	public void setFuelStation(boolean fuelStation) {
-		this.fuelStation = fuelStation;
-	}
-
-	public void setFuelStation(int fuelStation) {
-		setFuelStation(Integer.toString(fuelStation));
-	}
-
-	public void setFuelStation(String fuelStation) {
-		switch (fuelStation.toLowerCase()) {
-		case "1":
-		case "true":
-		case "yes":
-			this.fuelStation = true;
-			break;
-
-		default:
-			this.fuelStation = false;
-			break;
-		}
-	}
-
-	public String getAddress() {
-		return address;
-	}
-
-	public void setAddress(String address) {
-		this.address = address;
-	}
-
-	public double getLongitude() {
-		return longitude;
-	}
-
-	public void setLongitude(double longitude) {
-		this.longitude = longitude;
-	}
-
-	public void setLongitude(String longitude) {
-		try {
-			this.longitude = Double.parseDouble(longitude);
-		} catch (Exception e) {
-			this.longitude = 0;
-		}
-	}
-
-	public double getLatitude() {
-		return latitude;
-	}
-
-	public void setLatitude(double latitude) {
-		this.latitude = latitude;
-	}
-
-	public void setLatitude(String latitude) {
-		try {
-			this.latitude = Double.parseDouble(latitude);
-		} catch (Exception e) {
-			this.latitude = 0;
-		}
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = super.hashCode();
-		result = prime * result + ((address == null) ? 0 : address.hashCode());
-		long temp;
-		temp = Double.doubleToLongBits(latitude);
-		result = prime * result + (int) (temp ^ (temp >>> 32));
-		temp = Double.doubleToLongBits(longitude);
-		result = prime * result + (int) (temp ^ (temp >>> 32));
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		return result;
 	}
 
 	@Override
@@ -168,6 +80,94 @@ public class PlaceModel extends Model {
 		} else if (!name.equals(other.name))
 			return false;
 		return true;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public double getLatitude() {
+		return latitude;
+	}
+
+	public double getLongitude() {
+		return longitude;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + ((address == null) ? 0 : address.hashCode());
+		long temp;
+		temp = Double.doubleToLongBits(latitude);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(longitude);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		return result;
+	}
+
+	public boolean isFuelStation() {
+		return fuelStation;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public void setFuelStation(boolean fuelStation) {
+		this.fuelStation = fuelStation;
+	}
+
+	public void setFuelStation(int fuelStation) {
+		setFuelStation(Integer.toString(fuelStation));
+	}
+
+	public void setFuelStation(String fuelStation) {
+		switch (fuelStation.toLowerCase()) {
+		case "1":
+		case "true":
+		case "yes":
+			this.fuelStation = true;
+			break;
+
+		default:
+			this.fuelStation = false;
+			break;
+		}
+	}
+
+	public void setLatitude(double latitude) {
+		this.latitude = latitude;
+	}
+
+	public void setLatitude(String latitude) {
+		try {
+			this.latitude = Double.parseDouble(latitude);
+		} catch (Exception e) {
+			this.latitude = 0;
+		}
+	}
+
+	public void setLongitude(double longitude) {
+		this.longitude = longitude;
+	}
+
+	public void setLongitude(String longitude) {
+		try {
+			this.longitude = Double.parseDouble(longitude);
+		} catch (Exception e) {
+			this.longitude = 0;
+		}
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	@Override

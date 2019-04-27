@@ -11,20 +11,8 @@ import java.util.Map;
  *
  */
 public class RouteModel extends Model {
-	private static final long serialVersionUID = 8048192341961068140L;
-
 	public static enum RouteType {
 		BUSINESS((byte) 1), PRIVATE((byte) 0);
-
-		private final byte code;
-
-		private RouteType(byte code) {
-			this.code = code;
-		}
-
-		public byte getCode() {
-			return code;
-		}
 
 		public static RouteType fromCode(byte code) {
 			switch (code) {
@@ -45,7 +33,19 @@ public class RouteModel extends Model {
 				return 0;
 			}
 		}
+
+		private final byte code;
+
+		private RouteType(byte code) {
+			this.code = code;
+		}
+
+		public byte getCode() {
+			return code;
+		}
 	}
+
+	private static final long serialVersionUID = 8048192341961068140L;
 
 	private UserModel user;
 	private CarModel car;
@@ -71,132 +71,6 @@ public class RouteModel extends Model {
 		setDistance(params.get("distance")[0]);
 		setRouteDatetime(params.get("routeDatetime")[0]);
 		setUser(user);
-	}
-
-	public UserModel getUser() {
-		return user;
-	}
-
-	public void setUser(UserModel user) {
-		this.user = user;
-	}
-
-	public CarModel getCar() {
-		return car;
-	}
-
-	public void setCar(CarModel car) {
-		this.car = car;
-	}
-
-	public PlaceModel getStartPlace() {
-		return startPlace;
-	}
-
-	public void setStartPlace(PlaceModel startPlace) {
-		this.startPlace = startPlace;
-	}
-
-	public PlaceModel getEndPlace() {
-		return endPlace;
-	}
-
-	public void setEndPlace(PlaceModel endPlace) {
-		this.endPlace = endPlace;
-	}
-
-	public Date getRouteDatetime() {
-		return routeDatetime;
-	}
-
-	public Timestamp getRouteDatetimeAsTimestamp() {
-		if (routeDatetime == null) {
-			return null;
-		}
-
-		return new Timestamp(routeDatetime.getTime());
-	}
-
-	public void setRouteDatetime(Date routeDatetime) {
-		this.routeDatetime = routeDatetime;
-	}
-
-	public void setRouteDatetime(String routeDatetime) {
-		try {
-			this.routeDatetime = this.getDateFormatter(DATETIME).parse(routeDatetime);
-		} catch (Exception e) {
-			this.routeDatetime = new Date();
-		}
-	}
-
-	public RouteType getRouteType() {
-		return routeType;
-	}
-
-	public void setRouteType(RouteType routeType) {
-		this.routeType = routeType;
-	}
-
-	public void setRouteType(String routeType) {
-		try {
-			this.routeType = RouteType.fromCode((byte) Integer.parseInt(routeType));
-		} catch (Exception e) {
-			this.routeType = RouteType.PRIVATE;
-		}
-	}
-
-	public boolean isRoundTrip() {
-		return roundTrip;
-	}
-
-	public void setRoundTrip(boolean roundTrip) {
-		this.roundTrip = roundTrip;
-	}
-	
-	public void setRoundTrip(String roundTrip) {
-		switch (roundTrip.toLowerCase()) {
-		case "1":
-		case "yes":
-		case "true":
-			this.roundTrip = true;
-			break;
-
-		default:
-			this.roundTrip = false;
-			break;
-		}
-	}
-
-	public double getDistance() {
-		return distance;
-	}
-
-	public void setDistance(double distance) {
-		this.distance = distance;
-	}
-
-	public void setDistance(String distance) {
-		try {
-			this.distance = Double.parseDouble(distance);
-		} catch (Exception e) {
-			this.distance = 0;
-		}
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = super.hashCode();
-		result = prime * result + ((car == null) ? 0 : car.hashCode());
-		long temp;
-		temp = Double.doubleToLongBits(distance);
-		result = prime * result + (int) (temp ^ (temp >>> 32));
-		result = prime * result + ((endPlace == null) ? 0 : endPlace.hashCode());
-		result = prime * result + ((routeDatetime == null) ? 0 : routeDatetime.hashCode());
-		result = prime * result + ((routeType == null) ? 0 : routeType.hashCode());
-		result = prime * result + ((startPlace == null) ? 0 : startPlace.hashCode());
-		result = prime * result + ((user == null) ? 0 : user.hashCode());
-		return result;
 	}
 
 	@Override
@@ -238,6 +112,132 @@ public class RouteModel extends Model {
 		} else if (!user.equals(other.user))
 			return false;
 		return true;
+	}
+
+	public CarModel getCar() {
+		return car;
+	}
+
+	public double getDistance() {
+		return distance;
+	}
+
+	public PlaceModel getEndPlace() {
+		return endPlace;
+	}
+
+	public Date getRouteDatetime() {
+		return routeDatetime;
+	}
+
+	public Timestamp getRouteDatetimeAsTimestamp() {
+		if (routeDatetime == null) {
+			return null;
+		}
+
+		return new Timestamp(routeDatetime.getTime());
+	}
+
+	public RouteType getRouteType() {
+		return routeType;
+	}
+
+	public PlaceModel getStartPlace() {
+		return startPlace;
+	}
+
+	public UserModel getUser() {
+		return user;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + ((car == null) ? 0 : car.hashCode());
+		long temp;
+		temp = Double.doubleToLongBits(distance);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		result = prime * result + ((endPlace == null) ? 0 : endPlace.hashCode());
+		result = prime * result + ((routeDatetime == null) ? 0 : routeDatetime.hashCode());
+		result = prime * result + ((routeType == null) ? 0 : routeType.hashCode());
+		result = prime * result + ((startPlace == null) ? 0 : startPlace.hashCode());
+		result = prime * result + ((user == null) ? 0 : user.hashCode());
+		return result;
+	}
+
+	public boolean isRoundTrip() {
+		return roundTrip;
+	}
+
+	public void setCar(CarModel car) {
+		this.car = car;
+	}
+
+	public void setDistance(double distance) {
+		this.distance = distance;
+	}
+
+	public void setDistance(String distance) {
+		try {
+			this.distance = Double.parseDouble(distance);
+		} catch (Exception e) {
+			this.distance = 0;
+		}
+	}
+
+	public void setEndPlace(PlaceModel endPlace) {
+		this.endPlace = endPlace;
+	}
+
+	public void setRoundTrip(boolean roundTrip) {
+		this.roundTrip = roundTrip;
+	}
+
+	public void setRoundTrip(String roundTrip) {
+		switch (roundTrip.toLowerCase()) {
+		case "1":
+		case "yes":
+		case "true":
+			this.roundTrip = true;
+			break;
+
+		default:
+			this.roundTrip = false;
+			break;
+		}
+	}
+	
+	public void setRouteDatetime(Date routeDatetime) {
+		this.routeDatetime = routeDatetime;
+	}
+
+	public void setRouteDatetime(String routeDatetime) {
+		try {
+			this.routeDatetime = this.getDateFormatter(DATETIME).parse(routeDatetime);
+		} catch (Exception e) {
+			this.routeDatetime = new Date();
+		}
+	}
+
+	public void setRouteType(RouteType routeType) {
+		this.routeType = routeType;
+	}
+
+	public void setRouteType(String routeType) {
+		try {
+			this.routeType = RouteType.fromCode((byte) Integer.parseInt(routeType));
+		} catch (Exception e) {
+			this.routeType = RouteType.PRIVATE;
+		}
+	}
+
+	public void setStartPlace(PlaceModel startPlace) {
+		this.startPlace = startPlace;
+	}
+
+	public void setUser(UserModel user) {
+		this.user = user;
 	}
 
 	@Override
