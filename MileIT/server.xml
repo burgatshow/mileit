@@ -38,11 +38,11 @@
 	<distributedMap id="DynaCacheInstance_for_MileIT"
 		jndiName="cache/mileit" />
 		
-	<!-- Password is the same with user -->
+	<!-- Password is password_j2c_passkey -->
 	<authData id="password_j2c_passkey"
 		password="{xor}Lz4sLCgwLTsANW08AC8+LCw0OiY=" user="passwordSecretKey" />
 		
-	<!-- Password is the same with user -->
+	<!-- Password is password_j2c_salt -->
 	<authData id="password_j2c_salt"
 		password="{xor}Lz4sLCgwLTsANW08ACw+Mys=" user="passwordSalt" />
 
