@@ -12,6 +12,7 @@ public class UIKeys implements Serializable {
 	private static final long serialVersionUID = -1572929004551162917L;
 
 	// Form submission must elements
+	public static final String[] FORM_LOGIN = { "username", "password" };
 	public static final String[] FORM_ME_CARS = { "manufacturer", "fuel", "model", "vin", "plateNumber", "status" };
 	public static final String[] FORM_ME_MAINTENANCE = { "car", "odometer", "paymentMethod", "amount", "maintenanceDate" };
 	public static final String[] FORM_ME_TYRE = { "manufacturer", "model", "width", "height", "radius", "axis", "type" };
@@ -39,6 +40,8 @@ public class UIKeys implements Serializable {
 	public static final String MODE_AJAX_AMOUNTPAID = "aap";
 	public static final String LOAD_MAPS = "loadMap";
 	public static final String LOAD_CHARTS = "loadCharts";
+	public static final String PARAM_MODE = "m";
+	public static final String PARAM_ID = "id";
 
 	// IndexController
 	public static final String LAST_REFUEL = "lr";
@@ -64,7 +67,7 @@ public class UIKeys implements Serializable {
 	public static final String TYRES = "tyres";
 	public static final String TYRE_VENDORS = "tyreVendors";
 	public static final String TYRE_EVENTS = "tes";
-	
+
 	// RoutesController
 	public static final String ROUTES = "routes";
 }

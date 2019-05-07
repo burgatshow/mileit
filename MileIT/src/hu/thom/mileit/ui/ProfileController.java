@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import hu.thom.mileit.core.UIKeys;
+import hu.thom.mileit.models.UserModel;
 
 /**
  * Servlet class to manage user profile
@@ -37,7 +38,12 @@ public class ProfileController extends Controller {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		super.doGet(request, response);
-		renderPage(PROFILE_FORM, request, response);
+		user = (UserModel) request.getSession().getAttribute("user");
+		if (user == null) {
+			response.sendRedirect("login");
+		} else {
+			renderPage(PROFILE_FORM, request, response);
+		}
 	}
 
 	/**
@@ -49,15 +55,19 @@ public class ProfileController extends Controller {
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		super.doPost(request, response);
+		user = (UserModel) request.getSession().getAttribute("user");
+		if (user == null) {
+			response.sendRedirect("login");
+		} else {
+			parseMode(request);
 
-		parseMode(request);
+			user.setCurrency(request.getParameter("currency"));
+			user.setLocale(request.getParameter("locale"));
+			user.setDistance(request.getParameter("distance"));
+			user.setRounded(request.getParameter("rounded"));
 
-		user.setCurrency(request.getParameter("currency"));
-		user.setLocale(request.getParameter("locale"));
-		user.setDistance(request.getParameter("distance"));
-		user.setRounded(request.getParameter("rounded"));
-		
-		assignedObjects.put(UIKeys.STATUS, dbm.updateUserProfile(user) ? 0 : -1);
-		renderPage(PROFILE_FORM, request, response);
+			assignedObjects.put(UIKeys.STATUS, dbm.updateUserProfile(user) ? 0 : -1);
+			renderPage(PROFILE_FORM, request, response);
+		}
 	}
 }

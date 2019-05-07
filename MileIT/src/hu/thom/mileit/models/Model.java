@@ -18,10 +18,10 @@ public class Model extends DateModel {
 	private TyreModel tyre;
 	private TyreEventModel tyreEvent;
 	private RefuelModel refuel;
-
+	
 	private boolean active;
 	private boolean archived;
-	
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)

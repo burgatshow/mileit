@@ -7,8 +7,8 @@ CREATE TABLE IF NOT EXISTS `cars` (
   `model` VARCHAR(20) COLLATE utf8mb4_hungarian_ci NOT NULL,
   `manufacture_date` DATETIME DEFAULT NULL,
   `color` VARCHAR(7) COLLATE utf8mb4_hungarian_ci DEFAULT NULL,
-  `vin` VARCHAR(30) COLLATE utf8mb4_hungarian_ci NOT NULL,
-  `plate_number` VARCHAR(10) COLLATE utf8mb4_hungarian_ci NOT NULL,
+  `vin` VARCHAR(100) COLLATE utf8mb4_hungarian_ci NOT NULL,
+  `plate_number` VARCHAR(100) COLLATE utf8mb4_hungarian_ci NOT NULL,
   `fuel_capacity` DOUBLE UNSIGNED DEFAULT NULL,
   `fuel` TINYINT(1) UNSIGNED DEFAULT NULL,
   `start_date` DATETIME DEFAULT NULL,
@@ -73,6 +73,7 @@ CREATE TABLE IF NOT EXISTS `refuels` (
 CREATE TABLE IF NOT EXISTS `users` (
   `user_id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `username` VARCHAR(20) NOT NULL COLLATE utf8mb4_hungarian_ci,
+  `password` VARCHAR(100) NOT NULL COLLATE utf8mb4_hungarian_ci,
   `currency` VARCHAR(5) NOT NULL COLLATE utf8mb4_hungarian_ci DEFAULT 'Ft',
   `locale` VARCHAR(2) NOT NULL COLLATE utf8mb4_hungarian_ci DEFAULT 'hu',
   `distance` TINYINT(1) UNSIGNED NOT NULL DEFAULT 1,

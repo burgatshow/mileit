@@ -8,8 +8,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import hu.thom.mileit.core.DynaCacheAdaptor;
 import hu.thom.mileit.core.UIKeys;
 import hu.thom.mileit.models.PlaceModel;
+import hu.thom.mileit.models.UserModel;
 
 /**
  * Servlet class to manage place related operations
@@ -20,6 +22,8 @@ import hu.thom.mileit.models.PlaceModel;
 @WebServlet("/places")
 public class PlacesController extends Controller {
 	private static final long serialVersionUID = 2631517143636421486L;
+	
+	String userPlacesKey = null;
 
 	/**
 	 * Constructor
@@ -48,46 +52,55 @@ public class PlacesController extends Controller {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		super.doGet(request, response);
+		user = (UserModel) request.getSession().getAttribute("user");
+		if (user == null) {
+			response.sendRedirect("login");
+		} else {
+			userPlacesKey = user.getUsername() + "_" + UIKeys.PLACES;
 
-		parseMode(request);
+			parseMode(request);
 
-		assignedObjects.put(UIKeys.PLACES, dbm.getPlaces(user.getId()));
-
-		switch (m) {
-		case UIKeys.MODE_NEW:
-			validationMessages.clear();
-			assignedObjects.remove(UIKeys.PLACES);
-			renderPage(PLACES_FORM, request, response);
-			break;
-
-		case UIKeys.MODE_ARCHIVE:
-			parseId(request);
-
-			assignedObjects.put(UIKeys.STATUS, dbm.archivePlace(id) ? 1 : -1);
-			assignedObjects.put(UIKeys.PLACES, dbm.getPlaces(user.getId()));
-			renderPage(PLACES, request, response);
-
-			break;
-
-		case UIKeys.MODE_UPDATE:
-			parseId(request);
-
-			PlaceModel l = dbm.getPlace(id);
-			if (l != null) {
-				assignedObjects.put(UIKeys.LOAD_MAPS, 1);
-				assignedObjects.put(UIKeys.PLACES, l);
-				renderPage(PLACES_FORM, request, response);
-			} else {
-				assignedObjects.put(UIKeys.STATUS, -1);
-				renderPage(PLACES, request, response);
+			if (dc.get(userPlacesKey) == null) {
+				dc.put(userPlacesKey, dbm.getPlaces(user.getId()), DynaCacheAdaptor.DC_TTL_1H, user.getUsername());
 			}
-			break;
-		case UIKeys.MODE_:
-		case UIKeys.MODE_CANCEL:
-		default:
-			assignedObjects.remove(UIKeys.STATUS);
-			renderPage(PLACES, request, response);
-			break;
+			assignedObjects.put(UIKeys.PLACES, dc.get(userPlacesKey));
+
+			switch (m) {
+			case UIKeys.MODE_NEW:
+				validationMessages.clear();
+				assignedObjects.remove(UIKeys.PLACES);
+				renderPage(PLACES_FORM, request, response);
+				break;
+
+			case UIKeys.MODE_ARCHIVE:
+				parseId(request);
+
+				assignedObjects.put(UIKeys.STATUS, dbm.archivePlace(id) ? 1 : -1);
+				assignedObjects.put(UIKeys.PLACES, dbm.getPlaces(user.getId()));
+				renderPage(PLACES, request, response);
+
+				break;
+
+			case UIKeys.MODE_UPDATE:
+				parseId(request);
+
+				PlaceModel l = dbm.getPlace(id);
+				if (l != null) {
+					assignedObjects.put(UIKeys.LOAD_MAPS, 1);
+					assignedObjects.put(UIKeys.PLACES, l);
+					renderPage(PLACES_FORM, request, response);
+				} else {
+					assignedObjects.put(UIKeys.STATUS, -1);
+					renderPage(PLACES, request, response);
+				}
+				break;
+			case UIKeys.MODE_:
+			case UIKeys.MODE_CANCEL:
+			default:
+				assignedObjects.remove(UIKeys.STATUS);
+				renderPage(PLACES, request, response);
+				break;
+			}
 		}
 	}
 
@@ -100,36 +113,43 @@ public class PlacesController extends Controller {
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		super.doPost(request, response);
-
-		parseMode(request);
-
-		checkValidationMessages(UIKeys.FORM_ME_PLACE, validationMessages, request);
-
-		if (validationMessages.isEmpty()) {
-			PlaceModel l = new PlaceModel(request.getParameterMap(), user);
-
-			switch (m) {
-			case UIKeys.MODE_NEW:
-				l.setOperation(0);
-				break;
-			case UIKeys.MODE_UPDATE:
-				parseId(request);
-				l.setOperation(1);
-				l.setId(id);
-				break;
-			case UIKeys.MODE_:
-			case UIKeys.MODE_CANCEL:
-			default:
-				break;
-			}
-
-			assignedObjects.put(UIKeys.STATUS, dbm.createUpdatePlace(l) ? 1 : -1);
-			assignedObjects.put(UIKeys.PLACES, dbm.getPlaces(user.getId()));
-			renderPage(PLACES, request, response);
+		user = (UserModel) request.getSession().getAttribute("user");
+		if (user == null) {
+			response.sendRedirect("login");
 		} else {
-			assignedObjects.put(UIKeys.LOAD_MAPS, 1);
-			assignedObjects.put(UIKeys.STATUS, -2);
-			renderPage(PLACES_FORM, request, response);
+			userPlacesKey = user.getUsername() + "_" + UIKeys.PLACES;
+			
+			parseMode(request);
+
+			checkValidationMessages(UIKeys.FORM_ME_PLACE, validationMessages, request);
+
+			if (validationMessages.isEmpty()) {
+				PlaceModel l = new PlaceModel(request.getParameterMap(), user);
+
+				switch (m) {
+				case UIKeys.MODE_NEW:
+					l.setOperation(0);
+					break;
+				case UIKeys.MODE_UPDATE:
+					parseId(request);
+					l.setOperation(1);
+					l.setId(id);
+					break;
+				case UIKeys.MODE_:
+				case UIKeys.MODE_CANCEL:
+				default:
+					break;
+				}
+
+				assignedObjects.put(UIKeys.STATUS, dbm.createUpdatePlace(l) ? 1 : -1);
+				dc.put(userPlacesKey, dbm.getPlaces(user.getId()), DynaCacheAdaptor.DC_TTL_1H, user.getUsername());
+				assignedObjects.put(UIKeys.PLACES, dc.get(userPlacesKey));
+				renderPage(PLACES, request, response);
+			} else {
+				assignedObjects.put(UIKeys.LOAD_MAPS, 1);
+				assignedObjects.put(UIKeys.STATUS, -2);
+				renderPage(PLACES_FORM, request, response);
+			}
 		}
 	}
 }

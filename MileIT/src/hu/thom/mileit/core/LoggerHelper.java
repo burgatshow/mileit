@@ -11,12 +11,28 @@ import java.util.logging.Logger;
  *
  */
 public final class LoggerHelper implements Serializable {
+	/**
+	 * Serial version UID
+	 */
 	private static final long serialVersionUID = 7114711640573939717L;
 
+	/**
+	 * Default log message strings
+	 */
 	public static final String LOG_EXCEPTION = "An application exception occured, see details:";
+	
+	public static final String LOG_DC_E_GET = "Unable to get object from Dyna Cache!";
+	public static final String LOG_DC_E_PUT = "Unable to put object to Dyna Cache!";
+	public static final String LOG_DC_I_RETRIEVE = "DynaCache service retrieved the following object belongs to key:";
+	public static final String LOG_DC_I_ADD = "DynaCache service added an object into cache using key with timeout value for dependency ID:";
+	public static final String LOG_DC_I_INVALIDATED = "Entry gets invalidated: ";
+	public static final String LOG_DC_I_CLEAR = "DynaCache instance is cleared.";
+	
+	public static final String LOG_SEC_F_SECRET = "Secret key is not set, setting now.";
+	public static final String LOG_SEC_F_SALT = "Salt is not set, setting now.";
+	public static final String LGO_SEC_FFF_J2C = "Obtain J2C credential: ";
 
 	private Class<?> loggingClass;
-
 	private Logger logger;
 
 	/**
@@ -63,10 +79,18 @@ public final class LoggerHelper implements Serializable {
 		}
 	}
 	
+	/**
+	 * Logs an entry point for the given method
+	 * @param method {@link String} name of the method
+	 */
 	public void logEnter(String method) {
 		logger.entering(logger.getName(), method);
 	}
 	
+	/**
+	 * Logs an exit point for the given method
+	 * @param method {@link String} name of the method
+	 */
 	public void logExit(String method) {
 		logger.exiting(logger.getName(), method);
 	}

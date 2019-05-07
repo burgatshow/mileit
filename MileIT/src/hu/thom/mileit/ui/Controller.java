@@ -1,6 +1,5 @@
 package hu.thom.mileit.ui;
 
-
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -15,6 +14,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import hu.thom.mileit.core.DBManager;
+import hu.thom.mileit.core.DynaCacheAdaptor;
+import hu.thom.mileit.core.EncryptManager;
 import hu.thom.mileit.core.UIKeys;
 import hu.thom.mileit.models.UserModel;
 
@@ -28,6 +29,7 @@ public class Controller extends HttpServlet {
 	private static final long serialVersionUID = 1849843955087394555L;
 
 	public static final String VERSION = "0.0.4 (beta)";
+	public static final String LOGIN = "/WEB-INF/pages/login.jsp";
 	public static final String HOME = "/WEB-INF/pages/home.jsp";
 	public static final String REGISTER = "/WEB-INF/pages/register.jsp";
 	public static final String CARS = "/WEB-INF/pages/cars.jsp";
@@ -48,6 +50,8 @@ public class Controller extends HttpServlet {
 	public static final String ROUTES_FORM = "/WEB-INF/pages/routes-form.jsp";
 
 	public DBManager dbm = null;
+	public DynaCacheAdaptor dc = null;
+	public EncryptManager sm = null;
 
 	public String m = "";
 	public int id = 0;
@@ -63,9 +67,12 @@ public class Controller extends HttpServlet {
 	 * Constructor
 	 */
 	public Controller() {
-		if (dbm == null) {
-			dbm = new DBManager();
+		if (dc == null) {
+			dc = DynaCacheAdaptor.getInstance();
 		}
+
+		dbm = (DBManager) dc.get("dbm");
+		sm = (EncryptManager) dc.get("sm");
 
 		assignedObjects.put(UIKeys.VERSION, VERSION);
 		assignedObjects.put(UIKeys.PAGE, "index");
@@ -79,20 +86,8 @@ public class Controller extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
 	 *      response)
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
-
-		if (request.getSession().getAttribute("user") == null) {
-			if (request.getUserPrincipal() != null) {
-				user = dbm.getUserProfile(new UserModel(request.getUserPrincipal().getName()));
-				request.getSession().setAttribute("user", user);
-			}
-		} else {
-			user = (UserModel) request.getSession().getAttribute("user");
-		}
-
-		assignedObjects.put(UIKeys.USER, user);
 	}
 
 	/**
@@ -101,20 +96,8 @@ public class Controller extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
 	 *      response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
-
-		if (request.getSession().getAttribute("user") == null) {
-			if (request.getUserPrincipal() != null) {
-				user = dbm.getUserProfile(new UserModel(request.getUserPrincipal().getName()));
-				request.getSession().setAttribute("user", user);
-			}
-		} else {
-			user = (UserModel) request.getSession().getAttribute("user");
-		}
-
-		assignedObjects.put(UIKeys.USER, user);
 	}
 
 	/**
@@ -125,8 +108,8 @@ public class Controller extends HttpServlet {
 	 */
 	public void parseMode(HttpServletRequest request) {
 		if (request != null) {
-			if (request.getParameter("m") != null && !"".equalsIgnoreCase(request.getParameter("m"))) {
-				this.m = request.getParameter("m");
+			if (request.getParameter(UIKeys.PARAM_MODE) != null && !request.getParameter(UIKeys.PARAM_MODE).isEmpty()) {
+				this.m = request.getParameter(UIKeys.PARAM_MODE);
 			} else {
 				this.m = UIKeys.MODE_CANCEL;
 			}
@@ -150,8 +133,7 @@ public class Controller extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
 	 *      response)
 	 */
-	public void renderPage(String targetJSP, HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	public void renderPage(String targetJSP, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		if (assignedObjects != null && assignedObjects.size() > 0) {
 			for (Map.Entry<String, Object> entry : assignedObjects.entrySet()) {
 				request.setAttribute(entry.getKey(), entry.getValue());
@@ -162,6 +144,7 @@ public class Controller extends HttpServlet {
 			request.setAttribute(UIKeys.VALIDATION_MSGS, validationMessages);
 		}
 		request.getRequestDispatcher(targetJSP).forward(request, response);
+		return;
 	}
 
 	/**
@@ -173,7 +156,7 @@ public class Controller extends HttpServlet {
 	public void parseId(HttpServletRequest request) {
 		if (request != null) {
 			try {
-				this.id = Integer.parseInt(request.getParameter("id"));
+				this.id = Integer.parseInt(request.getParameter(UIKeys.PARAM_ID));
 			} catch (Exception e) {
 				this.id = -1;
 			}
@@ -182,11 +165,22 @@ public class Controller extends HttpServlet {
 		}
 	}
 
-	public void checkValidationMessages(String[] mustElements, final Set<String> validationMessages,
-			HttpServletRequest request) {
+	/**
+	 * Checks the input parameters and put them to the validationMessages list if
+	 * they failed based on the required elemenets
+	 * 
+	 * @param mustElements       a {@link String} array of parameters need to be
+	 *                           validated
+	 * @param validationMessages a {@link Set} of {@link String} where to the
+	 *                           paremeter will be added if it fails during
+	 *                           validation
+	 * @param request            the {@link HttpServletRequest} where the parameters
+	 *                           will come from
+	 */
+	public void checkValidationMessages(String[] mustElements, final Set<String> validationMessages, HttpServletRequest request) {
 		if (mustElements != null && mustElements.length != 0 && request != null && validationMessages != null) {
 			for (String key : mustElements) {
-				if (request.getParameter(key) == null || "".equalsIgnoreCase(request.getParameter(key))) {
+				if (request.getParameter(key) == null || request.getParameter(key).isEmpty()) {
 					validationMessages.add(key);
 				} else {
 					validationMessages.remove(key);

@@ -17,12 +17,13 @@ public class DBCommands implements Serializable {
  
 	// User
 	public static final String SQL_I_USER = "INSERT IGNORE INTO users (username) VALUES (?)";
+	public static final String SQL_S_AUTH = "SELECT u.username FROM users AS u WHERE u.username = ? AND u.password = ?";
 	public static final String SQL_S_PROFILE = "SELECT u.currency, u.locale, u.user_id, u.username, u.distance, u.rounded FROM users AS u WHERE u.username = ?";
 	public static final String SQL_U_PROFILE = "UPDATE users SET currency = ?, locale = ?, distance = ?, rounded = ? WHERE user_id = ?";
 
 	// Cars
-	public static final String SQL_I_CAR = "INSERT INTO cars (manufacturer, model, manufacture_date, color, vin, plate_number, fuel_capacity, fuel, start_date, end_date, description, friendly_name, user_id, active) VALUES (?, ?, ?, ?, UPPER(?), UPPER(?), ?, ?, ?, ?, ?, ?, ?, ?)";
-	public static final String SQL_U_CAR = "UPDATE cars SET manufacturer = ?, model = ?, manufacture_date = ?, color = ?, vin = UPPER(?), plate_number = UPPER(?), fuel_capacity = ?, fuel = ?, start_date = ?, end_date = ?, description = ?, friendly_name = ?, active = ? WHERE car_id = ?";
+	public static final String SQL_I_CAR = "INSERT INTO cars (manufacturer, model, manufacture_date, color, vin, plate_number, fuel_capacity, fuel, start_date, end_date, description, friendly_name, user_id, active) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+	public static final String SQL_U_CAR = "UPDATE cars SET manufacturer = ?, model = ?, manufacture_date = ?, color = ?, vin = ?, plate_number = ?, fuel_capacity = ?, fuel = ?, start_date = ?, end_date = ?, description = ?, friendly_name = ?, active = ? WHERE car_id = ?";
 	public static final String SQL_U_CAR_ARCHIVE_OR_ACTIVATE = "UPDATE cars SET archived = ? WHERE car_id = ?";
 	public static final String SQL_S_CARS = "SELECT c.car_id, c.manufacturer, c.model, c.manufacture_date, c.color, c.vin, c.plate_number, c.fuel_capacity, c.fuel, c.start_date, c.end_date, c.description, c.friendly_name, c.active, v.manufacturer_id, IF(v.NAME = 'BMW', 'BMW', CONCAT(UPPER(SUBSTR(v.NAME, 1, 1)), LOWER(SUBSTR(v.NAME, 2, LENGTH(v.NAME)-1)))) AS name, c.archived FROM cars AS c, sup_car_manufacturers AS v WHERE c.user_id = ? AND c.manufacturer = v.manufacturer_id ORDER BY c.active DESC, c.plate_number ASC";
 	public static final String SQL_S_CAR = "SELECT c.car_id, c.manufacturer, c.model, c.manufacture_date, c.color, c.vin, c.plate_number, c.fuel_capacity, c.fuel, c.start_date, c.end_date, c.description, c.friendly_name, c.active, c.archived FROM cars AS c WHERE c.car_id = ?";

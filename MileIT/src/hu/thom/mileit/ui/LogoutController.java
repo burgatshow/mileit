@@ -8,6 +8,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import hu.thom.mileit.models.UserModel;
+
 /**
  * Servlet class to manage user logout
  * 
@@ -17,7 +19,10 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/logout")
 public class LogoutController extends Controller {
 	private static final long serialVersionUID = -1161650807822947664L;
-	
+
+	/**
+	 * Constructor
+	 */
 	public LogoutController() {
 		super();
 	}
@@ -25,27 +30,32 @@ public class LogoutController extends Controller {
 	/**
 	 * Method to manage HTTP GET method.
 	 * 
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+	 *      response)
 	 */
 	@Override
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		super.doGet(request, response);
+		UserModel user = (UserModel) request.getSession().getAttribute("user");
+		if (user != null) {
+			// Clean up cache
+			dc.cleanupUser(user.getUsername());
 
-		request.getSession().invalidate();
-		request.logout();
-		response.sendRedirect("index");
-		return;
+			// Destroy user's session then log out
+			request.getSession().invalidate();
+			request.logout();
+		}
+		response.sendRedirect("login");
 	}
 
 	/**
 	 * Method to manage HTTP POST method.
 	 * 
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+	 *      response)
 	 */
 	@Override
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		super.doPost(request, response);
 		doGet(request, response);
 	}
