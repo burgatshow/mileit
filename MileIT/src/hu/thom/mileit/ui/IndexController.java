@@ -8,7 +8,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import hu.thom.mileit.core.DynaCacheAdaptor;
 import hu.thom.mileit.core.UIKeys;
+import hu.thom.mileit.models.RefuelModel;
+import hu.thom.mileit.models.UserModel;
 
 /**
  * Servlet class to manage homepage
@@ -16,7 +19,7 @@ import hu.thom.mileit.core.UIKeys;
  * @author thom <tamas.bures@protonmail.com>
  *
  */
-@WebServlet("/index")
+@WebServlet(value = { "/index" })
 public class IndexController extends Controller {
 	private static final long serialVersionUID = -2632090274800635855L;
 
@@ -35,14 +38,28 @@ public class IndexController extends Controller {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
 	 *      response)
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		super.doGet(request, response);
 
-		assignedObjects.put(UIKeys.LAST_REFUEL, dbm.getLastRefuel(user.getId()));
-		assignedObjects.remove(UIKeys.STATUS);
+		user = (UserModel) request.getSession().getAttribute("user");
 
-		renderPage(HOME, request, response);
+		if (user == null) {
+			response.sendRedirect("login");
+		} else {
+			assignedObjects.put(UIKeys.USER, user);
+			String lastRefuelKey = user.getUsername() + "_" + UIKeys.LAST_REFUEL;
+
+			RefuelModel userLastRefuel = (RefuelModel) dc.get(lastRefuelKey);
+			if (userLastRefuel == null) {
+				userLastRefuel = dbm.getLastRefuel(user.getId());
+				dc.put(lastRefuelKey, userLastRefuel, DynaCacheAdaptor.DC_TTL_1H, user.getUsername());
+			}
+
+			assignedObjects.put(UIKeys.LAST_REFUEL, dc.get(lastRefuelKey));
+			assignedObjects.remove(UIKeys.STATUS);
+
+			renderPage(HOME, request, response);
+		}
 	}
 
 }

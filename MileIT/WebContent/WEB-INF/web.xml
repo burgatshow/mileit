@@ -8,36 +8,6 @@
 		<welcome-file>index</welcome-file>
 	</welcome-file-list>
 
-	<security-constraint>
-		<display-name>Protected pages</display-name>
-		<web-resource-collection>
-			<web-resource-name>All Resources</web-resource-name>
-			<url-pattern>/*</url-pattern>
-		</web-resource-collection>
-		<auth-constraint>
-			<role-name>users</role-name>
-		</auth-constraint>
-	</security-constraint>
-	<login-config>
-		<auth-method>FORM</auth-method>
-		<realm-name>mileIT_Realm</realm-name>
-		<form-login-config>
-			<form-login-page>/login.jsp</form-login-page>
-			<form-error-page>/login-error.jsp</form-error-page>
-		</form-login-config>
-	</login-config>
-	<security-constraint>
-		<display-name>Allowed resources</display-name>
-		<web-resource-collection>
-			<web-resource-name>Application resources</web-resource-name>
-			<url-pattern>/img/*</url-pattern>
-			<url-pattern>/js/*</url-pattern>
-			<url-pattern>/css/*</url-pattern>
-			<url-pattern>/img/*</url-pattern>
-			<url-pattern>/fonts/*</url-pattern>
-			<url-pattern>/ajax</url-pattern>
-		</web-resource-collection>
-	</security-constraint>
 	<security-role>
 		<role-name>users</role-name>
 	</security-role>

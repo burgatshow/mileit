@@ -54,7 +54,11 @@ public class DBManager implements Serializable {
 	public DBManager() {
 		logger.logEnter("DBManager()");
 		if (ds == null) {
-			forceObtainDS();
+			try {
+				ds = (DataSource) new InitialContext().lookup("jdbc/mileit");
+			} catch (NamingException e) {
+				logger.logException("DBManager()", e);
+			}
 		}
 		logger.logExit("DBManager()");
 	}
@@ -160,6 +164,35 @@ public class DBManager implements Serializable {
 			closeConnection();
 		}
 		logger.logExit("archiveTyre()");
+		return status;
+	}
+
+	/**
+	 * Authenticates the user during logon process
+	 * 
+	 * @param username {@link String} the user's username
+	 * @param password {@link String} the user's encrypted password
+	 * @return true if valid, false otherwise
+	 */
+	public boolean authenticateUser(String username, String password) {
+		logger.logEnter("authenticateUser()");
+		boolean status = false;
+		try {
+			con = ds.getConnection();
+			ps = con.prepareStatement(DBCommands.SQL_S_AUTH);
+			ps.setString(1, username);
+			ps.setString(2, password);
+
+			rs = ps.executeQuery();
+			if (rs.next()) {
+				status = true;
+			}
+		} catch (Exception e) {
+			logger.logException("authenticateUser()", e);
+		} finally {
+			closeConnection();
+		}
+		logger.logExit("authenticateUser()");
 		return status;
 	}
 
@@ -295,8 +328,7 @@ public class DBManager implements Serializable {
 		if (m != null) {
 			try {
 				con = ds.getConnection();
-				ps = con.prepareStatement(
-						m.getOperation() == 0 ? DBCommands.SQL_I_MAINTENANCE : DBCommands.SQL_U_MAINTENANCE);
+				ps = con.prepareStatement(m.getOperation() == 0 ? DBCommands.SQL_I_MAINTENANCE : DBCommands.SQL_U_MAINTENANCE);
 
 				ps.setInt(1, m.getCar().getId());
 				ps.setInt(2, m.getPayment().getId());
@@ -589,34 +621,12 @@ public class DBManager implements Serializable {
 	}
 
 	/**
-	 * This is for to obtain the datasource from the application server because
-	 * Liberty and Tomcat works differently
-	 * 
-	 * @return {@link DataSource} if obtained, null otherwise
-	 */
-	private void forceObtainDS() {
-		logger.logEnter("forceObtainDS()");
-		InitialContext ctx = null;
-		try {
-			ctx = new InitialContext();
-			ds = (DataSource) ctx.lookup("jdbc/mileit");
-		} catch (NamingException e) {
-			try {
-				ds = (DataSource) ctx.lookup("java:comp/env/jdbc/mileit");
-			} catch (NamingException e2) {
-				logger.logException("forceObtainDS()", e);
-			}
-		}
-		logger.logExit("forceObtainDS()");
-	}
-
-	/**
 	 * Returns a single car record from the database identified by its ID
 	 * 
 	 * @param id int the car's ID
 	 * @return {@link CarModel} if found, null otherwise
 	 */
-	public CarModel getCar(int id) {
+	public CarModel getCar(int id, EncryptManager em) {
 		logger.logEnter("getCar()");
 		CarModel car = null;
 		try {
@@ -633,8 +643,14 @@ public class DBManager implements Serializable {
 				car.setModel(rs.getString(3));
 				car.setManufacturerDate(rs.getTimestamp(4));
 				car.setColor(rs.getString(5));
-				car.setVin(rs.getString(6));
-				car.setPlateNumber(rs.getString(7));
+
+				if (em != null) {
+					car.setVin(em.decrypt(rs.getString(6)));
+					car.setPlateNumber(em.decrypt(rs.getString(7)));
+				} else {
+					car.setVin(null);
+					car.setPlateNumber(null);
+				}
 				car.setFuelCapacity(rs.getDouble(8));
 				car.setFuel(rs.getInt(9));
 				car.setStartDate(rs.getTimestamp(10));
@@ -662,7 +678,7 @@ public class DBManager implements Serializable {
 	 * @return a {@link List} of {@link CarModel} objects if found, empty list
 	 *         otherwise
 	 */
-	public List<CarModel> getCars(int user_id) {
+	public List<CarModel> getCars(int user_id, EncryptManager em) {
 		logger.logEnter("getCars()");
 		List<CarModel> cars = new ArrayList<CarModel>();
 
@@ -681,8 +697,14 @@ public class DBManager implements Serializable {
 				car.setModel(rs.getString(3));
 				car.setManufacturerDate(rs.getTimestamp(4));
 				car.setColor(rs.getString(5));
-				car.setVin(rs.getString(6));
-				car.setPlateNumber(rs.getString(7));
+
+				if (em != null) {
+					car.setVin(em.decrypt(rs.getString(6)));
+					car.setPlateNumber(em.decrypt(rs.getString(7)));
+				} else {
+					car.setVin(null);
+					car.setPlateNumber(null);
+				}
 				car.setFuelCapacity(rs.getDouble(8));
 				car.setFuel(rs.getInt(9));
 				car.setStartDate(rs.getTimestamp(10));
@@ -725,8 +747,8 @@ public class DBManager implements Serializable {
 				cvTmp.put(rs.getInt(1), rs.getString(2));
 			}
 
-			carVendors = cvTmp.entrySet().stream().sorted(Map.Entry.comparingByValue()).collect(
-					Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+			carVendors = cvTmp.entrySet().stream().sorted(Map.Entry.comparingByValue())
+					.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
 
 		} catch (Exception e) {
 			logger.logException("getCarVendors()", e);
@@ -964,8 +986,7 @@ public class DBManager implements Serializable {
 			rs = ps.executeQuery();
 
 			if (rs.next()) {
-				l = new PlaceModel(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getInt(4), rs.getDouble(5),
-						rs.getDouble(6), rs.getInt(7));
+				l = new PlaceModel(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getInt(4), rs.getDouble(5), rs.getDouble(6), rs.getInt(7));
 			}
 		} catch (Exception e) {
 			logger.logException("getPlace()", e);
@@ -997,8 +1018,7 @@ public class DBManager implements Serializable {
 			rs = ps.executeQuery();
 
 			while (rs.next()) {
-				ls.add(new PlaceModel(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getDouble(4), rs.getDouble(5),
-						rs.getInt(6)));
+				ls.add(new PlaceModel(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getDouble(4), rs.getDouble(5), rs.getInt(6)));
 			}
 		} catch (Exception e) {
 			logger.logException("getPlaces()", e);
@@ -1187,9 +1207,8 @@ public class DBManager implements Serializable {
 			rs = ps.executeQuery();
 
 			if (rs.next()) {
-				tyre = new TyreModel(rs.getInt(1), rs.getInt(2), (byte) rs.getInt(3), rs.getInt(4), rs.getInt(5),
-						rs.getInt(6), rs.getInt(7), rs.getString(8), rs.getString(9), (byte) rs.getInt(10),
-						rs.getTimestamp(11), rs.getInt(12));
+				tyre = new TyreModel(rs.getInt(1), rs.getInt(2), (byte) rs.getInt(3), rs.getInt(4), rs.getInt(5), rs.getInt(6), rs.getInt(7),
+						rs.getString(8), rs.getString(9), (byte) rs.getInt(10), rs.getTimestamp(11), rs.getInt(12));
 			}
 
 		} catch (Exception e) {
@@ -1234,8 +1253,7 @@ public class DBManager implements Serializable {
 				t.setPurchaseDate(rs.getTimestamp(8));
 				t.setManufacturerName(rs.getString(9));
 				t.setModel(rs.getString(10));
-				t.setTyreEvent(new TyreEventModel(rs.getTimestamp(13), rs.getTimestamp(14), rs.getDouble(15),
-						rs.getDouble(11), rs.getDouble(12)));
+				t.setTyreEvent(new TyreEventModel(rs.getTimestamp(13), rs.getTimestamp(14), rs.getDouble(15), rs.getDouble(11), rs.getDouble(12)));
 				t.setCar(new CarModel(rs.getInt(16), rs.getString(17), rs.getString(18)));
 				t.setArchived(rs.getInt(19));
 
@@ -1272,8 +1290,8 @@ public class DBManager implements Serializable {
 				tvTmp.put(rs.getInt(1), rs.getString(2));
 			}
 
-			tyreVendors = tvTmp.entrySet().stream().sorted(Map.Entry.comparingByValue()).collect(
-					Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+			tyreVendors = tvTmp.entrySet().stream().sorted(Map.Entry.comparingByValue())
+					.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
 
 		} catch (Exception e) {
 			logger.logException("getTyreVendors()", e);
@@ -1375,7 +1393,7 @@ public class DBManager implements Serializable {
 	public boolean updateUserProfile(UserModel user) {
 		logger.logEnter("updateUserProfile()");
 		boolean status = false;
-		if (user.getUsername() != null && !"".equalsIgnoreCase(user.getUsername())) {
+		if (user.getUsername() != null && !user.getUsername().isEmpty()) {
 			try {
 				con = ds.getConnection();
 				ps = con.prepareStatement(DBCommands.SQL_U_PROFILE);
