@@ -16,6 +16,7 @@ MileIT is designed to be free forever, so if you have an applicable software env
 
 # Current features
 MileIT currently has the following features:
+
 - It can work with multiple accounts
 - It can work with multiple cars / account
 - It can manage and use multiple different refuelling stations
@@ -32,9 +33,10 @@ MileIT currently has the following features:
 
 # What needs to be get done to use
 To get start with MileIT, you will need the following software components:
-- An applicable J2EE application server like WAS Liberty or Tomcat (Tomcat will do)
-- A MariaDB open source RDBMS software
+
+- An [OpenLiberty](https://openliberty.io) J2EE application server
+- A [MariaDB](https://mariadb.com) open source RDBMS software
 - A computer / NAS to run the components listed above
-- My installation guide. :)
+- [My installation guide](https://github.com/burgatshow/mileit/wiki/Complete-installation-guide-on-Windows-using-Liberty). :)
 
 Stay tuned, more will come.
