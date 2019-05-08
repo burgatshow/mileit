@@ -13,11 +13,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import hu.thom.mileit.core.DBManager;
-import hu.thom.mileit.core.DynaCacheAdaptor;
-import hu.thom.mileit.core.EncryptManager;
-import hu.thom.mileit.core.UIKeys;
+import hu.thom.mileit.core.DynaCacheManager;
+import hu.thom.mileit.core.EncryptionManager;
+import hu.thom.mileit.core.data.DBManager;
 import hu.thom.mileit.models.UserModel;
+import hu.thom.mileit.utils.UIBindings;
 
 /**
  * Parent servlet class for child servlet classes
@@ -49,9 +49,9 @@ public class Controller extends HttpServlet {
 	public static final String ROUTES = "/WEB-INF/pages/routes.jsp";
 	public static final String ROUTES_FORM = "/WEB-INF/pages/routes-form.jsp";
 
-	public DBManager dbm = null;
-	public DynaCacheAdaptor dc = null;
-	public EncryptManager sm = null;
+	public DBManager db = null;
+	public DynaCacheManager dc = null;
+	public EncryptionManager em = null;
 
 	public String m = "";
 	public int id = 0;
@@ -68,14 +68,14 @@ public class Controller extends HttpServlet {
 	 */
 	public Controller() {
 		if (dc == null) {
-			dc = DynaCacheAdaptor.getInstance();
+			dc = DynaCacheManager.getInstance();
 		}
 
-		dbm = (DBManager) dc.get("dbm");
-		sm = (EncryptManager) dc.get("sm");
+		db = (DBManager) dc.get("db");
+		em = (EncryptionManager) dc.get("em");
 
-		assignedObjects.put(UIKeys.VERSION, VERSION);
-		assignedObjects.put(UIKeys.PAGE, "index");
+		assignedObjects.put(UIBindings.VERSION, VERSION);
+		assignedObjects.put(UIBindings.PAGE, "index");
 
 		validationMessages.clear();
 	}
@@ -108,13 +108,13 @@ public class Controller extends HttpServlet {
 	 */
 	public void parseMode(HttpServletRequest request) {
 		if (request != null) {
-			if (request.getParameter(UIKeys.PARAM_MODE) != null && !request.getParameter(UIKeys.PARAM_MODE).isEmpty()) {
-				this.m = request.getParameter(UIKeys.PARAM_MODE);
+			if (request.getParameter(UIBindings.PARAM_MODE) != null && !request.getParameter(UIBindings.PARAM_MODE).isEmpty()) {
+				this.m = request.getParameter(UIBindings.PARAM_MODE);
 			} else {
-				this.m = UIKeys.MODE_CANCEL;
+				this.m = UIBindings.MODE_CANCEL;
 			}
 		} else {
-			this.m = UIKeys.MODE_CANCEL;
+			this.m = UIBindings.MODE_CANCEL;
 		}
 	}
 
@@ -141,7 +141,7 @@ public class Controller extends HttpServlet {
 		}
 
 		if (!validationMessages.isEmpty()) {
-			request.setAttribute(UIKeys.VALIDATION_MSGS, validationMessages);
+			request.setAttribute(UIBindings.VALIDATION_MSGS, validationMessages);
 		}
 		request.getRequestDispatcher(targetJSP).forward(request, response);
 		return;
@@ -156,7 +156,7 @@ public class Controller extends HttpServlet {
 	public void parseId(HttpServletRequest request) {
 		if (request != null) {
 			try {
-				this.id = Integer.parseInt(request.getParameter(UIKeys.PARAM_ID));
+				this.id = Integer.parseInt(request.getParameter(UIBindings.PARAM_ID));
 			} catch (Exception e) {
 				this.id = -1;
 			}

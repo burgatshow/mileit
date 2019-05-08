@@ -39,7 +39,7 @@ public class LogoutController extends Controller {
 		UserModel user = (UserModel) request.getSession().getAttribute("user");
 		if (user != null) {
 			// Clean up cache
-			dc.cleanupUser(user.getUsername());
+			dc.invalidate(user.getUsername());
 
 			// Destroy user's session then log out
 			request.getSession().invalidate();

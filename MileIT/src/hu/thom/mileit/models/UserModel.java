@@ -10,10 +10,14 @@ public class UserModel extends Model {
 	private static final long serialVersionUID = -8687951190661595457L;
 
 	private String username;
+	private String email;
 	private String currency;
 	private String locale;
 	private int distance;
 	private int rounded;
+	private String pushoverUserKey;
+	private String pushoverAPIKey;
+	private String pushbulletAPIKey;
 
 	public UserModel() {
 	}
@@ -31,37 +35,6 @@ public class UserModel extends Model {
 		this.locale = locale;
 	}
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (!super.equals(obj))
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		UserModel other = (UserModel) obj;
-		if (currency == null) {
-			if (other.currency != null)
-				return false;
-		} else if (!currency.equals(other.currency))
-			return false;
-		if (distance != other.distance)
-			return false;
-		if (locale == null) {
-			if (other.locale != null)
-				return false;
-		} else if (!locale.equals(other.locale))
-			return false;
-		if (rounded != other.rounded)
-			return false;
-		if (username == null) {
-			if (other.username != null)
-				return false;
-		} else if (!username.equals(other.username))
-			return false;
-		return true;
-	}
-
 	public String getCurrency() {
 		return (currency == null || "".equalsIgnoreCase(currency)) ? "Ft" : currency;
 	}
@@ -70,8 +43,24 @@ public class UserModel extends Model {
 		return distance;
 	}
 
+	public String getEmail() {
+		return email;
+	}
+
 	public String getLocale() {
 		return (locale == null || "".equalsIgnoreCase(locale)) ? "hu" : locale;
+	}
+
+	public String getPushbulletAPIKey() {
+		return pushbulletAPIKey;
+	}
+
+	public String getPushoverAPIKey() {
+		return pushoverAPIKey;
+	}
+
+	public String getPushoverUserKey() {
+		return pushoverUserKey;
 	}
 
 	public int getRounded() {
@@ -80,18 +69,6 @@ public class UserModel extends Model {
 
 	public String getUsername() {
 		return username;
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = super.hashCode();
-		result = prime * result + ((currency == null) ? 0 : currency.hashCode());
-		result = prime * result + distance;
-		result = prime * result + ((locale == null) ? 0 : locale.hashCode());
-		result = prime * result + rounded;
-		result = prime * result + ((username == null) ? 0 : username.hashCode());
-		return result;
 	}
 
 	public void setCurrency(String currency) {
@@ -110,10 +87,26 @@ public class UserModel extends Model {
 		}
 	}
 
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
 	public void setLocale(String locale) {
 		this.locale = locale;
 	}
-	
+
+	public void setPushbulletAPIKey(String pushbulletAPIKey) {
+		this.pushbulletAPIKey = pushbulletAPIKey;
+	}
+
+	public void setPushoverAPIKey(String pushoverAPIKey) {
+		this.pushoverAPIKey = pushoverAPIKey;
+	}
+
+	public void setPushoverUserKey(String pushoverUserKey) {
+		this.pushoverUserKey = pushoverUserKey;
+	}
+
 	public void setRounded(int rounded) {
 		this.rounded = rounded;
 	}
@@ -131,9 +124,77 @@ public class UserModel extends Model {
 	}
 
 	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + ((currency == null) ? 0 : currency.hashCode());
+		result = prime * result + distance;
+		result = prime * result + ((email == null) ? 0 : email.hashCode());
+		result = prime * result + ((locale == null) ? 0 : locale.hashCode());
+		result = prime * result + ((pushbulletAPIKey == null) ? 0 : pushbulletAPIKey.hashCode());
+		result = prime * result + ((pushoverAPIKey == null) ? 0 : pushoverAPIKey.hashCode());
+		result = prime * result + ((pushoverUserKey == null) ? 0 : pushoverUserKey.hashCode());
+		result = prime * result + rounded;
+		result = prime * result + ((username == null) ? 0 : username.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		UserModel other = (UserModel) obj;
+		if (currency == null) {
+			if (other.currency != null)
+				return false;
+		} else if (!currency.equals(other.currency))
+			return false;
+		if (distance != other.distance)
+			return false;
+		if (email == null) {
+			if (other.email != null)
+				return false;
+		} else if (!email.equals(other.email))
+			return false;
+		if (locale == null) {
+			if (other.locale != null)
+				return false;
+		} else if (!locale.equals(other.locale))
+			return false;
+		if (pushbulletAPIKey == null) {
+			if (other.pushbulletAPIKey != null)
+				return false;
+		} else if (!pushbulletAPIKey.equals(other.pushbulletAPIKey))
+			return false;
+		if (pushoverAPIKey == null) {
+			if (other.pushoverAPIKey != null)
+				return false;
+		} else if (!pushoverAPIKey.equals(other.pushoverAPIKey))
+			return false;
+		if (pushoverUserKey == null) {
+			if (other.pushoverUserKey != null)
+				return false;
+		} else if (!pushoverUserKey.equals(other.pushoverUserKey))
+			return false;
+		if (rounded != other.rounded)
+			return false;
+		if (username == null) {
+			if (other.username != null)
+				return false;
+		} else if (!username.equals(other.username))
+			return false;
+		return true;
+	}
+
+	@Override
 	public String toString() {
-		return "UserModel [username=" + username + ", currency=" + currency + ", locale=" + locale + ", distance=" + distance + ", rounded=" + rounded
-				+ ", toString()=" + super.toString() + "]";
+		return "UserModel [username=" + username + ", email=" + email + ", currency=" + currency + ", locale=" + locale + ", distance=" + distance
+				+ ", rounded=" + rounded + ", pushoverUserKey=" + pushoverUserKey + ", pushoverAPIKey=" + pushoverAPIKey + ", pushbulletAPIKey="
+				+ pushbulletAPIKey + ", toString()=" + super.toString() + "]";
 	}
 
 }

@@ -8,10 +8,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import hu.thom.mileit.core.DynaCacheAdaptor;
-import hu.thom.mileit.core.UIKeys;
+import hu.thom.mileit.core.DynaCacheManager;
 import hu.thom.mileit.models.MaintenanceModel;
 import hu.thom.mileit.models.UserModel;
+import hu.thom.mileit.utils.UIBindings;
 
 /**
  * Servlet class to manage maintenance related operations
@@ -32,7 +32,7 @@ public class MaintenanceController extends Controller {
 	 */
 	public MaintenanceController() {
 		super();
-		assignedObjects.put(UIKeys.PAGE, "maintenance");
+		assignedObjects.put(UIBindings.PAGE, "maintenance");
 	}
 
 	/**
@@ -58,50 +58,50 @@ public class MaintenanceController extends Controller {
 		if (user == null) {
 			response.sendRedirect("login");
 		} else {
-			userMaintenanceKey = user.getUsername() + "_" + UIKeys.MAINTENANCES;
-			userCarsKey = user.getUsername() + "_" + UIKeys.CARS;
-			userPaymentsKey = user.getUsername() + "_" + UIKeys.PMS;
+			userMaintenanceKey = user.getUsername() + "_" + UIBindings.MAINTENANCES;
+			userCarsKey = user.getUsername() + "_" + UIBindings.CARS;
+			userPaymentsKey = user.getUsername() + "_" + UIBindings.PMS;
 			
 			parseMode(request);
 			
 			if (dc.get(userCarsKey) == null) {
-				dc.put(userCarsKey, dbm.getCars(user.getId(), sm), DynaCacheAdaptor.DC_TTL_1H, user.getUsername());
+				dc.put(userCarsKey, db.getCars(user.getId(), em), DynaCacheManager.DC_TTL_1H, user.getUsername());
 			}
-			assignedObjects.put(UIKeys.CARS, dc.get(userCarsKey));
+			assignedObjects.put(UIBindings.CARS, dc.get(userCarsKey));
 			
 			if (dc.get(userPaymentsKey) == null) {
-				dc.put(userPaymentsKey, dbm.getPaymentMethods(user.getId()), DynaCacheAdaptor.DC_TTL_1H, user.getUsername());
+				dc.put(userPaymentsKey, db.getPaymentMethods(user.getId()), DynaCacheManager.DC_TTL_1H, user.getUsername());
 			}
-			assignedObjects.put(UIKeys.PMS, dc.get(userPaymentsKey));
+			assignedObjects.put(UIBindings.PMS, dc.get(userPaymentsKey));
 			
 			if (dc.get(userMaintenanceKey) == null) {
-				dc.put(userMaintenanceKey, dbm.getMaintenances(user.getId()), DynaCacheAdaptor.DC_TTL_1H, user.getUsername());
+				dc.put(userMaintenanceKey, db.getMaintenances(user.getId(), em), DynaCacheManager.DC_TTL_1H, user.getUsername());
 			}
-			assignedObjects.put(UIKeys.MAINTENANCES, dc.get(userMaintenanceKey));
+			assignedObjects.put(UIBindings.MAINTENANCES, dc.get(userMaintenanceKey));
 
 			switch (m) {
-			case UIKeys.MODE_NEW:
+			case UIBindings.MODE_NEW:
 				validationMessages.clear();
-				assignedObjects.remove(UIKeys.MAINTENANCES);
+				assignedObjects.remove(UIBindings.MAINTENANCES);
 				renderPage(MAINTENANCES_FORM, request, response);
 				break;
 
-			case UIKeys.MODE_UPDATE:
+			case UIBindings.MODE_UPDATE:
 				parseId(request);
 
-				MaintenanceModel mm = dbm.getMaintenance(id);
+				MaintenanceModel mm = db.getMaintenance(id);
 				if (mm != null) {
-					assignedObjects.put(UIKeys.MAINTENANCES, mm);
+					assignedObjects.put(UIBindings.MAINTENANCES, mm);
 					renderPage(MAINTENANCES_FORM, request, response);
 				} else {
-					assignedObjects.put(UIKeys.STATUS, -1);
+					assignedObjects.put(UIBindings.STATUS, -1);
 					renderPage(MAINTENANCES, request, response);
 				}
 				break;
-			case UIKeys.MODE_:
-			case UIKeys.MODE_CANCEL:
+			case UIBindings.MODE_:
+			case UIBindings.MODE_CANCEL:
 			default:
-				assignedObjects.remove(UIKeys.STATUS);
+				assignedObjects.remove(UIBindings.STATUS);
 				renderPage(MAINTENANCES, request, response);
 				break;
 			}
@@ -121,40 +121,40 @@ public class MaintenanceController extends Controller {
 		if (user == null) {
 			response.sendRedirect("login");
 		} else {
-			userMaintenanceKey = user.getUsername() + "_" + UIKeys.MAINTENANCES;
+			userMaintenanceKey = user.getUsername() + "_" + UIBindings.MAINTENANCES;
 			
 			parseMode(request);
 
-			checkValidationMessages(UIKeys.FORM_ME_MAINTENANCE, validationMessages, request);
+			checkValidationMessages(UIBindings.FORM_ME_MAINTENANCE, validationMessages, request);
 
-			assignedObjects.put(UIKeys.CARS, dbm.getCars(user.getId(), sm));
-			assignedObjects.put(UIKeys.PMS, dbm.getPaymentMethods(user.getId()));
+			assignedObjects.put(UIBindings.CARS, db.getCars(user.getId(), em));
+			assignedObjects.put(UIBindings.PMS, db.getPaymentMethods(user.getId()));
 
 			if (validationMessages.isEmpty()) {
 				MaintenanceModel mm = new MaintenanceModel(request.getParameterMap(), user);
 
 				switch (m) {
-				case UIKeys.MODE_NEW:
+				case UIBindings.MODE_NEW:
 					mm.setOperation(0);
 					break;
-				case UIKeys.MODE_UPDATE:
+				case UIBindings.MODE_UPDATE:
 					parseId(request);
 					mm.setOperation(1);
 					mm.setId(id);
 					break;
-				case UIKeys.MODE_:
-				case UIKeys.MODE_CANCEL:
+				case UIBindings.MODE_:
+				case UIBindings.MODE_CANCEL:
 				default:
 					break;
 				}
 
-				assignedObjects.put(UIKeys.STATUS, dbm.createUpdateMaintenance(mm) ? 1 : -1);
-				dc.put(userMaintenanceKey, dbm.getMaintenances(user.getId()), DynaCacheAdaptor.DC_TTL_1H, user.getUsername());
-				assignedObjects.put(UIKeys.MAINTENANCES, dc.get(userMaintenanceKey));
+				assignedObjects.put(UIBindings.STATUS, db.createUpdateMaintenance(mm) ? 1 : -1);
+				dc.put(userMaintenanceKey, db.getMaintenances(user.getId(), em), DynaCacheManager.DC_TTL_1H, user.getUsername());
+				assignedObjects.put(UIBindings.MAINTENANCES, dc.get(userMaintenanceKey));
 				renderPage(MAINTENANCES, request, response);
 
 			} else {
-				assignedObjects.put(UIKeys.STATUS, -2);
+				assignedObjects.put(UIBindings.STATUS, -2);
 				renderPage(MAINTENANCES_FORM, request, response);
 			}
 		}

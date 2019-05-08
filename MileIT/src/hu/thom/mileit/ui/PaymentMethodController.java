@@ -8,10 +8,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import hu.thom.mileit.core.DynaCacheAdaptor;
-import hu.thom.mileit.core.UIKeys;
+import hu.thom.mileit.core.DynaCacheManager;
 import hu.thom.mileit.models.PaymentMethodModel;
 import hu.thom.mileit.models.UserModel;
+import hu.thom.mileit.utils.UIBindings;
 
 /**
  * Servlet class to manage payment method related operations
@@ -30,7 +30,7 @@ public class PaymentMethodController extends Controller {
 	 */
 	public PaymentMethodController() {
 		super();
-		assignedObjects.put(UIKeys.PAGE, "payment");
+		assignedObjects.put(UIBindings.PAGE, "payment");
 	}
 
 	/**
@@ -56,47 +56,47 @@ public class PaymentMethodController extends Controller {
 		if (user == null) {
 			response.sendRedirect("login");
 		} else {
-			userPaymentsKey = user.getUsername() + "_" + UIKeys.PMS;
+			userPaymentsKey = user.getUsername() + "_" + UIBindings.PMS;
 
 			parseMode(request);
 
 			if (dc.get(userPaymentsKey) == null) {
-				dc.put(userPaymentsKey, dbm.getPaymentMethods(user.getId()), DynaCacheAdaptor.DC_TTL_1H, user.getUsername());
+				dc.put(userPaymentsKey, db.getPaymentMethods(user.getId()), DynaCacheManager.DC_TTL_1H, user.getUsername());
 			}
-			assignedObjects.put(UIKeys.PMS, dc.get(userPaymentsKey));
+			assignedObjects.put(UIBindings.PMS, dc.get(userPaymentsKey));
 
 			switch (m) {
-			case UIKeys.MODE_NEW:
+			case UIBindings.MODE_NEW:
 				validationMessages.clear();
-				assignedObjects.remove(UIKeys.PMS);
+				assignedObjects.remove(UIBindings.PMS);
 				renderPage(PAYMENT_METHODS_FORM, request, response);
 				break;
 
-			case UIKeys.MODE_ARCHIVE:
+			case UIBindings.MODE_ARCHIVE:
 				parseId(request);
 
-				assignedObjects.put(UIKeys.STATUS, dbm.archivePaymentMethod(id) ? 1 : -1);
-				assignedObjects.put(UIKeys.PMS, dbm.getPaymentMethods(user.getId()));
+				assignedObjects.put(UIBindings.STATUS, db.archivePaymentMethod(id) ? 1 : -1);
+				assignedObjects.put(UIBindings.PMS, db.getPaymentMethods(user.getId()));
 				renderPage(PAYMENT_METHODS, request, response);
 
 				break;
 
-			case UIKeys.MODE_UPDATE:
+			case UIBindings.MODE_UPDATE:
 				parseId(request);
 
-				PaymentMethodModel pm = dbm.getPaymentMethod(id);
+				PaymentMethodModel pm = db.getPaymentMethod(id);
 				if (pm != null) {
-					assignedObjects.put(UIKeys.PMS, pm);
+					assignedObjects.put(UIBindings.PMS, pm);
 					renderPage(PAYMENT_METHODS_FORM, request, response);
 				} else {
-					assignedObjects.put(UIKeys.STATUS, -1);
+					assignedObjects.put(UIBindings.STATUS, -1);
 					renderPage(PAYMENT_METHODS, request, response);
 				}
 				break;
-			case UIKeys.MODE_:
-			case UIKeys.MODE_CANCEL:
+			case UIBindings.MODE_:
+			case UIBindings.MODE_CANCEL:
 			default:
-				assignedObjects.remove(UIKeys.STATUS);
+				assignedObjects.remove(UIBindings.STATUS);
 				renderPage(PAYMENT_METHODS, request, response);
 				break;
 			}
@@ -116,37 +116,37 @@ public class PaymentMethodController extends Controller {
 		if (user == null) {
 			response.sendRedirect("login");
 		} else {
-			userPaymentsKey = user.getUsername() + "_" + UIKeys.PMS;
+			userPaymentsKey = user.getUsername() + "_" + UIBindings.PMS;
 			
 			parseMode(request);
 
-			checkValidationMessages(UIKeys.FORM_ME_PAYMENT_METHOD, validationMessages, request);
+			checkValidationMessages(UIBindings.FORM_ME_PAYMENT_METHOD, validationMessages, request);
 
 			if (validationMessages.isEmpty()) {
 				PaymentMethodModel pm = new PaymentMethodModel(request.getParameterMap(), user);
 
 				switch (m) {
-				case UIKeys.MODE_NEW:
+				case UIBindings.MODE_NEW:
 					pm.setOperation(0);
 					break;
-				case UIKeys.MODE_UPDATE:
+				case UIBindings.MODE_UPDATE:
 					parseId(request);
 					pm.setOperation(1);
 					pm.setId(id);
 					break;
 
-				case UIKeys.MODE_:
-				case UIKeys.MODE_CANCEL:
+				case UIBindings.MODE_:
+				case UIBindings.MODE_CANCEL:
 				default:
 					break;
 				}
 
-				assignedObjects.put(UIKeys.STATUS, dbm.createUpdatePaymentMethod(pm) ? 1 : -1);
-				dc.put(userPaymentsKey, dbm.getPaymentMethods(user.getId()), DynaCacheAdaptor.DC_TTL_1H, user.getUsername());
-				assignedObjects.put(UIKeys.PMS, dc.get(userPaymentsKey));
+				assignedObjects.put(UIBindings.STATUS, db.createUpdatePaymentMethod(pm) ? 1 : -1);
+				dc.put(userPaymentsKey, db.getPaymentMethods(user.getId()), DynaCacheManager.DC_TTL_1H, user.getUsername());
+				assignedObjects.put(UIBindings.PMS, dc.get(userPaymentsKey));
 				renderPage(PAYMENT_METHODS, request, response);
 			} else {
-				assignedObjects.put(UIKeys.STATUS, -2);
+				assignedObjects.put(UIBindings.STATUS, -2);
 				renderPage(PAYMENT_METHODS_FORM, request, response);
 			}
 		}

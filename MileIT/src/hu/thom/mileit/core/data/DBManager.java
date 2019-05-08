@@ -1,4 +1,4 @@
-package hu.thom.mileit.core;
+package hu.thom.mileit.core.data;
 
 import java.io.Serializable;
 import java.sql.Connection;
@@ -16,6 +16,7 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
+import hu.thom.mileit.core.EncryptionManager;
 import hu.thom.mileit.models.CarModel;
 import hu.thom.mileit.models.MaintenanceModel;
 import hu.thom.mileit.models.PaymentMethodModel;
@@ -27,6 +28,7 @@ import hu.thom.mileit.models.TyreEventModel;
 import hu.thom.mileit.models.TyreModel;
 import hu.thom.mileit.models.TyreModel.Axis;
 import hu.thom.mileit.models.TyreModel.TyreType;
+import hu.thom.mileit.utils.LogManager;
 import hu.thom.mileit.models.UserModel;
 
 /**
@@ -36,12 +38,15 @@ import hu.thom.mileit.models.UserModel;
  *
  */
 public class DBManager implements Serializable {
+	/**
+	 * Serial version UID
+	 */
 	private static final long serialVersionUID = -5527815745942370595L;
 
 	/**
 	 * Logger instance
 	 */
-	private static LoggerHelper logger = new LoggerHelper(DBManager.class);
+	private static LogManager logger = new LogManager(DBManager.class);
 	private DataSource ds;
 	private Connection con;
 	private PreparedStatement ps;
@@ -287,8 +292,8 @@ public class DBManager implements Serializable {
 
 				ps.setTimestamp(3, car.getManufacturerDateAsTimestamp());
 				ps.setString(4, car.getColor());
-				ps.setString(5, car.getVin());
-				ps.setString(6, car.getPlateNumber());
+				ps.setString(5, car.getVin().toUpperCase());
+				ps.setString(6, car.getPlateNumber().toUpperCase());
 				ps.setDouble(7, car.getFuelCapacity());
 				ps.setInt(8, car.getFuel().getCode());
 				ps.setTimestamp(9, car.getStartDateAsTimestamp());
@@ -626,7 +631,7 @@ public class DBManager implements Serializable {
 	 * @param id int the car's ID
 	 * @return {@link CarModel} if found, null otherwise
 	 */
-	public CarModel getCar(int id, EncryptManager em) {
+	public CarModel getCar(int id, EncryptionManager em) {
 		logger.logEnter("getCar()");
 		CarModel car = null;
 		try {
@@ -643,14 +648,8 @@ public class DBManager implements Serializable {
 				car.setModel(rs.getString(3));
 				car.setManufacturerDate(rs.getTimestamp(4));
 				car.setColor(rs.getString(5));
-
-				if (em != null) {
-					car.setVin(em.decrypt(rs.getString(6)));
-					car.setPlateNumber(em.decrypt(rs.getString(7)));
-				} else {
-					car.setVin(null);
-					car.setPlateNumber(null);
-				}
+				car.setVin(em != null ? em.decrypt(rs.getString(6)) : rs.getString(6));
+				car.setPlateNumber(em != null ? em.decrypt(rs.getString(7)) : rs.getString(7));
 				car.setFuelCapacity(rs.getDouble(8));
 				car.setFuel(rs.getInt(9));
 				car.setStartDate(rs.getTimestamp(10));
@@ -678,7 +677,7 @@ public class DBManager implements Serializable {
 	 * @return a {@link List} of {@link CarModel} objects if found, empty list
 	 *         otherwise
 	 */
-	public List<CarModel> getCars(int user_id, EncryptManager em) {
+	public List<CarModel> getCars(int user_id, EncryptionManager em) {
 		logger.logEnter("getCars()");
 		List<CarModel> cars = new ArrayList<CarModel>();
 
@@ -874,7 +873,7 @@ public class DBManager implements Serializable {
 	 * @return a {@link List} of {@link MaintenanceModel} objects if found, empty
 	 *         list otherwise
 	 */
-	public List<MaintenanceModel> getMaintenances(int id) {
+	public List<MaintenanceModel> getMaintenances(int id, EncryptionManager em) {
 		logger.logEnter("getMaintenances()");
 		List<MaintenanceModel> ms = new ArrayList<MaintenanceModel>();
 
@@ -889,7 +888,8 @@ public class DBManager implements Serializable {
 			while (rs.next()) {
 				m = new MaintenanceModel();
 				m.setId(rs.getInt(1));
-				m.setCar(new CarModel(rs.getInt(2), rs.getString(9), rs.getString(10)));
+
+				m.setCar(new CarModel(rs.getInt(2), rs.getString(9), em != null ? em.decrypt(rs.getString(10)) : rs.getString(10)));
 				m.setUser(new UserModel(rs.getInt(3)));
 				m.setPayment(new PaymentMethodModel(rs.getInt(4), rs.getString(11), null));
 				m.setOdometer(rs.getDouble(5));
@@ -1077,7 +1077,7 @@ public class DBManager implements Serializable {
 	 * @return a {@link List} of {@link RefuelModel} objects if found, empty list
 	 *         otherwise
 	 */
-	public List<RefuelModel> getRefuels(int user_id) {
+	public List<RefuelModel> getRefuels(int user_id, EncryptionManager em) {
 		logger.logEnter("getRefuels()");
 		List<RefuelModel> refuels = new ArrayList<RefuelModel>();
 
@@ -1091,7 +1091,8 @@ public class DBManager implements Serializable {
 			RefuelModel refuel = null;
 			while (rs.next()) {
 				refuel = new RefuelModel(rs.getInt(1));
-				refuel.setCar(new CarModel(rs.getInt(2), rs.getString(12), rs.getString(11)));
+
+				refuel.setCar(new CarModel(rs.getInt(2), rs.getString(12), em != null ? em.decrypt(rs.getString(11)) : rs.getString(11)));
 				refuel.setPlace(new PlaceModel(rs.getInt(3), rs.getString(13), null, 0, 0, 1));
 				refuel.setRefuelDate(rs.getTimestamp(4));
 				refuel.setOdometer(rs.getDouble(5));
@@ -1157,7 +1158,7 @@ public class DBManager implements Serializable {
 	 * @return a {@link List} of {@link RefuelModel} objects if found, empty list
 	 *         otherwise
 	 */
-	public List<RouteModel> getRoutes(int user_id) {
+	public List<RouteModel> getRoutes(int user_id, EncryptionManager em) {
 		logger.logEnter("getRoutes()");
 		List<RouteModel> routes = new ArrayList<RouteModel>();
 
@@ -1174,7 +1175,8 @@ public class DBManager implements Serializable {
 				route.setRouteDatetime(rs.getTimestamp(2));
 				route.setDistance(rs.getDouble(3));
 				route.setRouteType(RouteType.fromCode((byte) rs.getInt(4)));
-				route.setCar(new CarModel(rs.getInt(5), rs.getString(7), rs.getString(6)));
+
+				route.setCar(new CarModel(rs.getInt(5), rs.getString(7), em != null ? em.decrypt(rs.getString(6)) : rs.getString(6)));
 				route.setStartPlace(new PlaceModel(rs.getInt(8), rs.getString(9), rs.getString(10), 0, 0, 0));
 				route.setEndPlace(new PlaceModel(rs.getInt(11), rs.getString(12), rs.getString(13), 0, 0, 0));
 
@@ -1229,7 +1231,7 @@ public class DBManager implements Serializable {
 	 * @return a {@link List} of {@link TyreModel} objects if found, empty list
 	 *         otherwise
 	 */
-	public List<TyreModel> getTyres(int user_id) {
+	public List<TyreModel> getTyres(int user_id, EncryptionManager em) {
 		logger.logEnter("getTyres()");
 		List<TyreModel> tyres = new ArrayList<TyreModel>();
 
@@ -1254,7 +1256,7 @@ public class DBManager implements Serializable {
 				t.setManufacturerName(rs.getString(9));
 				t.setModel(rs.getString(10));
 				t.setTyreEvent(new TyreEventModel(rs.getTimestamp(13), rs.getTimestamp(14), rs.getDouble(15), rs.getDouble(11), rs.getDouble(12)));
-				t.setCar(new CarModel(rs.getInt(16), rs.getString(17), rs.getString(18)));
+				t.setCar(new CarModel(rs.getInt(16), rs.getString(17), em != null ? em.decrypt(rs.getString(18)) : rs.getString(18)));
 				t.setArchived(rs.getInt(19));
 
 				tyres.add(t);
@@ -1310,7 +1312,7 @@ public class DBManager implements Serializable {
 	 * @param user {@link String} username of the user
 	 * @return the completed {@link UserModel} on success, null otherwise
 	 */
-	public UserModel getUserProfile(String username) {
+	public UserModel getUserProfile(String username, EncryptionManager em) {
 		logger.logEnter("getUserProfile()");
 		UserModel user = null;
 		try {
@@ -1328,6 +1330,19 @@ public class DBManager implements Serializable {
 				user.setUsername(rs.getString(4));
 				user.setDistance(rs.getInt(5));
 				user.setRounded(rs.getInt(6));
+
+				if (em != null) {
+					user.setEmail(em.decrypt(rs.getString(7)));
+					user.setPushoverUserKey(em.decrypt(rs.getString(8)));
+					user.setPushoverAPIKey(em.decrypt(rs.getString(9)));
+					user.setPushbulletAPIKey(em.decrypt(rs.getString(10)));
+				} else {
+					user.setEmail(null);
+					user.setPushoverUserKey(null);
+					user.setPushoverAPIKey(null);
+					user.setPushbulletAPIKey(null);
+				}
+
 			}
 		} catch (Exception e) {
 			logger.logException("getUserProfile()", e);
@@ -1344,9 +1359,9 @@ public class DBManager implements Serializable {
 	 * @param user {@link UserModel} object containing the username
 	 * @return the completed {@link UserModel}
 	 */
-	public UserModel getUserProfile(UserModel user) {
+	public UserModel getUserProfile(UserModel user, EncryptionManager em) {
 		createUserProfile(user.getUsername());
-		return getUserProfile(user.getUsername());
+		return getUserProfile(user.getUsername(), em);
 	}
 
 	/**
@@ -1390,7 +1405,7 @@ public class DBManager implements Serializable {
 	 * @param user {@link UserModel} the user data need to be written into the DB
 	 * @return boolean true on success, false otherwise
 	 */
-	public boolean updateUserProfile(UserModel user) {
+	public boolean updateUserProfile(UserModel user, EncryptionManager em) {
 		logger.logEnter("updateUserProfile()");
 		boolean status = false;
 		if (user.getUsername() != null && !user.getUsername().isEmpty()) {
@@ -1402,7 +1417,11 @@ public class DBManager implements Serializable {
 				ps.setString(2, user.getLocale());
 				ps.setInt(3, user.getDistance());
 				ps.setInt(4, user.getRounded());
-				ps.setInt(5, user.getId());
+				ps.setString(5, em.encrypt(user.getEmail()));
+				ps.setString(6, em.encrypt(user.getPushoverUserKey()));
+				ps.setString(7, em.encrypt(user.getPushoverAPIKey()));
+				ps.setString(8, em.encrypt(user.getPushbulletAPIKey()));
+				ps.setInt(9, user.getId());
 
 				status = ps.executeUpdate() == 1 ? true : false;
 			} catch (Exception e) {

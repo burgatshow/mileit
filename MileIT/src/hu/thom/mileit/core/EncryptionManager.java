@@ -2,8 +2,6 @@ package hu.thom.mileit.core;
 
 import java.io.Serializable;
 import java.util.Base64;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
@@ -16,19 +14,20 @@ import javax.security.auth.login.LoginException;
 import com.ibm.websphere.security.auth.data.AuthData;
 import com.ibm.websphere.security.auth.data.AuthDataProvider;
 
+import hu.thom.mileit.utils.LogManager;
+import hu.thom.mileit.utils.LogMessages;
+
 /**
  * Class to implement symmetric encryption mechanisms
  * 
  * @author thom <tamas.bures@protonmail.com>
  *
  */
-public class EncryptManager implements Serializable {
+public class EncryptionManager implements Serializable {
 	/**
 	 * Serial version UID
 	 */
 	private static final long serialVersionUID = 2965476526353529592L;
-
-	private static final String CLAZZ = EncryptManager.class.getCanonicalName();
 
 	/**
 	 * Fields for secret key and salt
@@ -47,23 +46,31 @@ public class EncryptManager implements Serializable {
 	 * Logger instance
 	 */
 
-	private LoggerHelper lh = new LoggerHelper(EncryptManager.class);
-	private Logger logger = lh.getLogger();
+	private LogManager logger = new LogManager(EncryptionManager.class);
 
 	/**
 	 * Constructor
 	 */
-	public EncryptManager() {
-		lh.logEnter("EncryptManager()");
+	public EncryptionManager() {
+		logger.logEnter("EncryptManager()");
+		
+		setupCiphers();
 
+		logger.logExit("EncryptManager()");
+	}
+
+	private void setupCiphers() {
+		logger.logEnter("setupCiphers()");
 		if (SECRET_KEY == null) {
-			logger.logp(Level.FINE, CLAZZ, "EncryptManager()", LoggerHelper.LOG_SEC_F_SECRET);
+			logger.logDebug("setupCiphers()", LogMessages.LOG_SEC_F_SECRET);
 			SECRET_KEY = getAuthenticationAlias("password_j2c_passkey");
+			logger.logTrace("setupCiphers()", null, SECRET_KEY);
 		}
 
 		if (SALT == null) {
-			logger.logp(Level.FINE, CLAZZ, "EncryptManager()", LoggerHelper.LOG_SEC_F_SALT);
+			logger.logDebug("setupCiphers()", LogMessages.LOG_SEC_F_SALT);
 			SALT = getAuthenticationAlias("password_j2c_salt");
+			logger.logTrace("setupCiphers()", null, SALT);
 		}
 
 		if (encrypter == null || decrypter == null) {
@@ -81,11 +88,10 @@ public class EncryptManager implements Serializable {
 				decrypter.init(Cipher.DECRYPT_MODE, secretKeySpec, initVectorParameterSpec);
 
 			} catch (Exception e) {
-				lh.logException("EncryptManager()", e);
+				logger.logException("EncryptManager()", e);
 			}
 		}
-
-		lh.logExit("EncryptManager()");
+		logger.logExit("setupCiphers()");
 	}
 
 	/**
@@ -96,22 +102,22 @@ public class EncryptManager implements Serializable {
 	 *         otherwise
 	 */
 	private String getAuthenticationAlias(String authAliasName) {
-		lh.logEnter("getAuthenticationAlias()");
+		logger.logEnter("getAuthenticationAlias()");
 
 		String key = null;
 		if (authAliasName != null && !authAliasName.isEmpty()) {
 			try {
-				logger.logp(Level.FINEST, CLAZZ, "getAuthenticationAlias()", LoggerHelper.LGO_SEC_FFF_J2C, authAliasName);
+				logger.logDebug("getAuthenticationAlias()", LogMessages.LOG_SEC_FFF_J2C, authAliasName);
 
 				AuthData ad = AuthDataProvider.getAuthData(authAliasName);
 				key = new String(ad.getPassword());
 
 			} catch (LoginException e) {
-				lh.logException("getAuthenticationAlias()", e);
+				logger.logException("getAuthenticationAlias()", e);
 			}
 		}
 
-		lh.logExit("getAuthenticationAlias()");
+		logger.logExit("getAuthenticationAlias()");
 		return key;
 	}
 
@@ -123,18 +129,18 @@ public class EncryptManager implements Serializable {
 	 *         or empty parameter received
 	 */
 	public String encrypt(String strToEncrypt) {
-		lh.logEnter("encrypt()");
+		logger.logEnter("encrypt()");
 
 		String encryptedValue = null;
 		if (strToEncrypt != null && !strToEncrypt.isEmpty()) {
 			try {
 				encryptedValue = Base64.getEncoder().encodeToString(encrypter.doFinal(strToEncrypt.getBytes("UTF-8")));
 			} catch (Exception e) {
-				lh.logException("encrypt()", e);
+				logger.logException("encrypt()", e);
 			}
 		}
 
-		lh.logExit("encrypt()");
+		logger.logExit("encrypt()");
 		return encryptedValue;
 	}
 
@@ -146,17 +152,17 @@ public class EncryptManager implements Serializable {
 	 *         received
 	 */
 	public String decrypt(String strToDecrypt) {
-		lh.logEnter("decrypt()");
+		logger.logEnter("decrypt()");
 
 		String decryptedValue = null;
 		if (strToDecrypt != null && !strToDecrypt.isEmpty()) {
 			try {
 				decryptedValue = new String(decrypter.doFinal(Base64.getDecoder().decode(strToDecrypt)));
 			} catch (Exception e) {
-				lh.logException("decrypt()", e);
+				logger.logException("decrypt()", e);
 			}
 		}
-		lh.logExit("decrypt()");
+		logger.logExit("decrypt()");
 		return decryptedValue;
 	}
 }

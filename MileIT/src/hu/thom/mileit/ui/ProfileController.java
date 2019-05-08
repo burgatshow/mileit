@@ -8,8 +8,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import hu.thom.mileit.core.UIKeys;
 import hu.thom.mileit.models.UserModel;
+import hu.thom.mileit.utils.UIBindings;
 
 /**
  * Servlet class to manage user profile
@@ -26,7 +26,7 @@ public class ProfileController extends Controller {
 	 */
 	public ProfileController() {
 		super();
-		assignedObjects.put(UIKeys.PAGE, "profile");
+		assignedObjects.put(UIBindings.PAGE, "profile");
 	}
 
 	/**
@@ -65,8 +65,12 @@ public class ProfileController extends Controller {
 			user.setLocale(request.getParameter("locale"));
 			user.setDistance(request.getParameter("distance"));
 			user.setRounded(request.getParameter("rounded"));
+			user.setEmail(request.getParameter("email"));
+			user.setPushbulletAPIKey(request.getParameter("pushbulletKey"));
+			user.setPushoverUserKey(request.getParameter("pushoverUser"));
+			user.setPushoverAPIKey(request.getParameter("pushoverAPIKey"));
 
-			assignedObjects.put(UIKeys.STATUS, dbm.updateUserProfile(user) ? 0 : -1);
+			assignedObjects.put(UIBindings.STATUS, db.updateUserProfile(user, em) ? 0 : -1);
 			renderPage(PROFILE_FORM, request, response);
 		}
 	}

@@ -1,12 +1,14 @@
 package hu.thom.mileit.core;
 
 import java.io.Serializable;
-import java.util.logging.Level;
 
 import javax.naming.InitialContext;
 
 import com.ibm.websphere.cache.DistributedMap;
 import com.ibm.websphere.cache.EntryInfo;
+
+import hu.thom.mileit.utils.LogManager;
+import hu.thom.mileit.utils.LogMessages;
 
 /**
  * Contains all the methods operating with Dynamic cache service
@@ -14,19 +16,14 @@ import com.ibm.websphere.cache.EntryInfo;
  * @author thom <tamas.bures@protonmail.com>
  *
  */
-public class DynaCacheAdaptor implements Serializable {
+public class DynaCacheManager implements Serializable {
 	/**
 	 * Serial version UID
 	 */
 	private static final long serialVersionUID = 7151480629489552539L;
 
 	/**
-	 * Canonical name of this class used in loggers
-	 */
-	private final String CLAZZ = DynaCacheAdaptor.class.getCanonicalName();
-
-	/**
-	 * Default Dyna Cache timeout values
+	 * Default Dynamic Cache timeout values
 	 */
 	public static final int DC_TTL_FOREVER = 0;
 	public static final int DC_TTL_1D = 3600 * 24;
@@ -37,7 +34,7 @@ public class DynaCacheAdaptor implements Serializable {
 	/**
 	 * Instance
 	 */
-	private static DynaCacheAdaptor dc;
+	private static DynaCacheManager dc;
 
 	/**
 	 * {@link DistributedMap} recommended implementation
@@ -47,16 +44,16 @@ public class DynaCacheAdaptor implements Serializable {
 	/**
 	 * Logger instance
 	 */
-	private static LoggerHelper logger = new LoggerHelper(DynaCacheAdaptor.class);
+	private static LogManager logger = new LogManager(DynaCacheManager.class);
 
 	/**
 	 * Constructor
 	 * 
-	 * @return {@link DynaCacheAdaptor}
+	 * @return {@link DynaCacheManager}
 	 */
-	public static DynaCacheAdaptor getInstance() {
+	public static DynaCacheManager getInstance() {
 		if (dc == null) {
-			dc = new DynaCacheAdaptor();
+			dc = new DynaCacheManager();
 		}
 		return dc;
 	}
@@ -64,7 +61,7 @@ public class DynaCacheAdaptor implements Serializable {
 	/**
 	 * Private constructor
 	 */
-	private DynaCacheAdaptor() {
+	private DynaCacheManager() {
 		logger.logEnter("DynaCacheAdaptor()");
 		if (cacheInstance == null) {
 			try {
@@ -89,7 +86,7 @@ public class DynaCacheAdaptor implements Serializable {
 		Object cacheObject = null;
 		if (objectKey != null && !objectKey.isEmpty()) {
 			cacheObject = cacheInstance.get(objectKey);
-			logger.getLogger().logp(Level.FINE, CLAZZ, "get()", LoggerHelper.LOG_DC_I_RETRIEVE, objectKey);
+			logger.logDebug("get()", LogMessages.LOG_DC_I_RETRIEVE, objectKey, cacheObject);
 		}
 		logger.logExit("get()");
 		return cacheObject;
@@ -118,7 +115,7 @@ public class DynaCacheAdaptor implements Serializable {
 			}
 
 			cacheInstance.put(cacheKey, cacheValue, 1, timeout, EntryInfo.NOT_SHARED, new String[] { dependencyID });
-			logger.getLogger().logp(Level.FINE, CLAZZ, "put()", LoggerHelper.LOG_DC_I_ADD, new Object[] { cacheKey, timeout, dependencyID });
+			logger.logDebug("put()", LogMessages.LOG_DC_I_ADD, new Object[] { cacheKey, timeout, dependencyID });
 		}
 		logger.logExit("put()");
 	}
@@ -129,7 +126,7 @@ public class DynaCacheAdaptor implements Serializable {
 	public void clear() {
 		logger.logEnter("clear()");
 		if (cacheInstance != null) {
-			logger.getLogger().fine(LoggerHelper.LOG_DC_I_CLEAR);
+			logger.logDebug("clear()", LogMessages.LOG_DC_I_CLEAR);
 			cacheInstance.clear();
 		}
 		logger.logExit("clear()");
@@ -138,12 +135,11 @@ public class DynaCacheAdaptor implements Serializable {
 	/**
 	 * Removes all cached entries belongs to the given user
 	 * 
-	 * @param username {@link String} the username to whom entries need to be
-	 *                 removed (based on dependency id) from cache
+	 * @param key {@link String} Invalidates the object in cache
 	 */
-	public void cleanupUser(String username) {
-		if (username != null && !username.isEmpty()) {
-			cacheInstance.invalidate(username);
+	public void invalidate(String key) {
+		if (key != null && !key.isEmpty()) {
+			cacheInstance.invalidate(key);
 		}
 	}
 
