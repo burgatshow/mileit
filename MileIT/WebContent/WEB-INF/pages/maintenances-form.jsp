@@ -117,6 +117,17 @@
 				<div class="col-md-6">
 					<div class="form-group">
 						<div class="form-group">
+							<label for="expirationDate"><fmt:message key="mntnc.form.expiration" /></label> <input name="expirationDate" type="text" class="form-control"
+								id="expirationDate" placeholder="<fmt:message key="mntnc.form.expiration" />"
+								value="<c:out value="${not empty param.expirationDate ? param.expirationDate : not empty maintenances ? maintenances.expiration : ''}"/>">
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<div class="form-group">
+						<div class="form-group">
 							<label for="description"><fmt:message key="mntnc.form.desc" /></label> <input name="description" type="text" class="form-control"
 								id="description" placeholder="<fmt:message key="mntnc.form.desc" />"
 								value="<c:out value="${not empty param.description ? param.description : not empty maintenances ? maintenances.description : ''}"/>">

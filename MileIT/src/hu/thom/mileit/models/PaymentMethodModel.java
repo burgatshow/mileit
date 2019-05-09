@@ -16,7 +16,7 @@ public class PaymentMethodModel extends Model {
 
 	public PaymentMethodModel() {
 	}
-	
+
 	public PaymentMethodModel(int id) {
 		setId(id);
 	}
@@ -76,12 +76,14 @@ public class PaymentMethodModel extends Model {
 		return result;
 	}
 
-	public void setDescription(String description) {
+	public PaymentMethodModel setDescription(String description) {
 		this.description = description;
+		return this;
 	}
 
-	public void setName(String name) {
+	public PaymentMethodModel setName(String name) {
 		this.name = name;
+		return this;
 	}
 
 	@Override

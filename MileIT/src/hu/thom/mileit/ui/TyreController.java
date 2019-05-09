@@ -8,11 +8,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import hu.thom.mileit.core.DynaCacheAdaptor;
-import hu.thom.mileit.core.UIKeys;
+import hu.thom.mileit.core.DynaCacheManager;
 import hu.thom.mileit.models.TyreEventModel;
 import hu.thom.mileit.models.TyreModel;
 import hu.thom.mileit.models.UserModel;
+import hu.thom.mileit.utils.UIBindings;
 
 /**
  * Servlet class to manage tyres related operations
@@ -31,7 +31,7 @@ public class TyreController extends Controller {
 	 */
 	public TyreController() {
 		super();
-		assignedObjects.put(UIKeys.PAGE, "tyres");
+		assignedObjects.put(UIBindings.PAGE, "tyres");
 	}
 
 	/**
@@ -57,73 +57,73 @@ public class TyreController extends Controller {
 		if (user == null) {
 			response.sendRedirect("login");
 		} else {
-			userTyresKey = user.getUsername() + "_" + UIKeys.TYRES;
+			userTyresKey = user.getUsername() + "_" + UIBindings.TYRES;
 
 			parseMode(request);
 
 			if (dc.get(userTyresKey) == null) {
-				dc.put(userTyresKey, dbm.getTyres(user.getId()), DynaCacheAdaptor.DC_TTL_1H, user.getUsername());
+				dc.put(userTyresKey, db.getTyres(user.getId(), em), DynaCacheManager.DC_TTL_1H, user.getUsername());
 			}
-			assignedObjects.put(UIKeys.TYRES, dc.get(userTyresKey));
+			assignedObjects.put(UIBindings.TYRES, dc.get(userTyresKey));
 
-			if (dc.get(UIKeys.TYRE_VENDORS) == null) {
-				dc.put(UIKeys.TYRE_VENDORS, dbm.getTyreVendors(), DynaCacheAdaptor.DC_TTL_FOREVER, "common");
+			if (dc.get(UIBindings.TYRE_VENDORS) == null) {
+				dc.put(UIBindings.TYRE_VENDORS, db.getTyreVendors(), DynaCacheManager.DC_TTL_FOREVER, "common");
 			}
-			assignedObjects.put(UIKeys.TYRE_VENDORS, dc.get(UIKeys.TYRE_VENDORS));
+			assignedObjects.put(UIBindings.TYRE_VENDORS, dc.get(UIBindings.TYRE_VENDORS));
 
-			if (dc.get(UIKeys.CAR_VENDORS) == null) {
-				dc.put(UIKeys.CAR_VENDORS, dbm.getCarVendors(), DynaCacheAdaptor.DC_TTL_FOREVER, "common");
+			if (dc.get(UIBindings.CAR_VENDORS) == null) {
+				dc.put(UIBindings.CAR_VENDORS, db.getCarVendors(), DynaCacheManager.DC_TTL_FOREVER, "common");
 			}
-			assignedObjects.put(UIKeys.CAR_VENDORS, dc.get(UIKeys.CAR_VENDORS));
+			assignedObjects.put(UIBindings.CAR_VENDORS, dc.get(UIBindings.CAR_VENDORS));
 
 			TyreModel tm = null;
 
 			switch (m) {
-			case UIKeys.MODE_NEW:
+			case UIBindings.MODE_NEW:
 				validationMessages.clear();
-				assignedObjects.remove(UIKeys.TYRES);
+				assignedObjects.remove(UIBindings.TYRES);
 				renderPage(TYRES_FORM, request, response);
 				break;
 
-			case UIKeys.MODE_ARCHIVE:
+			case UIBindings.MODE_ARCHIVE:
 				parseId(request);
 
-				assignedObjects.put(UIKeys.STATUS, dbm.archiveTyre(id) ? 1 : -1);
-				assignedObjects.put(UIKeys.TYRES, dbm.getTyres(user.getId()));
+				assignedObjects.put(UIBindings.STATUS, db.archiveTyre(id) ? 1 : -1);
+				assignedObjects.put(UIBindings.TYRES, db.getTyres(user.getId(), em));
 				renderPage(TYRES, request, response);
 
 				break;
 
-			case UIKeys.MODE_UPDATE:
+			case UIBindings.MODE_UPDATE:
 				parseId(request);
 
-				tm = dbm.getTyre(id);
+				tm = db.getTyre(id);
 				if (tm != null) {
-					assignedObjects.put(UIKeys.TYRES, tm);
+					assignedObjects.put(UIBindings.TYRES, tm);
 					renderPage(TYRES_FORM, request, response);
 				} else {
-					assignedObjects.put(UIKeys.STATUS, -1);
+					assignedObjects.put(UIBindings.STATUS, -1);
 					renderPage(TYRES_MAP, request, response);
 				}
 				break;
-			case UIKeys.MODE_MAP:
+			case UIBindings.MODE_MAP:
 				parseId(request);
 
-				tm = dbm.getTyre(id);
+				tm = db.getTyre(id);
 				if (tm != null) {
-					assignedObjects.put(UIKeys.CARS, dbm.getCars(user.getId(), sm));
-					assignedObjects.put(UIKeys.TYRES, tm);
+					assignedObjects.put(UIBindings.CARS, db.getCars(user.getId(), em));
+					assignedObjects.put(UIBindings.TYRES, tm);
 					renderPage(TYRES_MAP, request, response);
 				} else {
-					assignedObjects.put(UIKeys.STATUS, -1);
+					assignedObjects.put(UIBindings.STATUS, -1);
 					renderPage(TYRES, request, response);
 				}
 
 				break;
-			case UIKeys.MODE_:
-			case UIKeys.MODE_CANCEL:
+			case UIBindings.MODE_:
+			case UIBindings.MODE_CANCEL:
 			default:
-				assignedObjects.remove(UIKeys.STATUS);
+				assignedObjects.remove(UIBindings.STATUS);
 				renderPage(TYRES, request, response);
 				break;
 			}
@@ -143,16 +143,16 @@ public class TyreController extends Controller {
 		if (user == null) {
 			response.sendRedirect("login");
 		} else {
-			userTyresKey = user.getUsername() + "_" + UIKeys.TYRES;
+			userTyresKey = user.getUsername() + "_" + UIBindings.TYRES;
 
 			parseMode(request);
 
-			if (m.equalsIgnoreCase(UIKeys.MODE_NEW) || m.equalsIgnoreCase(UIKeys.MODE_UPDATE)) {
-				checkValidationMessages(UIKeys.FORM_ME_TYRE, validationMessages, request);
+			if (m.equalsIgnoreCase(UIBindings.MODE_NEW) || m.equalsIgnoreCase(UIBindings.MODE_UPDATE)) {
+				checkValidationMessages(UIBindings.FORM_ME_TYRE, validationMessages, request);
 			}
 
-			if (m.equalsIgnoreCase(UIKeys.MODE_MAP)) {
-				checkValidationMessages(UIKeys.FORM_ME_TYRE_EVENT, validationMessages, request);
+			if (m.equalsIgnoreCase(UIBindings.MODE_MAP)) {
+				checkValidationMessages(UIBindings.FORM_ME_TYRE_EVENT, validationMessages, request);
 			}
 
 			if (validationMessages.isEmpty()) {
@@ -160,11 +160,11 @@ public class TyreController extends Controller {
 				TyreEventModel te = null;
 
 				switch (m) {
-				case UIKeys.MODE_NEW:
+				case UIBindings.MODE_NEW:
 					tyre = new TyreModel(request.getParameterMap(), user);
 					tyre.setOperation(0);
 					break;
-				case UIKeys.MODE_UPDATE:
+				case UIBindings.MODE_UPDATE:
 					parseId(request);
 
 					tyre = new TyreModel(request.getParameterMap(), user);
@@ -173,39 +173,39 @@ public class TyreController extends Controller {
 					tyre.setOperation(1);
 					break;
 
-				case UIKeys.MODE_MAP:
+				case UIBindings.MODE_MAP:
 					parseId(request);
 					te = new TyreEventModel(request.getParameterMap(), user);
 					te.setOperation(0);
 
 					break;
-				case UIKeys.MODE_:
-				case UIKeys.MODE_CANCEL:
+				case UIBindings.MODE_:
+				case UIBindings.MODE_CANCEL:
 				default:
 					break;
 				}
 
-				if (m.equalsIgnoreCase(UIKeys.MODE_NEW) || m.equalsIgnoreCase(UIKeys.MODE_UPDATE)) {
-					assignedObjects.put(UIKeys.STATUS, dbm.createUpdateTyre(tyre) ? 1 : -1);
+				if (m.equalsIgnoreCase(UIBindings.MODE_NEW) || m.equalsIgnoreCase(UIBindings.MODE_UPDATE)) {
+					assignedObjects.put(UIBindings.STATUS, db.createUpdateTyre(tyre) ? 1 : -1);
 				}
 
-				if (m.equalsIgnoreCase(UIKeys.MODE_MAP)) {
-					assignedObjects.put(UIKeys.STATUS, dbm.createTyreEvent(te) ? 1 : -1);
+				if (m.equalsIgnoreCase(UIBindings.MODE_MAP)) {
+					assignedObjects.put(UIBindings.STATUS, db.createTyreEvent(te) ? 1 : -1);
 
 				}
 
-				dc.put(userTyresKey, dbm.getTyres(user.getId()), DynaCacheAdaptor.DC_TTL_1H, user.getUsername());
-				assignedObjects.put(UIKeys.TYRES, dc.get(userTyresKey));
+				dc.put(userTyresKey, db.getTyres(user.getId(), em), DynaCacheManager.DC_TTL_1H, user.getUsername());
+				assignedObjects.put(UIBindings.TYRES, dc.get(userTyresKey));
 
 				renderPage(TYRES, request, response);
 			} else {
-				assignedObjects.put(UIKeys.STATUS, -2);
+				assignedObjects.put(UIBindings.STATUS, -2);
 
-				if (m.equalsIgnoreCase(UIKeys.MODE_NEW) || m.equalsIgnoreCase(UIKeys.MODE_UPDATE)) {
+				if (m.equalsIgnoreCase(UIBindings.MODE_NEW) || m.equalsIgnoreCase(UIBindings.MODE_UPDATE)) {
 					renderPage(TYRES_FORM, request, response);
 				}
 
-				if (m.equalsIgnoreCase(UIKeys.MODE_MAP)) {
+				if (m.equalsIgnoreCase(UIBindings.MODE_MAP)) {
 					renderPage(TYRES_MAP, request, response);
 				}
 			}

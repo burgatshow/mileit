@@ -47,8 +47,6 @@ public class RouteModel extends Model {
 
 	private static final long serialVersionUID = 8048192341961068140L;
 
-	private UserModel user;
-	private CarModel car;
 	private PlaceModel startPlace;
 	private PlaceModel endPlace;
 	private Date routeDatetime;
@@ -58,7 +56,7 @@ public class RouteModel extends Model {
 
 	public RouteModel() {
 	}
-	
+
 	public RouteModel(int id) {
 		setId(id);
 	}
@@ -82,17 +80,14 @@ public class RouteModel extends Model {
 		if (getClass() != obj.getClass())
 			return false;
 		RouteModel other = (RouteModel) obj;
-		if (car == null) {
-			if (other.car != null)
-				return false;
-		} else if (!car.equals(other.car))
-			return false;
 		if (Double.doubleToLongBits(distance) != Double.doubleToLongBits(other.distance))
 			return false;
 		if (endPlace == null) {
 			if (other.endPlace != null)
 				return false;
 		} else if (!endPlace.equals(other.endPlace))
+			return false;
+		if (roundTrip != other.roundTrip)
 			return false;
 		if (routeDatetime == null) {
 			if (other.routeDatetime != null)
@@ -106,16 +101,7 @@ public class RouteModel extends Model {
 				return false;
 		} else if (!startPlace.equals(other.startPlace))
 			return false;
-		if (user == null) {
-			if (other.user != null)
-				return false;
-		} else if (!user.equals(other.user))
-			return false;
 		return true;
-	}
-
-	public CarModel getCar() {
-		return car;
 	}
 
 	public double getDistance() {
@@ -146,23 +132,18 @@ public class RouteModel extends Model {
 		return startPlace;
 	}
 
-	public UserModel getUser() {
-		return user;
-	}
-
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + ((car == null) ? 0 : car.hashCode());
 		long temp;
 		temp = Double.doubleToLongBits(distance);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
 		result = prime * result + ((endPlace == null) ? 0 : endPlace.hashCode());
+		result = prime * result + (roundTrip ? 1231 : 1237);
 		result = prime * result + ((routeDatetime == null) ? 0 : routeDatetime.hashCode());
 		result = prime * result + ((routeType == null) ? 0 : routeType.hashCode());
 		result = prime * result + ((startPlace == null) ? 0 : startPlace.hashCode());
-		result = prime * result + ((user == null) ? 0 : user.hashCode());
 		return result;
 	}
 
@@ -170,31 +151,31 @@ public class RouteModel extends Model {
 		return roundTrip;
 	}
 
-	public void setCar(CarModel car) {
-		this.car = car;
-	}
-
-	public void setDistance(double distance) {
+	public RouteModel setDistance(double distance) {
 		this.distance = distance;
+		return this;
 	}
 
-	public void setDistance(String distance) {
+	public RouteModel setDistance(String distance) {
 		try {
 			this.distance = Double.parseDouble(distance);
 		} catch (Exception e) {
 			this.distance = 0;
 		}
+		return this;
 	}
 
-	public void setEndPlace(PlaceModel endPlace) {
+	public RouteModel setEndPlace(PlaceModel endPlace) {
 		this.endPlace = endPlace;
+		return this;
 	}
 
-	public void setRoundTrip(boolean roundTrip) {
+	public RouteModel setRoundTrip(boolean roundTrip) {
 		this.roundTrip = roundTrip;
+		return this;
 	}
 
-	public void setRoundTrip(String roundTrip) {
+	public RouteModel setRoundTrip(String roundTrip) {
 		switch (roundTrip.toLowerCase()) {
 		case "1":
 		case "yes":
@@ -206,44 +187,46 @@ public class RouteModel extends Model {
 			this.roundTrip = false;
 			break;
 		}
-	}
-	
-	public void setRouteDatetime(Date routeDatetime) {
-		this.routeDatetime = routeDatetime;
+		return this;
 	}
 
-	public void setRouteDatetime(String routeDatetime) {
+	public RouteModel setRouteDatetime(Date routeDatetime) {
+		this.routeDatetime = routeDatetime;
+		return this;
+	}
+
+	public RouteModel setRouteDatetime(String routeDatetime) {
 		try {
 			this.routeDatetime = this.getDateFormatter(DATETIME).parse(routeDatetime);
 		} catch (Exception e) {
 			this.routeDatetime = new Date();
 		}
+		return this;
 	}
 
-	public void setRouteType(RouteType routeType) {
+	public RouteModel setRouteType(RouteType routeType) {
 		this.routeType = routeType;
+		return this;
 	}
 
-	public void setRouteType(String routeType) {
+	public RouteModel setRouteType(String routeType) {
 		try {
 			this.routeType = RouteType.fromCode((byte) Integer.parseInt(routeType));
 		} catch (Exception e) {
 			this.routeType = RouteType.PRIVATE;
 		}
+		return this;
 	}
 
-	public void setStartPlace(PlaceModel startPlace) {
+	public RouteModel setStartPlace(PlaceModel startPlace) {
 		this.startPlace = startPlace;
-	}
-
-	public void setUser(UserModel user) {
-		this.user = user;
+		return this;
 	}
 
 	@Override
 	public String toString() {
-		return "RouteModel [user=" + user + ", car=" + car + ", startPlace=" + startPlace + ", endPlace=" + endPlace + ", routeDatetime="
-				+ routeDatetime + ", routeType=" + routeType + ", distance=" + distance + ", toString()=" + super.toString() + "]";
+		return "RouteModel [startPlace=" + startPlace + ", endPlace=" + endPlace + ", routeDatetime=" + routeDatetime + ", routeType=" + routeType
+				+ ", distance=" + distance + ", roundTrip=" + roundTrip + ", toString()=" + super.toString() + "]";
 	}
 
 }

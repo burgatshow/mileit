@@ -10,8 +10,11 @@ $(document).ready(
 					"#purchaseDate", "#changeDate" ];
 			var dateTimeFields = [ "#routeDatetime", "#refuelDate" ];
 
+			var dateTimeFieldsWithSeconds = [ "#expirationDate" ];
+
 			dateFields.forEach(renderDatepicker);
 			dateTimeFields.forEach(renderDateTimePicker);
+			dateTimeFieldsWithSeconds.forEach(renderDateTimePickerWithSeconds);
 
 			function renderDatepicker(data, index) {
 				$(data).datetimepicker({
@@ -22,6 +25,12 @@ $(document).ready(
 			function renderDateTimePicker(data, index) {
 				$(data).datetimepicker({
 					format : "YYYY-MM-DD HH:mm"
+				});
+			}
+
+			function renderDateTimePickerWithSeconds(data, index) {
+				$(data).datetimepicker({
+					format : "YYYY-MM-DD HH:mm:ss"
 				});
 			}
 

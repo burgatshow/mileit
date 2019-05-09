@@ -108,7 +108,7 @@ public class CarModel extends Model {
 	public CarModel(String id) {
 		setId(id);
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -179,7 +179,7 @@ public class CarModel extends Model {
 
 	public Map<String, Object> getCarForRest() {
 		Map<String, Object> cm = new HashMap<String, Object>(1);
-		
+
 		cm.put("car_id", getId());
 		cm.put("manufacturer", manufacturerName);
 		cm.put("model", model);
@@ -194,7 +194,7 @@ public class CarModel extends Model {
 		cm.put("vin", vin);
 		cm.put("active", isActive());
 		cm.put("description", description);
-		
+
 		return cm;
 	}
 
@@ -296,39 +296,46 @@ public class CarModel extends Model {
 		return result;
 	}
 
-	public void setColor(String color) {
+	public CarModel setColor(String color) {
 		this.color = color;
+		return this;
 	}
 
-	public void setDescription(String description) {
+	public CarModel setDescription(String description) {
 		this.description = description;
+		return this;
 	}
 
-	public void setEndDate(Date endDate) {
+	public CarModel setEndDate(Date endDate) {
 		this.endDate = endDate;
+		return this;
 	}
 
-	public void setEndDate(String endDate) {
+	public CarModel setEndDate(String endDate) {
 		try {
 			this.endDate = this.getDateFormatter(null).parse(endDate);
 		} catch (Exception e) {
 			this.endDate = null;
 		}
+		return this;
 	}
 
-	public void setFriendlyName(String friendlyName) {
+	public CarModel setFriendlyName(String friendlyName) {
 		this.friendlyName = friendlyName;
+		return this;
 	}
 
-	public void setFuel(Fuel fuel) {
+	public CarModel setFuel(Fuel fuel) {
 		this.fuel = fuel;
+		return this;
 	}
 
-	public void setFuel(int fuel) {
+	public CarModel setFuel(int fuel) {
 		setFuel(String.valueOf(fuel));
+		return this;
 	}
 
-	public void setFuel(String fuel) {
+	public CarModel setFuel(String fuel) {
 		switch (fuel) {
 		case "1":
 			this.fuel = Fuel.PETROL;
@@ -351,74 +358,88 @@ public class CarModel extends Model {
 			this.fuel = Fuel.OTHER;
 			break;
 		}
+		return this;
 	}
 
-	public void setFuelCapacity(Double fuelCapacity) {
+	public CarModel setFuelCapacity(Double fuelCapacity) {
 		this.fuelCapacity = fuelCapacity;
+		return this;
 	}
 
-	public void setFuelCapacity(int fuelCapacity) {
+	public CarModel setFuelCapacity(int fuelCapacity) {
 		this.fuelCapacity = (double) fuelCapacity;
+		return this;
 	}
 
-	public void setFuelCapacity(String fuelCapacity) {
+	public CarModel setFuelCapacity(String fuelCapacity) {
 		try {
 			this.fuelCapacity = Double.parseDouble(fuelCapacity);
 		} catch (Exception e) {
 			this.fuelCapacity = 0;
 		}
+		return this;
 	}
 
-	public void setManufacturer(int manufacturer) {
+	public CarModel setManufacturer(int manufacturer) {
 		this.manufacturer = manufacturer;
+		return this;
 	}
 
-	public void setManufacturer(String manufacturer) {
+	public CarModel setManufacturer(String manufacturer) {
 		try {
 			this.manufacturer = Integer.parseInt(manufacturer);
 		} catch (Exception e) {
 			this.manufacturer = 0;
 		}
+		return this;
 	}
 
-	public void setManufacturerDate(Date manufacturerDate) {
+	public CarModel setManufacturerDate(Date manufacturerDate) {
 		this.manufacturerDate = manufacturerDate;
+		return this;
 	}
 
-	public void setManufacturerDate(String manufacturerDate) {
+	public CarModel setManufacturerDate(String manufacturerDate) {
 		try {
 			this.manufacturerDate = this.getDateFormatter(DATE_YEAR_ONLY).parse(manufacturerDate);
 		} catch (Exception e) {
 			this.manufacturerDate = null;
 		}
+		return this;
 	}
 
-	public void setManufacturerName(String manufacturerName) {
+	public CarModel setManufacturerName(String manufacturerName) {
 		this.manufacturerName = manufacturerName;
+		return this;
 	}
 
-	public void setModel(String model) {
+	public CarModel setModel(String model) {
 		this.model = model;
+		return this;
 	}
 
-	public void setPlateNumber(String plateNumber) {
+	public CarModel setPlateNumber(String plateNumber) {
 		this.plateNumber = plateNumber;
+		return this;
 	}
 
-	public void setStartDate(Date startDate) {
+	public CarModel setStartDate(Date startDate) {
 		this.startDate = startDate;
+		return this;
 	}
-	
-	public void setStartDate(String startDate) {
+
+	public CarModel setStartDate(String startDate) {
 		try {
 			this.startDate = this.getDateFormatter(null).parse(startDate);
 		} catch (Exception e) {
 			this.startDate = null;
 		}
+		return this;
 	}
 
-	public void setVin(String vin) {
+	public CarModel setVin(String vin) {
 		this.vin = vin;
+		return this;
 	}
 
 	@Override

@@ -8,10 +8,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import hu.thom.mileit.core.DynaCacheAdaptor;
-import hu.thom.mileit.core.UIKeys;
+import hu.thom.mileit.core.DynaCacheManager;
 import hu.thom.mileit.models.PlaceModel;
 import hu.thom.mileit.models.UserModel;
+import hu.thom.mileit.utils.UIBindings;
 
 /**
  * Servlet class to manage place related operations
@@ -30,7 +30,7 @@ public class PlacesController extends Controller {
 	 */
 	public PlacesController() {
 		super();
-		assignedObjects.put(UIKeys.PAGE, "locations");
+		assignedObjects.put(UIBindings.PAGE, "locations");
 	}
 
 	/**
@@ -56,48 +56,48 @@ public class PlacesController extends Controller {
 		if (user == null) {
 			response.sendRedirect("login");
 		} else {
-			userPlacesKey = user.getUsername() + "_" + UIKeys.PLACES;
+			userPlacesKey = user.getUsername() + "_" + UIBindings.PLACES;
 
 			parseMode(request);
 
 			if (dc.get(userPlacesKey) == null) {
-				dc.put(userPlacesKey, dbm.getPlaces(user.getId()), DynaCacheAdaptor.DC_TTL_1H, user.getUsername());
+				dc.put(userPlacesKey, db.getPlaces(user.getId()), DynaCacheManager.DC_TTL_1H, user.getUsername());
 			}
-			assignedObjects.put(UIKeys.PLACES, dc.get(userPlacesKey));
+			assignedObjects.put(UIBindings.PLACES, dc.get(userPlacesKey));
 
 			switch (m) {
-			case UIKeys.MODE_NEW:
+			case UIBindings.MODE_NEW:
 				validationMessages.clear();
-				assignedObjects.remove(UIKeys.PLACES);
+				assignedObjects.remove(UIBindings.PLACES);
 				renderPage(PLACES_FORM, request, response);
 				break;
 
-			case UIKeys.MODE_ARCHIVE:
+			case UIBindings.MODE_ARCHIVE:
 				parseId(request);
 
-				assignedObjects.put(UIKeys.STATUS, dbm.archivePlace(id) ? 1 : -1);
-				assignedObjects.put(UIKeys.PLACES, dbm.getPlaces(user.getId()));
+				assignedObjects.put(UIBindings.STATUS, db.archivePlace(id) ? 1 : -1);
+				assignedObjects.put(UIBindings.PLACES, db.getPlaces(user.getId()));
 				renderPage(PLACES, request, response);
 
 				break;
 
-			case UIKeys.MODE_UPDATE:
+			case UIBindings.MODE_UPDATE:
 				parseId(request);
 
-				PlaceModel l = dbm.getPlace(id);
+				PlaceModel l = db.getPlace(id);
 				if (l != null) {
-					assignedObjects.put(UIKeys.LOAD_MAPS, 1);
-					assignedObjects.put(UIKeys.PLACES, l);
+					assignedObjects.put(UIBindings.LOAD_MAPS, 1);
+					assignedObjects.put(UIBindings.PLACES, l);
 					renderPage(PLACES_FORM, request, response);
 				} else {
-					assignedObjects.put(UIKeys.STATUS, -1);
+					assignedObjects.put(UIBindings.STATUS, -1);
 					renderPage(PLACES, request, response);
 				}
 				break;
-			case UIKeys.MODE_:
-			case UIKeys.MODE_CANCEL:
+			case UIBindings.MODE_:
+			case UIBindings.MODE_CANCEL:
 			default:
-				assignedObjects.remove(UIKeys.STATUS);
+				assignedObjects.remove(UIBindings.STATUS);
 				renderPage(PLACES, request, response);
 				break;
 			}
@@ -117,37 +117,37 @@ public class PlacesController extends Controller {
 		if (user == null) {
 			response.sendRedirect("login");
 		} else {
-			userPlacesKey = user.getUsername() + "_" + UIKeys.PLACES;
+			userPlacesKey = user.getUsername() + "_" + UIBindings.PLACES;
 			
 			parseMode(request);
 
-			checkValidationMessages(UIKeys.FORM_ME_PLACE, validationMessages, request);
+			checkValidationMessages(UIBindings.FORM_ME_PLACE, validationMessages, request);
 
 			if (validationMessages.isEmpty()) {
 				PlaceModel l = new PlaceModel(request.getParameterMap(), user);
 
 				switch (m) {
-				case UIKeys.MODE_NEW:
+				case UIBindings.MODE_NEW:
 					l.setOperation(0);
 					break;
-				case UIKeys.MODE_UPDATE:
+				case UIBindings.MODE_UPDATE:
 					parseId(request);
 					l.setOperation(1);
 					l.setId(id);
 					break;
-				case UIKeys.MODE_:
-				case UIKeys.MODE_CANCEL:
+				case UIBindings.MODE_:
+				case UIBindings.MODE_CANCEL:
 				default:
 					break;
 				}
 
-				assignedObjects.put(UIKeys.STATUS, dbm.createUpdatePlace(l) ? 1 : -1);
-				dc.put(userPlacesKey, dbm.getPlaces(user.getId()), DynaCacheAdaptor.DC_TTL_1H, user.getUsername());
-				assignedObjects.put(UIKeys.PLACES, dc.get(userPlacesKey));
+				assignedObjects.put(UIBindings.STATUS, db.createUpdatePlace(l) ? 1 : -1);
+				dc.put(userPlacesKey, db.getPlaces(user.getId()), DynaCacheManager.DC_TTL_1H, user.getUsername());
+				assignedObjects.put(UIBindings.PLACES, dc.get(userPlacesKey));
 				renderPage(PLACES, request, response);
 			} else {
-				assignedObjects.put(UIKeys.LOAD_MAPS, 1);
-				assignedObjects.put(UIKeys.STATUS, -2);
+				assignedObjects.put(UIBindings.LOAD_MAPS, 1);
+				assignedObjects.put(UIBindings.STATUS, -2);
 				renderPage(PLACES_FORM, request, response);
 			}
 		}

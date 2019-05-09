@@ -13,10 +13,10 @@ import javax.servlet.http.HttpServletResponse;
 import com.ibm.json.java.JSONArray;
 import com.ibm.json.java.JSONObject;
 
-import hu.thom.mileit.core.DynaCacheAdaptor;
-import hu.thom.mileit.core.UIKeys;
+import hu.thom.mileit.core.DynaCacheManager;
 import hu.thom.mileit.models.RefuelModel;
 import hu.thom.mileit.models.UserModel;
+import hu.thom.mileit.utils.UIBindings;
 
 /**
  * Servlet class to manage car related operations
@@ -26,6 +26,9 @@ import hu.thom.mileit.models.UserModel;
  */
 @WebServlet("/ajax")
 public class AjaxController extends Controller {
+	/**
+	 * Serial version UID
+	 */
 	private static final long serialVersionUID = -1790582648465801733L;
 
 	/**
@@ -63,12 +66,12 @@ public class AjaxController extends Controller {
 		} else {
 			PrintWriter w = response.getWriter();
 
-			String userKey = user.getUsername() + "_" + UIKeys.FUEL_STATS;
+			String userKey = user.getUsername() + "_" + UIBindings.FUEL_STATS;
 
 			List<RefuelModel> fuelStats = null;
 			if (dc.get(userKey) == null) {
-				fuelStats = (List<RefuelModel>) dbm.getFuelPriceStats(user.getId());
-				dc.put(userKey, fuelStats, DynaCacheAdaptor.DC_TTL_1H, user.getUsername());
+				fuelStats = (List<RefuelModel>) db.getFuelPriceStats(user.getId());
+				dc.put(userKey, fuelStats, DynaCacheManager.DC_TTL_1H, user.getUsername());
 			} else {
 				fuelStats = (List<RefuelModel>) dc.get(userKey);
 			}
@@ -83,7 +86,7 @@ public class AjaxController extends Controller {
 				JSONObject item = null;
 
 				switch (m) {
-				case UIKeys.MODE_AJAX_FUELSTAT:
+				case UIBindings.MODE_AJAX_FUELSTAT:
 					for (RefuelModel rm : fuelStats) {
 						item = new JSONObject();
 						item.put("date", df.format(rm.getRefuelDate()));
@@ -94,7 +97,7 @@ public class AjaxController extends Controller {
 
 					break;
 
-				case UIKeys.MODE_AJAX_AMOUNTPAID:
+				case UIBindings.MODE_AJAX_AMOUNTPAID:
 					for (RefuelModel rm : fuelStats) {
 						item = new JSONObject();
 						item.put("date", df.format(rm.getRefuelDate()));

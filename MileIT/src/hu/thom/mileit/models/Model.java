@@ -18,8 +18,10 @@ public class Model extends DateModel {
 	private TyreModel tyre;
 	private TyreEventModel tyreEvent;
 	private RefuelModel refuel;
-	
+	private MaintenanceModel maintenances;
+
 	private boolean active;
+
 	private boolean archived;
 
 	@Override
@@ -41,6 +43,11 @@ public class Model extends DateModel {
 		} else if (!car.equals(other.car))
 			return false;
 		if (id != other.id)
+			return false;
+		if (maintenances == null) {
+			if (other.maintenances != null)
+				return false;
+		} else if (!maintenances.equals(other.maintenances))
 			return false;
 		if (operation != other.operation)
 			return false;
@@ -85,6 +92,10 @@ public class Model extends DateModel {
 		return id;
 	}
 
+	public MaintenanceModel getMaintenances() {
+		return maintenances;
+	}
+
 	public int getOperation() {
 		return operation;
 	}
@@ -121,6 +132,7 @@ public class Model extends DateModel {
 		result = prime * result + (archived ? 1231 : 1237);
 		result = prime * result + ((car == null) ? 0 : car.hashCode());
 		result = prime * result + id;
+		result = prime * result + ((maintenances == null) ? 0 : maintenances.hashCode());
 		result = prime * result + operation;
 		result = prime * result + ((payment == null) ? 0 : payment.hashCode());
 		result = prime * result + ((place == null) ? 0 : place.hashCode());
@@ -139,15 +151,17 @@ public class Model extends DateModel {
 		return archived;
 	}
 
-	public void setActive(boolean active) {
+	public Model setActive(boolean active) {
 		this.active = active;
+		return this;
 	}
 
-	public void setActive(int active) {
+	public Model setActive(int active) {
 		setActive(Integer.toString(active));
+		return this;
 	}
 
-	public void setActive(String active) {
+	public Model setActive(String active) {
 		switch (active.toLowerCase()) {
 		case "1":
 		case "yes":
@@ -159,17 +173,20 @@ public class Model extends DateModel {
 			this.active = false;
 			break;
 		}
+		return this;
 	}
 
-	public void setArchived(boolean archived) {
+	public Model setArchived(boolean archived) {
 		this.archived = archived;
+		return this;
 	}
 
-	public void setArchived(int archived) {
+	public Model setArchived(int archived) {
 		setArchived(Integer.toString(archived));
+		return this;
 	}
 
-	public void setArchived(String archived) {
+	public Model setArchived(String archived) {
 		switch (archived.toLowerCase()) {
 		case "1":
 		case "yes":
@@ -181,56 +198,72 @@ public class Model extends DateModel {
 			this.archived = false;
 			break;
 		}
+		return this;
 	}
 
-	public void setCar(CarModel car) {
+	public CarModel setCar(CarModel car) {
 		this.car = car;
+		return this.car;
 	}
 
-	public void setId(int id) {
+	public Model setId(int id) {
 		this.id = id;
+		return this;
 	}
 
-	public void setId(String id) {
+	public Model setId(String id) {
 		try {
 			this.id = Integer.parseInt(id);
 		} catch (Exception e) {
 		}
+		return this;
 	}
 
-	public void setOperation(int operation) {
+	public MaintenanceModel setMaintenances(MaintenanceModel maintenances) {
+		this.maintenances = maintenances;
+		return this.maintenances;
+	}
+
+	public Model setOperation(int operation) {
 		this.operation = operation;
+		return this;
 	}
 
-	public void setPayment(PaymentMethodModel payment) {
+	public PaymentMethodModel setPayment(PaymentMethodModel payment) {
 		this.payment = payment;
+		return this.payment;
 	}
 
-	public void setPlace(PlaceModel place) {
+	public PlaceModel setPlace(PlaceModel place) {
 		this.place = place;
+		return this.place;
 	}
 
-	public void setRefuel(RefuelModel refuel) {
+	public RefuelModel setRefuel(RefuelModel refuel) {
 		this.refuel = refuel;
+		return this.refuel;
 	}
 
-	public void setTyre(TyreModel tyre) {
+	public TyreModel setTyre(TyreModel tyre) {
 		this.tyre = tyre;
+		return this.tyre;
 	}
 
-	public void setTyreEvent(TyreEventModel tyreEvent) {
+	public TyreEventModel setTyreEvent(TyreEventModel tyreEvent) {
 		this.tyreEvent = tyreEvent;
+		return this.tyreEvent;
 	}
 
-	public void setUser(UserModel user) {
+	public UserModel setUser(UserModel user) {
 		this.user = user;
+		return this.user;
 	}
 
 	@Override
 	public String toString() {
 		return "Model [id=" + id + ", operation=" + operation + ", car=" + car + ", user=" + user + ", payment=" + payment + ", place=" + place
-				+ ", tyre=" + tyre + ", tyreEvent=" + tyreEvent + ", refuel=" + refuel + ", active=" + active + ", archived=" + archived
-				+ ", toString()=" + super.toString() + "]";
+				+ ", tyre=" + tyre + ", tyreEvent=" + tyreEvent + ", refuel=" + refuel + ", maintenances=" + maintenances + ", active=" + active
+				+ ", archived=" + archived + ", toString()=" + super.toString() + "]";
 	}
 
 }

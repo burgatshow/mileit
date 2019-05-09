@@ -1,4 +1,4 @@
-package hu.thom.mileit.core;
+package hu.thom.mileit.utils;
 
 import java.io.Serializable;
 
@@ -8,10 +8,15 @@ import java.io.Serializable;
  * @author thom <tamas.bures@protonmail.com>
  *
  */
-public class UIKeys implements Serializable {
+public final class UIBindings implements Serializable {
+	/**
+	 * Serial version UID
+	 */
 	private static final long serialVersionUID = -1572929004551162917L;
 
-	// Form submission must elements
+	/**
+	 * Form submission must elements
+	 */
 	public static final String[] FORM_LOGIN = { "username", "password" };
 	public static final String[] FORM_ME_CARS = { "manufacturer", "fuel", "model", "vin", "plateNumber", "status" };
 	public static final String[] FORM_ME_MAINTENANCE = { "car", "odometer", "paymentMethod", "amount", "maintenanceDate" };
@@ -22,7 +27,9 @@ public class UIKeys implements Serializable {
 	public static final String[] FORM_ME_PAYMENT_METHOD = { "name" };
 	public static final String[] FORM_ME_ROUTE = { "car", "type", "startPlace", "endPlace", "routeDatetime" };
 
-	// General controller keys
+	/**
+	 * General controller keys
+	 */
 	public static final String VERSION = "v";
 	public static final String PAGE = "page";
 	public static final String USER = "user";
@@ -43,31 +50,47 @@ public class UIKeys implements Serializable {
 	public static final String PARAM_MODE = "m";
 	public static final String PARAM_ID = "id";
 
-	// IndexController
+	/**
+	 * IndexController
+	 */
 	public static final String LAST_REFUEL = "lr";
 	public static final String FUEL_STATS = "fs";
 
-	// CarController
+	/**
+	 * CarController
+	 */
 	public static final String CAR_VENDORS = "carVendors";
 	public static final String CARS = "cars";
 
-	// PaymentMethodController
+	/**
+	 * PaymentMethodController
+	 */
 	public static final String PMS = "pms";
 
-	// RefuelController
+	/**
+	 * RefuelController
+	 */
 	public static final String REFUELS = "refuels";
 
-	// PlaceController
+	/**
+	 * PlaceController
+	 */
 	public static final String PLACES = "places";
 
-	// MaintenanceController
+	/**
+	 * MaintenanceController
+	 */
 	public static final String MAINTENANCES = "maintenances";
 
-	// TyreController
+	/**
+	 * TyreController
+	 */
 	public static final String TYRES = "tyres";
 	public static final String TYRE_VENDORS = "tyreVendors";
 	public static final String TYRE_EVENTS = "tes";
 
-	// RoutesController
+	/**
+	 * RoutesController
+	 */
 	public static final String ROUTES = "routes";
 }

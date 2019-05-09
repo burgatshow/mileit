@@ -8,10 +8,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import hu.thom.mileit.core.DynaCacheAdaptor;
-import hu.thom.mileit.core.UIKeys;
+import hu.thom.mileit.core.DynaCacheManager;
 import hu.thom.mileit.models.CarModel;
 import hu.thom.mileit.models.UserModel;
+import hu.thom.mileit.utils.UIBindings;
 
 /**
  * Servlet class to manage car related operations
@@ -30,7 +30,7 @@ public class CarController extends Controller {
 	 */
 	public CarController() {
 		super();
-		assignedObjects.put(UIKeys.PAGE, "cars");
+		assignedObjects.put(UIBindings.PAGE, "cars");
 	}
 
 	/**
@@ -56,70 +56,62 @@ public class CarController extends Controller {
 		if (user == null) {
 			response.sendRedirect("login");
 		} else {
-			userCarsKey = user.getUsername() + "_" + UIKeys.CARS;
+			userCarsKey = user.getUsername() + "_" + UIBindings.CARS;
+			
+			String userRefuelsKey = user.getUsername() + "_" + UIBindings.REFUELS;
 
 			parseMode(request);
 
-			if (dc.get(UIKeys.CAR_VENDORS) == null) {
-				dc.put(UIKeys.CAR_VENDORS, dbm.getCarVendors(), DynaCacheAdaptor.DC_TTL_FOREVER, user.getUsername());
+			if (dc.get(UIBindings.CAR_VENDORS) == null) {
+				dc.put(UIBindings.CAR_VENDORS, db.getCarVendors(), DynaCacheManager.DC_TTL_FOREVER, user.getUsername());
 			}
 
-			assignedObjects.put(UIKeys.CAR_VENDORS, dc.get(UIKeys.CAR_VENDORS));
+			assignedObjects.put(UIBindings.CAR_VENDORS, dc.get(UIBindings.CAR_VENDORS));
 
 			if (dc.get(userCarsKey) == null) {
-				dc.put(userCarsKey, dbm.getCars(user.getId(), sm), DynaCacheAdaptor.DC_TTL_1H, user.getUsername());
+				dc.put(userCarsKey, db.getCars(user.getId(), em), DynaCacheManager.DC_TTL_1H, user.getUsername());
 			}
 
-			assignedObjects.put(UIKeys.CARS, dc.get(userCarsKey));
+			assignedObjects.put(UIBindings.CARS, dc.get(userCarsKey));
 
 			switch (m) {
-			case UIKeys.MODE_NEW:
+			case UIBindings.MODE_NEW:
 				validationMessages.clear();
-				assignedObjects.remove(UIKeys.CARS);
+				assignedObjects.remove(UIBindings.CARS);
 				renderPage(CARS_FORM, request, response);
 				break;
 
-			case UIKeys.MODE_ARCHIVE:
+			case UIBindings.MODE_ARCHIVE:
+			case UIBindings.MODE_ACTIVATE:
 				parseId(request);
 
-				assignedObjects.put(UIKeys.STATUS, dbm.archiveOrActivateCar(id, 1) ? 2 : -1);
+				assignedObjects.put(UIBindings.STATUS, db.archiveOrActivateCar(id, "archive".equals(m) ? 1 : 0) ? 2 : -1);
 
-				dc.put(userCarsKey, dbm.getCars(user.getId(), sm), DynaCacheAdaptor.DC_TTL_1H, user.getUsername());
-				assignedObjects.put(UIKeys.CARS, dc.get(userCarsKey));
+				dc.put(userCarsKey, db.getCars(user.getId(), em), DynaCacheManager.DC_TTL_1H, user.getUsername());
+				dc.invalidate(userRefuelsKey);
+				assignedObjects.put(UIBindings.CARS, dc.get(userCarsKey));
 
 				renderPage(CARS, request, response);
 
 				break;
 
-			case UIKeys.MODE_ACTIVATE:
+			case UIBindings.MODE_UPDATE:
 				parseId(request);
 
-				assignedObjects.put(UIKeys.STATUS, dbm.archiveOrActivateCar(id, 0) ? 2 : -1);
-
-				dc.put(userCarsKey, dbm.getCars(user.getId(), sm), DynaCacheAdaptor.DC_TTL_1H, user.getUsername());
-				assignedObjects.put(UIKeys.CARS, dc.get(userCarsKey));
-
-				renderPage(CARS, request, response);
-
-				break;
-
-			case UIKeys.MODE_UPDATE:
-				parseId(request);
-
-				CarModel car = dbm.getCar(id, sm);
+				CarModel car = db.getCar(id, em);
 				if (car != null) {
-					assignedObjects.put(UIKeys.CARS, car);
+					assignedObjects.put(UIBindings.CARS, car);
 					renderPage(CARS_FORM, request, response);
 				} else {
-					assignedObjects.put(UIKeys.STATUS, -1);
+					assignedObjects.put(UIBindings.STATUS, -1);
 					renderPage(CARS, request, response);
 				}
 
 				break;
-			case UIKeys.MODE_:
-			case UIKeys.MODE_CANCEL:
+			case UIBindings.MODE_:
+			case UIBindings.MODE_CANCEL:
 			default:
-				assignedObjects.remove(UIKeys.STATUS);
+				assignedObjects.remove(UIBindings.STATUS);
 				renderPage(CARS, request, response);
 				break;
 			}
@@ -139,43 +131,43 @@ public class CarController extends Controller {
 		if (user == null) {
 			response.sendRedirect("login");
 		} else {
-			userCarsKey = user.getUsername() + "_" + UIKeys.CARS;
+			userCarsKey = user.getUsername() + "_" + UIBindings.CARS;
 
 			parseMode(request);
 
-			checkValidationMessages(UIKeys.FORM_ME_CARS, validationMessages, request);
+			checkValidationMessages(UIBindings.FORM_ME_CARS, validationMessages, request);
 
 			if (validationMessages.isEmpty()) {
 				CarModel car = new CarModel(request.getParameterMap(), user);
 
 				int status = 0;
 				switch (m) {
-				case UIKeys.MODE_NEW:
+				case UIBindings.MODE_NEW:
 					car.setOperation(0);
 					break;
-				case UIKeys.MODE_UPDATE:
+				case UIBindings.MODE_UPDATE:
 					parseId(request);
 					car.setId(id);
 					car.setOperation(1);
 					status = 1;
 					break;
 
-				case UIKeys.MODE_:
-				case UIKeys.MODE_CANCEL:
+				case UIBindings.MODE_:
+				case UIBindings.MODE_CANCEL:
 				default:
 					break;
 				}
 				
 				// Encrypt sensitive data
-				car.setPlateNumber(sm.encrypt(car.getPlateNumber()));
-				car.setVin(sm.encrypt(car.getVin()));
+				car.setPlateNumber(em.encrypt(car.getPlateNumber()));
+				car.setVin(em.encrypt(car.getVin()));
 
-				assignedObjects.put(UIKeys.STATUS, dbm.createUpdateCar(car) ? status : -1);
-				dc.put(userCarsKey, dbm.getCars(user.getId(), sm), DynaCacheAdaptor.DC_TTL_1H, user.getUsername());
-				assignedObjects.put(UIKeys.CARS, dc.get(userCarsKey));
+				assignedObjects.put(UIBindings.STATUS, db.createUpdateCar(car) ? status : -1);
+				dc.put(userCarsKey, db.getCars(user.getId(), em), DynaCacheManager.DC_TTL_1H, user.getUsername());
+				assignedObjects.put(UIBindings.CARS, dc.get(userCarsKey));
 				renderPage(CARS, request, response);
 			} else {
-				assignedObjects.put(UIKeys.STATUS, -2);
+				assignedObjects.put(UIBindings.STATUS, -2);
 				renderPage(CARS_FORM, request, response);
 			}
 		}

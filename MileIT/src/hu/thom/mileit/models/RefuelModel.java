@@ -88,55 +88,64 @@ public class RefuelModel extends Model {
 		return partialRefuel;
 	}
 
-	public void setAmount(double amount) {
+	public RefuelModel setAmount(double amount) {
 		this.amount = amount;
+		return this;
 	}
 
-	public void setAmount(String amount) {
+	public RefuelModel setAmount(String amount) {
 		try {
 			this.amount = Double.parseDouble(amount);
 		} catch (Exception e) {
 			this.amount = 0;
 		}
+		return this;
 	}
 
-	public void setDistance(double distance) {
+	public RefuelModel setDistance(double distance) {
 		this.distance = distance;
+		return this;
 	}
 
-	public void setFuelAmount(double fuelAmount) {
+	public RefuelModel setFuelAmount(double fuelAmount) {
 		this.fuelAmount = fuelAmount;
+		return this;
 	}
 
-	public void setFuelAmount(String fuelAmount) {
+	public RefuelModel setFuelAmount(String fuelAmount) {
 		try {
 			this.fuelAmount = Double.parseDouble(fuelAmount);
 		} catch (Exception e) {
 			this.fuelAmount = 0;
 		}
+		return this;
 	}
 
-	public void setOdometer(double odometer) {
+	public RefuelModel setOdometer(double odometer) {
 		this.odometer = odometer;
+		return this;
 	}
 
-	public void setOdometer(String odometer) {
+	public RefuelModel setOdometer(String odometer) {
 		try {
 			this.odometer = Double.parseDouble(odometer);
 		} catch (Exception e) {
 			this.odometer = 0;
 		}
+		return this;
 	}
 
-	public void setPartialRefuel(boolean partialRefuel) {
+	public RefuelModel setPartialRefuel(boolean partialRefuel) {
 		this.partialRefuel = partialRefuel;
+		return this;
 	}
 
-	public void setPartialRefuel(int partialRefuel) {
+	public RefuelModel setPartialRefuel(int partialRefuel) {
 		setPartialRefuel(Integer.toString(partialRefuel));
+		return this;
 	}
 
-	public void setPartialRefuel(String partialRefuel) {
+	public RefuelModel setPartialRefuel(String partialRefuel) {
 		System.out.println(partialRefuel);
 		switch (partialRefuel.toLowerCase()) {
 		case "1":
@@ -149,30 +158,35 @@ public class RefuelModel extends Model {
 			this.partialRefuel = false;
 			break;
 		}
+		return this;
 	}
 
-	public void setRefuelDate(Date refuelDate) {
+	public RefuelModel setRefuelDate(Date refuelDate) {
 		this.refuelDate = refuelDate;
+		return this;
 	}
 
-	public void setRefuelTimestamp(String refuelDate) {
+	public RefuelModel setRefuelTimestamp(String refuelDate) {
 		try {
 			this.refuelDate = this.getDateFormatter(DATETIME).parse(refuelDate);
 		} catch (Exception e) {
 			this.refuelDate = new Date();
 		}
+		return this;
 	}
 
-	public void setUnitPrice(double unitPrice) {
+	public RefuelModel setUnitPrice(double unitPrice) {
 		this.unitPrice = unitPrice;
+		return this;
 	}
 
-	public void setUnitPrice(String unitPrice) {
+	public RefuelModel setUnitPrice(String unitPrice) {
 		try {
 			this.unitPrice = Double.parseDouble(unitPrice);
 		} catch (Exception e) {
 			this.unitPrice = 0;
 		}
+		return this;
 	}
 
 	@Override
@@ -226,9 +240,8 @@ public class RefuelModel extends Model {
 
 	@Override
 	public String toString() {
-		return "RefuelModel [refuelDate=" + refuelDate + ", odometer=" + odometer + ", unitPrice=" + unitPrice
-				+ ", fuelAmount=" + fuelAmount + ", amount=" + amount + ", partialRefuel=" + partialRefuel
-				+ ", distance=" + distance + ", toString()=" + super.toString() + "]";
+		return "RefuelModel [refuelDate=" + refuelDate + ", odometer=" + odometer + ", unitPrice=" + unitPrice + ", fuelAmount=" + fuelAmount
+				+ ", amount=" + amount + ", partialRefuel=" + partialRefuel + ", distance=" + distance + ", toString()=" + super.toString() + "]";
 	}
 
 }

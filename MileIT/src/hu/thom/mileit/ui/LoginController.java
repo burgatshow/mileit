@@ -8,8 +8,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import hu.thom.mileit.core.UIKeys;
 import hu.thom.mileit.models.UserModel;
+import hu.thom.mileit.utils.UIBindings;
 
 /**
  * Servlet class to manage user login events
@@ -47,7 +47,7 @@ public class LoginController extends Controller {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		super.doGet(request, response);
-
+		
 		if (request.getSession().getAttribute("user") == null) {
 			validationMessages.clear();
 			renderPage(LOGIN, request, response);
@@ -68,21 +68,21 @@ public class LoginController extends Controller {
 
 		if (request.getSession().getAttribute("user") == null) {
 
-			checkValidationMessages(UIKeys.FORM_LOGIN, validationMessages, request);
+			checkValidationMessages(UIBindings.FORM_LOGIN, validationMessages, request);
 
 			if (validationMessages.isEmpty()) {
 				String username = request.getParameter("username");
 				String password = request.getParameter("password");
-				if (dbm.authenticateUser(username, sm.encrypt(password))) {
-					UserModel user = dbm.getUserProfile(username);
+				if (db.authenticateUser(username, em.encrypt(password))) {
+					UserModel user = db.getUserProfile(username, em);
 					request.getSession().setAttribute("user", user);
 					response.sendRedirect("index");
 				} else {
-					assignedObjects.put(UIKeys.STATUS, -1);
+					assignedObjects.put(UIBindings.STATUS, -1);
 					renderPage(LOGIN, request, response);
 				}
 			} else {
-				assignedObjects.put(UIKeys.STATUS, -2);
+				assignedObjects.put(UIBindings.STATUS, -2);
 				renderPage(LOGIN, request, response);
 			}
 		} else {

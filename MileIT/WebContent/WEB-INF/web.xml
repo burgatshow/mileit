@@ -29,4 +29,9 @@
 		<error-code>503</error-code>
 		<location>/WEB-INF/pages/errors/503.jsp</location>
 	</error-page>
+	<filter>
+		<display-name>XSS Filter mechanism</display-name>
+		<filter-name>XSSFilter</filter-name>
+		<filter-class>hu.thom.mileit.ui.xss.XSSFilter</filter-class>
+	</filter>
 </web-app>
