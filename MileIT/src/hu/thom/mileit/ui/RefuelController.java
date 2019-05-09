@@ -8,10 +8,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import hu.thom.mileit.core.DynaCacheAdaptor;
-import hu.thom.mileit.core.UIKeys;
+import hu.thom.mileit.core.DynaCacheManager;
 import hu.thom.mileit.models.RefuelModel;
 import hu.thom.mileit.models.UserModel;
+import hu.thom.mileit.utils.UIBindings;
 
 /**
  * Servlet class to manage refuel related operations
@@ -33,7 +33,7 @@ public class RefuelController extends Controller {
 	 */
 	public RefuelController() {
 		super();
-		assignedObjects.put(UIKeys.PAGE, "refuels");
+		assignedObjects.put(UIBindings.PAGE, "refuels");
 	}
 
 	/**
@@ -60,65 +60,65 @@ public class RefuelController extends Controller {
 		if (user == null) {
 			response.sendRedirect("login");
 		} else {
-			userPaymentsKey = user.getUsername() + "_" + UIKeys.PMS;
-			userCarsKey = user.getUsername() + "_" + UIKeys.CARS;
-			userPlacesKey = user.getUsername() + "_" + UIKeys.PLACES;
-			userRefuelsKey = user.getUsername() + "_" + UIKeys.REFUELS;
+			userPaymentsKey = user.getUsername() + "_" + UIBindings.PMS;
+			userCarsKey = user.getUsername() + "_" + UIBindings.CARS;
+			userPlacesKey = user.getUsername() + "_" + UIBindings.PLACES;
+			userRefuelsKey = user.getUsername() + "_" + UIBindings.REFUELS;
 
 			parseMode(request);
 
 			if (dc.get(userCarsKey) == null) {
-				dc.put(userCarsKey, dbm.getCars(user.getId(), sm), DynaCacheAdaptor.DC_TTL_1H, user.getUsername());
+				dc.put(userCarsKey, db.getCars(user.getId(), em), DynaCacheManager.DC_TTL_1H, user.getUsername());
 			}
-			assignedObjects.put(UIKeys.CARS, dc.get(userCarsKey));
+			assignedObjects.put(UIBindings.CARS, dc.get(userCarsKey));
 
 			if (dc.get(userPlacesKey) == null) {
-				dc.put(userPlacesKey, dbm.getPlaces(user.getId()), DynaCacheAdaptor.DC_TTL_1H, user.getUsername());
+				dc.put(userPlacesKey, db.getPlaces(user.getId()), DynaCacheManager.DC_TTL_1H, user.getUsername());
 			}
-			assignedObjects.put(UIKeys.PLACES, dc.get(userPlacesKey));
+			assignedObjects.put(UIBindings.PLACES, dc.get(userPlacesKey));
 
 			if (dc.get(userPaymentsKey) == null) {
-				dc.put(userPaymentsKey, dbm.getPaymentMethods(user.getId()), DynaCacheAdaptor.DC_TTL_1H, user.getUsername());
+				dc.put(userPaymentsKey, db.getPaymentMethods(user.getId()), DynaCacheManager.DC_TTL_1H, user.getUsername());
 			}
-			assignedObjects.put(UIKeys.PMS, dc.get(userPaymentsKey));
+			assignedObjects.put(UIBindings.PMS, dc.get(userPaymentsKey));
 
 			if (dc.get(userRefuelsKey) == null) {
-				dc.put(userRefuelsKey, dbm.getRefuels(user.getId()), DynaCacheAdaptor.DC_TTL_1H, user.getUsername());
+				dc.put(userRefuelsKey, db.getRefuels(user.getId(), em), DynaCacheManager.DC_TTL_1H, user.getUsername());
 			}
-			assignedObjects.put(UIKeys.REFUELS, dc.get(userRefuelsKey));
+			assignedObjects.put(UIBindings.REFUELS, dc.get(userRefuelsKey));
 
 			switch (m) {
-			case UIKeys.MODE_NEW:
+			case UIBindings.MODE_NEW:
 				validationMessages.clear();
-				assignedObjects.remove(UIKeys.REFUELS);
+				assignedObjects.remove(UIBindings.REFUELS);
 				renderPage(REFUELS_FORM, request, response);
 				break;
 
-			case UIKeys.MODE_DELETE:
+			case UIBindings.MODE_DELETE:
 				parseId(request);
 
-				assignedObjects.put(UIKeys.STATUS, dbm.deleteRefuel(id) ? 2 : -1);
-				assignedObjects.put(UIKeys.REFUELS, dbm.getRefuels(user.getId()));
+				assignedObjects.put(UIBindings.STATUS, db.deleteRefuel(id) ? 2 : -1);
+				assignedObjects.put(UIBindings.REFUELS, db.getRefuels(user.getId(), em));
 				renderPage(REFUELS, request, response);
 
 				break;
 
-			case UIKeys.MODE_UPDATE:
+			case UIBindings.MODE_UPDATE:
 				parseId(request);
 
-				RefuelModel rf = dbm.getRefuel(id);
+				RefuelModel rf = db.getRefuel(id);
 				if (rf != null) {
-					assignedObjects.put(UIKeys.REFUELS, rf);
+					assignedObjects.put(UIBindings.REFUELS, rf);
 					renderPage(REFUELS_FORM, request, response);
 				} else {
-					assignedObjects.put(UIKeys.STATUS, -1);
+					assignedObjects.put(UIBindings.STATUS, -1);
 					renderPage(REFUELS, request, response);
 				}
 				break;
-			case UIKeys.MODE_:
-			case UIKeys.MODE_CANCEL:
+			case UIBindings.MODE_:
+			case UIBindings.MODE_CANCEL:
 			default:
-				assignedObjects.remove(UIKeys.STATUS);
+				assignedObjects.remove(UIBindings.STATUS);
 				renderPage(REFUELS, request, response);
 				break;
 			}
@@ -138,39 +138,39 @@ public class RefuelController extends Controller {
 		if (user == null) {
 			response.sendRedirect("login");
 		} else {
-			userRefuelsKey = user.getUsername() + "_" + UIKeys.REFUELS;
+			userRefuelsKey = user.getUsername() + "_" + UIBindings.REFUELS;
 
 			parseMode(request);
 
-			checkValidationMessages(UIKeys.FORM_ME_REFUEL, validationMessages, request);
+			checkValidationMessages(UIBindings.FORM_ME_REFUEL, validationMessages, request);
 
 			if (validationMessages.isEmpty()) {
 				RefuelModel rf = new RefuelModel(request.getParameterMap(), user);
 
 				switch (m) {
-				case UIKeys.MODE_NEW:
+				case UIBindings.MODE_NEW:
 					rf.setOperation(0);
 					break;
-				case UIKeys.MODE_UPDATE:
+				case UIBindings.MODE_UPDATE:
 					parseId(request);
 					rf.setOperation(1);
 					rf.setId(id);
 					break;
-				case UIKeys.MODE_:
-				case UIKeys.MODE_CANCEL:
+				case UIBindings.MODE_:
+				case UIBindings.MODE_CANCEL:
 				default:
 					break;
 				}
 
-				assignedObjects.put(UIKeys.STATUS, dbm.createUpdateRefuel(rf) ? 1 : -1);
-				dc.put(userRefuelsKey, dbm.getRefuels(user.getId()), DynaCacheAdaptor.DC_TTL_1H, user.getUsername());
-				assignedObjects.put(UIKeys.REFUELS, dbm.getRefuels(user.getId()));
+				assignedObjects.put(UIBindings.STATUS, db.createUpdateRefuel(rf) ? 1 : -1);
+				dc.put(userRefuelsKey, db.getRefuels(user.getId(), em), DynaCacheManager.DC_TTL_1H, user.getUsername());
+				assignedObjects.put(UIBindings.REFUELS, db.getRefuels(user.getId(), em));
 				renderPage(REFUELS, request, response);
 			} else {
-				assignedObjects.put(UIKeys.STATUS, -2);
-				assignedObjects.put(UIKeys.CARS, dbm.getCars(user.getId(), sm));
-				assignedObjects.put(UIKeys.PLACES, dbm.getPlaces(user.getId()));
-				assignedObjects.put(UIKeys.PMS, dbm.getPaymentMethods(user.getId()));
+				assignedObjects.put(UIBindings.STATUS, -2);
+				assignedObjects.put(UIBindings.CARS, db.getCars(user.getId(), em));
+				assignedObjects.put(UIBindings.PLACES, db.getPlaces(user.getId()));
+				assignedObjects.put(UIBindings.PMS, db.getPaymentMethods(user.getId()));
 				renderPage(REFUELS_FORM, request, response);
 			}
 		}

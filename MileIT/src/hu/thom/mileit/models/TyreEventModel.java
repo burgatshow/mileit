@@ -113,52 +113,61 @@ public class TyreEventModel extends Model {
 		return result;
 	}
 
-	public void setDateEnd(Date dateEnd) {
+	public TyreEventModel setDateEnd(Date dateEnd) {
 		this.dateEnd = dateEnd;
+		return this;
 	}
 
-	public void setDateStart(Date dateStart) {
+	public TyreEventModel setDateStart(Date dateStart) {
 		this.dateStart = dateStart;
+		return this;
 	}
 
-	public void setEventDate(Date eventDate) {
+	public TyreEventModel setEventDate(Date eventDate) {
 		this.eventDate = eventDate;
+		return this;
 	}
 
-	public void setEventDate(String eventDate) {
+	public TyreEventModel setEventDate(String eventDate) {
 		try {
 			this.eventDate = this.getDateFormatter(null).parse(eventDate);
 		} catch (Exception e) {
 			this.eventDate = new Date();
 		}
+		return this;
 	}
 
-	public void setOdometerEnd(double odometerEnd) {
+	public TyreEventModel setOdometerEnd(double odometerEnd) {
 		this.odometerEnd = odometerEnd;
+		return this;
 	}
 
-	public void setOdometerEnd(String odometerEnd) {
+	public TyreEventModel setOdometerEnd(String odometerEnd) {
 		try {
 			this.odometerEnd = Double.parseDouble(odometerEnd);
 		} catch (Exception e) {
 			this.odometerEnd = 0;
 		}
+		return this;
 	}
 
-	public void setOdometerStart(double odometerStart) {
+	public TyreEventModel setOdometerStart(double odometerStart) {
 		this.odometerStart = odometerStart;
+		return this;
 	}
 
-	public void setOdometerStart(String odometerStart) {
+	public TyreEventModel setOdometerStart(String odometerStart) {
 		try {
 			this.odometerStart = Double.parseDouble(odometerStart);
 		} catch (Exception e) {
 			this.odometerStart = 0;
 		}
+		return this;
 	}
 
-	public void setTotalDistance(double totalDistance) {
+	public TyreEventModel setTotalDistance(double totalDistance) {
 		this.totalDistance = totalDistance;
+		return this;
 	}
 
 	@Override

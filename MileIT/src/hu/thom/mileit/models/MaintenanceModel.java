@@ -17,6 +17,7 @@ public class MaintenanceModel extends Model {
 	private double odometer;
 	private String description;
 	private double amount;
+	private Date expiration;
 
 	public MaintenanceModel() {
 	}
@@ -32,6 +33,7 @@ public class MaintenanceModel extends Model {
 		setMaintenanceDate(params.get("maintenanceDate")[0]);
 		setOdometer(params.get("odometer")[0]);
 		setAmount(params.get("amount")[0]);
+		setExpiration(params.get("expirationDate")[0]);
 		this.description = params.get("description")[0];
 	}
 
@@ -55,6 +57,11 @@ public class MaintenanceModel extends Model {
 				return false;
 		} else if (!description.equals(other.description))
 			return false;
+		if (expiration == null) {
+			if (other.expiration != null)
+				return false;
+		} else if (!expiration.equals(other.expiration))
+			return false;
 		if (maintenanceDate == null) {
 			if (other.maintenanceDate != null)
 				return false;
@@ -71,6 +78,18 @@ public class MaintenanceModel extends Model {
 
 	public String getDescription() {
 		return description;
+	}
+
+	public Date getExpiration() {
+		return expiration;
+	}
+
+	public Timestamp getExpirationAsTimestamp() {
+		if (expiration == null) {
+			return null;
+		}
+
+		return new Timestamp(expiration.getTime());
 	}
 
 	public Date getMaintenanceDate() {
@@ -97,56 +116,78 @@ public class MaintenanceModel extends Model {
 		temp = Double.doubleToLongBits(amount);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
 		result = prime * result + ((description == null) ? 0 : description.hashCode());
+		result = prime * result + ((expiration == null) ? 0 : expiration.hashCode());
 		result = prime * result + ((maintenanceDate == null) ? 0 : maintenanceDate.hashCode());
 		temp = Double.doubleToLongBits(odometer);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
 		return result;
 	}
 
-	public void setAmount(double amount) {
+	public MaintenanceModel setAmount(double amount) {
 		this.amount = amount;
+		return this;
 	}
 
-	public void setAmount(String amount) {
+	public MaintenanceModel setAmount(String amount) {
 		try {
 			this.amount = Double.parseDouble(amount);
 		} catch (Exception e) {
 			this.amount = 0;
 		}
+		return this;
 	}
 
-	public void setDescription(String description) {
+	public MaintenanceModel setDescription(String description) {
 		this.description = description;
+		return this;
 	}
 
-	public void setMaintenanceDate(Date maintenanceDate) {
-		this.maintenanceDate = maintenanceDate;
+	public MaintenanceModel setExpiration(Date expiration) {
+		this.expiration = expiration;
+		return this;
 	}
 
-	public void setMaintenanceDate(String maintenanceDate) {
+	public MaintenanceModel setExpiration(String expiration) {
 		try {
-			this.maintenanceDate = this.getDateFormatter(null).parse(maintenanceDate);
+			this.expiration = this.getDateFormatter(DATETIMESEC).parse(expiration);
+		} catch (Exception e) {
+			this.expiration = null;
+		}
+		return this;
+	}
+
+	public MaintenanceModel setMaintenanceDate(Date maintenanceDate) {
+		this.maintenanceDate = maintenanceDate;
+		return this;
+	}
+
+	public MaintenanceModel setMaintenanceDate(String maintenanceDate) {
+		try {
+			this.maintenanceDate = this.getDateFormatter(DATE).parse(maintenanceDate);
 		} catch (Exception e) {
 			this.maintenanceDate = new Date();
 		}
+		return this;
 	}
 
-	public void setOdometer(double odometer) {
+	public MaintenanceModel setOdometer(double odometer) {
 		this.odometer = odometer;
+		return this;
 	}
 
-	public void setOdometer(String odometer) {
+	public MaintenanceModel setOdometer(String odometer) {
 		try {
 			this.odometer = Double.parseDouble(odometer);
 		} catch (Exception e) {
 			this.odometer = 0;
 		}
+		return this;
 	}
 
 	@Override
 	public String toString() {
-		return "MaintenanceModel [maintenanceDate=" + maintenanceDate + ", odometer=" + odometer + ", description="
-				+ description + ", amount=" + amount + ", toString()=" + super.toString() + "]";
+		return "MaintenanceModel [maintenanceDate=" + maintenanceDate + ", odometer=" + odometer + ", description=" + description + ", amount="
+				+ amount + ", expiration=" + expiration + ", toString()=" + super.toString() + "]";
 	}
 
 }

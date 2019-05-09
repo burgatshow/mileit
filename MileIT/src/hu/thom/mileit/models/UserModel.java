@@ -10,10 +10,14 @@ public class UserModel extends Model {
 	private static final long serialVersionUID = -8687951190661595457L;
 
 	private String username;
+	private String email;
 	private String currency;
 	private String locale;
 	private int distance;
 	private int rounded;
+	private String pushoverUserKey;
+	private String pushoverAPIKey;
+	private String pushbulletAPIKey;
 
 	public UserModel() {
 	}
@@ -29,6 +33,121 @@ public class UserModel extends Model {
 	public UserModel(String currency, String locale) {
 		this.currency = currency;
 		this.locale = locale;
+	}
+
+	public String getCurrency() {
+		return (currency == null || "".equalsIgnoreCase(currency)) ? "Ft" : currency;
+	}
+
+	public int getDistance() {
+		return distance;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public String getLocale() {
+		return (locale == null || "".equalsIgnoreCase(locale)) ? "hu" : locale;
+	}
+
+	public String getPushbulletAPIKey() {
+		return pushbulletAPIKey;
+	}
+
+	public String getPushoverAPIKey() {
+		return pushoverAPIKey;
+	}
+
+	public String getPushoverUserKey() {
+		return pushoverUserKey;
+	}
+
+	public int getRounded() {
+		return rounded;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public UserModel setCurrency(String currency) {
+		this.currency = currency;
+		return this;
+	}
+
+	public UserModel setDistance(int distance) {
+		this.distance = distance;
+		return this;
+	}
+
+	public UserModel setDistance(String distance) {
+		try {
+			this.distance = Integer.parseInt(distance);
+		} catch (Exception e) {
+			this.distance = 1;
+		}
+		return this;
+	}
+
+	public UserModel setEmail(String email) {
+		this.email = email;
+		return this;
+	}
+
+	public UserModel setLocale(String locale) {
+		this.locale = locale;
+		return this;
+	}
+
+	public UserModel setPushbulletAPIKey(String pushbulletAPIKey) {
+		this.pushbulletAPIKey = pushbulletAPIKey;
+		return this;
+	}
+
+	public UserModel setPushoverAPIKey(String pushoverAPIKey) {
+		this.pushoverAPIKey = pushoverAPIKey;
+		return this;
+	}
+
+	public UserModel setPushoverUserKey(String pushoverUserKey) {
+		this.pushoverUserKey = pushoverUserKey;
+		return this;
+	}
+
+	public UserModel setRounded(int rounded) {
+		this.rounded = rounded;
+		return this;
+	}
+
+	public UserModel setRounded(String rounded) {
+		try {
+			this.rounded = Integer.parseInt(rounded);
+		} catch (Exception e) {
+			this.rounded = 1;
+		}
+		return this;
+	}
+
+	public UserModel setUsername(String username) {
+		this.username = username;
+		return this;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + ((currency == null) ? 0 : currency.hashCode());
+		result = prime * result + distance;
+		result = prime * result + ((email == null) ? 0 : email.hashCode());
+		result = prime * result + ((locale == null) ? 0 : locale.hashCode());
+		result = prime * result + ((pushbulletAPIKey == null) ? 0 : pushbulletAPIKey.hashCode());
+		result = prime * result + ((pushoverAPIKey == null) ? 0 : pushoverAPIKey.hashCode());
+		result = prime * result + ((pushoverUserKey == null) ? 0 : pushoverUserKey.hashCode());
+		result = prime * result + rounded;
+		result = prime * result + ((username == null) ? 0 : username.hashCode());
+		return result;
 	}
 
 	@Override
@@ -47,10 +166,30 @@ public class UserModel extends Model {
 			return false;
 		if (distance != other.distance)
 			return false;
+		if (email == null) {
+			if (other.email != null)
+				return false;
+		} else if (!email.equals(other.email))
+			return false;
 		if (locale == null) {
 			if (other.locale != null)
 				return false;
 		} else if (!locale.equals(other.locale))
+			return false;
+		if (pushbulletAPIKey == null) {
+			if (other.pushbulletAPIKey != null)
+				return false;
+		} else if (!pushbulletAPIKey.equals(other.pushbulletAPIKey))
+			return false;
+		if (pushoverAPIKey == null) {
+			if (other.pushoverAPIKey != null)
+				return false;
+		} else if (!pushoverAPIKey.equals(other.pushoverAPIKey))
+			return false;
+		if (pushoverUserKey == null) {
+			if (other.pushoverUserKey != null)
+				return false;
+		} else if (!pushoverUserKey.equals(other.pushoverUserKey))
 			return false;
 		if (rounded != other.rounded)
 			return false;
@@ -62,78 +201,11 @@ public class UserModel extends Model {
 		return true;
 	}
 
-	public String getCurrency() {
-		return (currency == null || "".equalsIgnoreCase(currency)) ? "Ft" : currency;
-	}
-
-	public int getDistance() {
-		return distance;
-	}
-
-	public String getLocale() {
-		return (locale == null || "".equalsIgnoreCase(locale)) ? "hu" : locale;
-	}
-
-	public int getRounded() {
-		return rounded;
-	}
-
-	public String getUsername() {
-		return username;
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = super.hashCode();
-		result = prime * result + ((currency == null) ? 0 : currency.hashCode());
-		result = prime * result + distance;
-		result = prime * result + ((locale == null) ? 0 : locale.hashCode());
-		result = prime * result + rounded;
-		result = prime * result + ((username == null) ? 0 : username.hashCode());
-		return result;
-	}
-
-	public void setCurrency(String currency) {
-		this.currency = currency;
-	}
-
-	public void setDistance(int distance) {
-		this.distance = distance;
-	}
-
-	public void setDistance(String distance) {
-		try {
-			this.distance = Integer.parseInt(distance);
-		} catch (Exception e) {
-			this.distance = 1;
-		}
-	}
-
-	public void setLocale(String locale) {
-		this.locale = locale;
-	}
-	
-	public void setRounded(int rounded) {
-		this.rounded = rounded;
-	}
-
-	public void setRounded(String rounded) {
-		try {
-			this.rounded = Integer.parseInt(rounded);
-		} catch (Exception e) {
-			this.rounded = 1;
-		}
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
 	@Override
 	public String toString() {
-		return "UserModel [username=" + username + ", currency=" + currency + ", locale=" + locale + ", distance=" + distance + ", rounded=" + rounded
-				+ ", toString()=" + super.toString() + "]";
+		return "UserModel [username=" + username + ", email=" + email + ", currency=" + currency + ", locale=" + locale + ", distance=" + distance
+				+ ", rounded=" + rounded + ", pushoverUserKey=" + pushoverUserKey + ", pushoverAPIKey=" + pushoverAPIKey + ", pushbulletAPIKey="
+				+ pushbulletAPIKey + ", toString()=" + super.toString() + "]";
 	}
 
 }

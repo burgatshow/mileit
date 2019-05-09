@@ -8,10 +8,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import hu.thom.mileit.core.DynaCacheAdaptor;
-import hu.thom.mileit.core.UIKeys;
+import hu.thom.mileit.core.DynaCacheManager;
 import hu.thom.mileit.models.RouteModel;
 import hu.thom.mileit.models.UserModel;
+import hu.thom.mileit.utils.UIBindings;
 
 /**
  * Servlet class to manage route related operations
@@ -32,7 +32,7 @@ public class RouteController extends Controller {
 	 */
 	public RouteController() {
 		super();
-		assignedObjects.put(UIKeys.PAGE, "routes");
+		assignedObjects.put(UIBindings.PAGE, "routes");
 	}
 
 	/**
@@ -58,60 +58,60 @@ public class RouteController extends Controller {
 		if (user == null) {
 			response.sendRedirect("login");
 		} else {
-			userRoutesKey = user.getUsername() + "_" + UIKeys.ROUTES;
-			userCarsKey = user.getUsername() + "_" + UIKeys.CARS;
-			userPlacesKey = user.getUsername() + "_" + UIKeys.PLACES;
+			userRoutesKey = user.getUsername() + "_" + UIBindings.ROUTES;
+			userCarsKey = user.getUsername() + "_" + UIBindings.CARS;
+			userPlacesKey = user.getUsername() + "_" + UIBindings.PLACES;
 
 			parseMode(request);
 
 			if (dc.get(userCarsKey) == null) {
-				dc.put(userCarsKey, dbm.getCars(user.getId(), sm), DynaCacheAdaptor.DC_TTL_1H, user.getUsername());
+				dc.put(userCarsKey, db.getCars(user.getId(), em), DynaCacheManager.DC_TTL_1H, user.getUsername());
 			}
-			assignedObjects.put(UIKeys.CARS, dc.get(userCarsKey));
+			assignedObjects.put(UIBindings.CARS, dc.get(userCarsKey));
 
 			if (dc.get(userPlacesKey) == null) {
-				dc.put(userPlacesKey, dbm.getPlaces(user.getId()), DynaCacheAdaptor.DC_TTL_1H, user.getUsername());
+				dc.put(userPlacesKey, db.getPlaces(user.getId()), DynaCacheManager.DC_TTL_1H, user.getUsername());
 			}
-			assignedObjects.put(UIKeys.PLACES, dc.get(userPlacesKey));
+			assignedObjects.put(UIBindings.PLACES, dc.get(userPlacesKey));
 
 			if (dc.get(userRoutesKey) == null) {
-				dc.put(userRoutesKey, dbm.getRoutes(user.getId()), DynaCacheAdaptor.DC_TTL_1H, user.getUsername());
+				dc.put(userRoutesKey, db.getRoutes(user.getId(), em), DynaCacheManager.DC_TTL_1H, user.getUsername());
 			}
-			assignedObjects.put(UIKeys.ROUTES, dc.get(userRoutesKey));
+			assignedObjects.put(UIBindings.ROUTES, dc.get(userRoutesKey));
 
 			switch (m) {
-			case UIKeys.MODE_NEW:
+			case UIBindings.MODE_NEW:
 				validationMessages.clear();
-				assignedObjects.remove(UIKeys.ROUTES);
+				assignedObjects.remove(UIBindings.ROUTES);
 				renderPage(ROUTES_FORM, request, response);
 				break;
 
-			case UIKeys.MODE_DELETE:
+			case UIBindings.MODE_DELETE:
 				parseId(request);
 
-				assignedObjects.put(UIKeys.STATUS, dbm.deleteRoute(id) ? 2 : -1);
-				assignedObjects.put(UIKeys.ROUTES, dbm.getRoutes(user.getId()));
+				assignedObjects.put(UIBindings.STATUS, db.deleteRoute(id) ? 2 : -1);
+				assignedObjects.put(UIBindings.ROUTES, db.getRoutes(user.getId(), em));
 				renderPage(ROUTES, request, response);
 
 				break;
 
-			case UIKeys.MODE_UPDATE:
+			case UIBindings.MODE_UPDATE:
 				parseId(request);
 
-				RouteModel r = dbm.getRoute(id);
+				RouteModel r = db.getRoute(id);
 				if (r != null) {
-					assignedObjects.put(UIKeys.ROUTES, r);
+					assignedObjects.put(UIBindings.ROUTES, r);
 					renderPage(ROUTES_FORM, request, response);
 				} else {
-					assignedObjects.put(UIKeys.STATUS, -1);
+					assignedObjects.put(UIBindings.STATUS, -1);
 					renderPage(ROUTES, request, response);
 				}
 
 				break;
-			case UIKeys.MODE_:
-			case UIKeys.MODE_CANCEL:
+			case UIBindings.MODE_:
+			case UIBindings.MODE_CANCEL:
 			default:
-				assignedObjects.remove(UIKeys.STATUS);
+				assignedObjects.remove(UIBindings.STATUS);
 				renderPage(ROUTES, request, response);
 				break;
 			}
@@ -131,40 +131,40 @@ public class RouteController extends Controller {
 		if (user == null) {
 			response.sendRedirect("login");
 		} else {
-			userRoutesKey = user.getUsername() + "_" + UIKeys.ROUTES;
-			
+			userRoutesKey = user.getUsername() + "_" + UIBindings.ROUTES;
+
 			parseMode(request);
 
-			checkValidationMessages(UIKeys.FORM_ME_ROUTE, validationMessages, request);
+			checkValidationMessages(UIBindings.FORM_ME_ROUTE, validationMessages, request);
 
 			if (validationMessages.isEmpty()) {
 				RouteModel r = new RouteModel(request.getParameterMap(), user);
 
 				switch (m) {
-				case UIKeys.MODE_NEW:
+				case UIBindings.MODE_NEW:
 					System.out.println("Round-trip: " + request.getParameter("roundTrip") != null ? true : false);
 					r.setRoundTrip(request.getParameter("roundTrip") != null ? true : false);
 					r.setOperation(0);
 					break;
-				case UIKeys.MODE_UPDATE:
+				case UIBindings.MODE_UPDATE:
 					parseId(request);
 					r.setOperation(1);
 					r.setId(id);
 					break;
-				case UIKeys.MODE_:
-				case UIKeys.MODE_CANCEL:
+				case UIBindings.MODE_:
+				case UIBindings.MODE_CANCEL:
 				default:
 					break;
 				}
 
-				assignedObjects.put(UIKeys.STATUS, dbm.createUpdateRoute(r) ? 0 : -1);
-				dc.put(userRoutesKey, dbm.getRoutes(user.getId()), DynaCacheAdaptor.DC_TTL_1H, user.getUsername());
-				assignedObjects.put(UIKeys.ROUTES, dbm.getRoutes(user.getId()));
+				assignedObjects.put(UIBindings.STATUS, db.createUpdateRoute(r) ? 0 : -1);
+				dc.put(userRoutesKey, db.getRoutes(user.getId(), em), DynaCacheManager.DC_TTL_1H, user.getUsername());
+				assignedObjects.put(UIBindings.ROUTES, db.getRoutes(user.getId(), em));
 				renderPage(ROUTES, request, response);
 			} else {
-				assignedObjects.put(UIKeys.STATUS, -2);
-				assignedObjects.put(UIKeys.CARS, dbm.getCars(user.getId(), sm));
-				assignedObjects.put(UIKeys.PLACES, dbm.getPlaces(user.getId()));
+				assignedObjects.put(UIBindings.STATUS, -2);
+				assignedObjects.put(UIBindings.CARS, db.getCars(user.getId(), em));
+				assignedObjects.put(UIBindings.PLACES, db.getPlaces(user.getId()));
 				renderPage(ROUTES_FORM, request, response);
 			}
 		}

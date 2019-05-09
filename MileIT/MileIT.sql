@@ -31,6 +31,7 @@ CREATE TABLE IF NOT EXISTS `maintenances` (
   `date` DATETIME DEFAULT CURRENT_TIMESTAMP,
   `description` VARCHAR(1000) COLLATE utf8mb4_hungarian_ci DEFAULT NULL,
   `amount` DOUBLE UNSIGNED NOT NULL,
+  `expiration` DATETIME NULL DEFAULT NULL,
   PRIMARY KEY (`mntnc_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
@@ -74,11 +75,15 @@ CREATE TABLE IF NOT EXISTS `users` (
   `user_id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `username` VARCHAR(20) NOT NULL COLLATE utf8mb4_hungarian_ci,
   `password` VARCHAR(100) NOT NULL COLLATE utf8mb4_hungarian_ci,
+  `email` VARCHAR(100) NULL DEFAULT NULL COLLATE utf8mb4_hungarian_ci,
   `currency` VARCHAR(5) NOT NULL COLLATE utf8mb4_hungarian_ci DEFAULT 'Ft',
   `locale` VARCHAR(2) NOT NULL COLLATE utf8mb4_hungarian_ci DEFAULT 'hu',
   `distance` TINYINT(1) UNSIGNED NOT NULL DEFAULT 1,
   `rounded` TINYINT(1) UNSIGNED NOT NULL DEFAULT 1,
   `archived` TINYINT(1) UNSIGNED NOT NULL DEFAULT 0,
+  `pushover_api_user` VARCHAR(100) NULL DEFAULT NULL COLLATE utf8mb4_hungarian_ci,
+  `pushover_api_key` VARCHAR(100) NULL DEFAULT NULL COLLATE utf8mb4_hungarian_ci,
+  `pushbullet_api_key` VARCHAR(100) NULL DEFAULT NULL COLLATE utf8mb4_hungarian_ci,
   PRIMARY KEY (`user_id`), UNIQUE KEY `username` (`username`)) 
   ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 

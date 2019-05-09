@@ -10,7 +10,9 @@ MileIT/.settings/org.eclipse.wst.common.component
 MileIT/.settings/org.eclipse.wst.common.project.facet.core.xml
 MileIT/.settings/org.eclipse.wst.jsdt.ui.superType.container
 MileIT/.settings/org.eclipse.wst.jsdt.ui.superType.name
-MileIT/WebContent/WEB-INF/classes/*
+MileIT/WebContent/WEB-INF/classes/
+MileIT/WebContent/WEB-INF/lib/*
+MileIT/*/bin/
 *.prefs
 .DS_Store
 MileIT/WebContent/WEB-INF/lib/esapi-2.2.0.0-RC2.jar

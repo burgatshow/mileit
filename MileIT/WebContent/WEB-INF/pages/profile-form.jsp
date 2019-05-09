@@ -45,10 +45,16 @@
 		</div>
 		<form method="post">
 			<div class="row">
-				<div class="col-md-12">
+				<div class="col-md-6">
 					<div class="form-group">
 						<label for="username"><fmt:message key="profile.form.username" /></label> <input name="username" disabled="disabled" type="text"
 							class="form-control" id="name" placeholder="<fmt:message key="profile.form.username" />" value="<c:out value="${user.username}" />">
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="form-group">
+						<label for="email"><fmt:message key="profile.form.email" /></label> <input name="email" type="email" class="form-control" id="email"
+							placeholder="<fmt:message key="profile.form.email" />" value="<c:out value="${user.email}" />">
 					</div>
 				</div>
 			</div>
@@ -85,6 +91,30 @@
 							<option value="0" <c:if test="${user.rounded eq '0'}">selected="selected"</c:if>><fmt:message key="no" /></option>
 							<option value="1" <c:if test="${user.rounded eq '1'}">selected="selected"</c:if>><fmt:message key="yes" /></option>
 						</select>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-6">
+					<div class="form-group">
+						<label for="pushoverUser"><fmt:message key="profile.form.pushover.user" /></label> <input name="pushoverUser" type="text" class="form-control"
+							id="pushoverUser" placeholder="<fmt:message key="profile.form.pushover.user" />" value="<c:out value="${user.pushoverUserKey}" />">
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="form-group">
+						<label for="pushoverAPIKey"><fmt:message key="profile.form.pushover.key" /></label> <input name="pushoverAPIKey" type="text"
+							class="form-control" id="pushoverAPIKey" placeholder="<fmt:message key="profile.form.pushover.key" />"
+							value="<c:out value="${user.pushoverAPIKey}" />">
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<div class="form-group">
+						<label for="pushbulletKey"><fmt:message key="profile.form.pushbullet.key" /></label> <input name="pushbulletKey" type="text"
+							class="form-control" id="pushbulletKey" placeholder="<fmt:message key="profile.form.pushbullet.key" />"
+							value="<c:out value="${user.pushbulletAPIKey}" />">
 					</div>
 				</div>
 			</div>
