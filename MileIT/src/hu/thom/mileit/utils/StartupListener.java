@@ -53,21 +53,21 @@ public class StartupListener implements ServletContextListener, Serializable {
 		logger.logInfo("contextInitialized()", LogMessages.APPLICATION_STARTING);
 
 		DynaCacheManager dc = DynaCacheManager.getInstance();
-		logger.logDebug("contextInitialized()", LogMessages.START_DC);
-		
+		logger.logTrace("contextInitialized()", LogMessages.START_DC);
+
 		dc.clear();
 
 		if (dc.get("em") == null) {
-			dc.put("em", new EncryptionManager(), DynaCacheManager.DC_TTL_FOREVER, "application");
-			logger.logDebug("contextInitialized()", LogMessages.START_EM);
+			dc.put("em", EncryptionManager.getInstance(), DynaCacheManager.DC_TTL_FOREVER, "application");
+			logger.logTrace("contextInitialized()", LogMessages.START_EM);
 		}
 
 		DBManager db = null;
 		if (dc.get("db") == null) {
-			db = new DBManager();
+			db = DBManager.getInstance();
 			dc.put("db", db, DynaCacheManager.DC_TTL_FOREVER, "application");
-			logger.logDebug("contextInitialized()", LogMessages.START_DB);
-			
+			logger.logTrace("contextInitialized()", LogMessages.START_DB);
+
 		}
 
 		if (dc.get(UIBindings.CAR_VENDORS) == null) {

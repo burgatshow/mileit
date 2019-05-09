@@ -116,19 +116,22 @@ public class PlaceModel extends Model {
 		return fuelStation;
 	}
 
-	public void setAddress(String address) {
+	public PlaceModel setAddress(String address) {
 		this.address = address;
+		return this;
 	}
 
-	public void setFuelStation(boolean fuelStation) {
+	public PlaceModel setFuelStation(boolean fuelStation) {
 		this.fuelStation = fuelStation;
+		return this;
 	}
 
-	public void setFuelStation(int fuelStation) {
+	public PlaceModel setFuelStation(int fuelStation) {
 		setFuelStation(Integer.toString(fuelStation));
+		return this;
 	}
 
-	public void setFuelStation(String fuelStation) {
+	public PlaceModel setFuelStation(String fuelStation) {
 		switch (fuelStation.toLowerCase()) {
 		case "1":
 		case "true":
@@ -140,34 +143,40 @@ public class PlaceModel extends Model {
 			this.fuelStation = false;
 			break;
 		}
+		return this;
 	}
 
-	public void setLatitude(double latitude) {
+	public PlaceModel setLatitude(double latitude) {
 		this.latitude = latitude;
+		return this;
 	}
 
-	public void setLatitude(String latitude) {
+	public PlaceModel setLatitude(String latitude) {
 		try {
 			this.latitude = Double.parseDouble(latitude);
 		} catch (Exception e) {
 			this.latitude = 0;
 		}
+		return this;
 	}
 
-	public void setLongitude(double longitude) {
+	public PlaceModel setLongitude(double longitude) {
 		this.longitude = longitude;
+		return this;
 	}
 
-	public void setLongitude(String longitude) {
+	public PlaceModel setLongitude(String longitude) {
 		try {
 			this.longitude = Double.parseDouble(longitude);
 		} catch (Exception e) {
 			this.longitude = 0;
 		}
+		return this;
 	}
 
-	public void setName(String name) {
+	public PlaceModel setName(String name) {
 		this.name = name;
+		return this;
 	}
 
 	@Override

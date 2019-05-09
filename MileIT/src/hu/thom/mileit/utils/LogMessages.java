@@ -36,16 +36,23 @@ public final class LogMessages implements Serializable {
 	public static final String APPLICATION_STOPPED		= "MILEIT0010I: MileIT application is successfully stopped.";
 	
 	/**
+	 * Error message strings
+	 */
+	public static final String INVALID_INPUT			= "MILEIT0001E: Invalid or insufficient amount of parameters.";
+	
+	/**
 	 * Debug message strings
 	 */
 	public static final String LOG_SEC_F_SECRET 		= "MILEIT0001D: Secret key is not set, setting now.";
 	public static final String LOG_SEC_F_SALT 			= "MILEIT0002D: Salt is not set, setting now.";
 	public static final String LOG_SEC_FFF_J2C 			= "MILEIT0003D: Obtain J2C credential: ";
-	public static final String START_EM 				= "MILEIT0001T:	Creating, configuring and loading EncryptionManager into cache.";
-	public static final String START_DC 				= "MILEIT0002T:	Starting Dynamic Cache Manager.";
-	public static final String START_DB 				= "MILEIT0003T:	Starting Dynamic Cache Manager.";
+	public static final String DC_CLEAR 				= "MILEIT0004D:	Dynamic cache content wiped out.";
+	public static final String NO_USERS_TO_NOTIFY 		= "MILEIT0005D: Currently, there are no expiring items.";
 	
 	/**
 	 * Trace message strings
 	 */
+	public static final String START_EM 				= "MILEIT0001T:	Creating, configuring and loading Encryption manager into cache.";
+	public static final String START_DC 				= "MILEIT0002T:	Starting Dynamic Cache manager.";
+	public static final String START_DB 				= "MILEIT0003T:	Starting Database manager.";
 }

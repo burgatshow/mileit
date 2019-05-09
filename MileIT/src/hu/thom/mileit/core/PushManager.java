@@ -1,7 +1,5 @@
 package hu.thom.mileit.core;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Serializable;
 import java.net.URL;
@@ -13,70 +11,127 @@ import java.util.StringJoiner;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import com.ibm.json.java.JSONObject;
+
+import hu.thom.mileit.utils.LogManager;
+import hu.thom.mileit.utils.LogMessages;
+
+/**
+ * Class to implement notification providers
+ * 
+ * @author thom <tamas.bures@protonmail.com>
+ *
+ */
 public class PushManager implements Serializable {
+	/**
+	 * Serial version UID
+	 */
 	private static final long serialVersionUID = -9146376235788834522L;
 
-//	curl -s -F "token=aoibifuy8chx7qsc89arbupughtnu2" -F "user=ussx29sf79zytyye472rty8mjwu772" -F "title=Dell OptiPlex" -F "message=$1" https://api.pushover.net/1/messages.json > /dev/null
-//	curl -s -X POST https://api.pushbullet.com/v2/pushes -H 'Access-Token: o.MvlB1BlB8avFXDEnOb8G8xQUW3324brs' -H 'Content-Type: application/json' --data-binary '{"email": "btotyi@gmail.com", "type": "note", "title": "Dell OptiPlex", "body": "'"$1"'"}' > /dev/null
+	/**
+	 * Logger instance
+	 */
+	private LogManager logger = new LogManager(PushManager.class);
+
+	/**
+	 * Instance
+	 */
+	private static PushManager pm;
+
+	/**
+	 * Constructor
+	 * 
+	 * @return {@link PushManager}
+	 */
+	public static PushManager getInstance() {
+		if (pm == null) {
+			pm = new PushManager();
+		}
+		return pm;
+	}
 
 	/**
 	 * Constructor
 	 */
-	public PushManager() {
+	private PushManager() {
+		logger.logEnter("PushManager()");
+		logger.logExit("PushManager()");
 	}
 
-	public boolean sendPushoverPost(String key, String payload) {
+	public boolean sendPush(String user, String token, String payload, int type) {
+		logger.logEnter("sendPush()");
 		boolean status = false;
 
-		try {
-			URL obj = new URL("https://api.pushover.net/1/messages.json");
-			HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
+		if (user != null && !user.isEmpty() && token != null && !token.isEmpty() && payload != null && !payload.isEmpty()) {
+			try {
+				URL endpointURL = null;
+				String postPayload = null;
+				String contentType = "application/x-www-form-urlencoded; charset=UTF-8";
+				if (type == 0) {
+					// Pushover
+					endpointURL = new URL("https://api.pushover.net/1/messages.json");
 
-			// add reuqest header
-			con.setRequestMethod("POST");
+					Map<String, String> formAttributes = new HashMap<String, String>();
+					formAttributes.put("user", user);
+					formAttributes.put("token", token);
+					formAttributes.put("title", "MileIT notification");
+					formAttributes.put("message", payload);
 
-			Map<String, String> formAttributes = new HashMap<String, String>();
-			formAttributes.put("token", "aoibifuy8chx7qsc89arbupughtnu2");
-			formAttributes.put("user", "ussx29sf79zytyye472rty8mjwu772");
-			formAttributes.put("title", "MileIT notification");
-			formAttributes.put("message", payload);
+					StringJoiner sj = new StringJoiner("&");
+					for (Map.Entry<String, String> entry : formAttributes.entrySet()) {
+						sj.add(URLEncoder.encode(entry.getKey(), "UTF-8") + "=" + URLEncoder.encode(entry.getValue(), "UTF-8"));
+					}
+					postPayload = sj.toString();
+				} else {
+					// Pushbullet
+					endpointURL = new URL("https://api.pushbullet.com/v2/pushes");
 
-			StringJoiner sj = new StringJoiner("&");
-			for (Map.Entry<String, String> entry : formAttributes.entrySet())
-				sj.add(URLEncoder.encode(entry.getKey(), "UTF-8") + "=" + URLEncoder.encode(entry.getValue(), "UTF-8"));
-			byte[] out = sj.toString().getBytes(StandardCharsets.UTF_8);
-			int length = out.length;
+					JSONObject pushbulletData = new JSONObject();
+					pushbulletData.put("email", user);
+					pushbulletData.put("type", "note");
+					pushbulletData.put("title", "MileIT notification");
+					pushbulletData.put("body", payload);
+					postPayload = pushbulletData.serialize();
+					contentType = "application/json; charset=UTF-8";
+				}
 
-			// Send post request
-			con.setDoOutput(true);
-			con.setFixedLengthStreamingMode(length);
-			con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
-			con.connect();
+				HttpsURLConnection con = (HttpsURLConnection) endpointURL.openConnection();
+				con.setDoOutput(true);
+				con.setRequestMethod("POST");
+				con.setRequestProperty("Content-Type", contentType);
+				if (type == 1) {
+					con.setRequestProperty("Access-Token", token);
+				}
 
-			try (OutputStream os = con.getOutputStream()) {
-				os.write(out);
+				byte[] out = postPayload.getBytes(StandardCharsets.UTF_8);
+				con.setFixedLengthStreamingMode(out.length);
+
+				con.connect();
+
+				try (OutputStream os = con.getOutputStream()) {
+					os.write(out);
+				} catch (Exception e) {
+					logger.logException("sendPush()", e);
+				}
+
+				int rc = con.getResponseCode();
+				switch (rc) {
+				case 400:
+					break;
+				default:
+					// 200
+					status = true;
+					break;
+				}
+				con.disconnect();
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.logException("sendPush()", e);
 			}
-
-			int responseCode = con.getResponseCode();
-			System.out.println("\nSending 'POST' request to URL.");
-			System.out.println("Response Code : " + responseCode);
-
-			BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-			String inputLine;
-			StringBuffer response = new StringBuffer();
-
-			while ((inputLine = in.readLine()) != null) {
-				response.append(inputLine);
-			}
-			in.close();
-
-			// print result
-			System.out.println(response.toString());
-		} catch (Exception e) {
+		} else {
+			logger.logError("sendPush()", LogMessages.INVALID_INPUT);
 		}
 
+		logger.logExit("sendPush()");
 		return status;
 	}
 }

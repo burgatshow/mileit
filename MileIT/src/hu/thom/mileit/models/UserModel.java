@@ -71,56 +71,67 @@ public class UserModel extends Model {
 		return username;
 	}
 
-	public void setCurrency(String currency) {
+	public UserModel setCurrency(String currency) {
 		this.currency = currency;
+		return this;
 	}
 
-	public void setDistance(int distance) {
+	public UserModel setDistance(int distance) {
 		this.distance = distance;
+		return this;
 	}
 
-	public void setDistance(String distance) {
+	public UserModel setDistance(String distance) {
 		try {
 			this.distance = Integer.parseInt(distance);
 		} catch (Exception e) {
 			this.distance = 1;
 		}
+		return this;
 	}
 
-	public void setEmail(String email) {
+	public UserModel setEmail(String email) {
 		this.email = email;
+		return this;
 	}
 
-	public void setLocale(String locale) {
+	public UserModel setLocale(String locale) {
 		this.locale = locale;
+		return this;
 	}
 
-	public void setPushbulletAPIKey(String pushbulletAPIKey) {
+	public UserModel setPushbulletAPIKey(String pushbulletAPIKey) {
 		this.pushbulletAPIKey = pushbulletAPIKey;
+		return this;
 	}
 
-	public void setPushoverAPIKey(String pushoverAPIKey) {
+	public UserModel setPushoverAPIKey(String pushoverAPIKey) {
 		this.pushoverAPIKey = pushoverAPIKey;
+		return this;
 	}
 
-	public void setPushoverUserKey(String pushoverUserKey) {
+	public UserModel setPushoverUserKey(String pushoverUserKey) {
 		this.pushoverUserKey = pushoverUserKey;
+		return this;
 	}
 
-	public void setRounded(int rounded) {
+	public UserModel setRounded(int rounded) {
 		this.rounded = rounded;
+		return this;
 	}
 
-	public void setRounded(String rounded) {
+	public UserModel setRounded(String rounded) {
 		try {
 			this.rounded = Integer.parseInt(rounded);
 		} catch (Exception e) {
 			this.rounded = 1;
 		}
+		return this;
 	}
 
-	public void setUsername(String username) {
+	public UserModel setUsername(String username) {
 		this.username = username;
+		return this;
 	}
 
 	@Override

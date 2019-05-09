@@ -45,15 +45,31 @@ public class EncryptionManager implements Serializable {
 	/**
 	 * Logger instance
 	 */
-
 	private LogManager logger = new LogManager(EncryptionManager.class);
+
+	/**
+	 * Instance
+	 */
+	private static EncryptionManager em;
+
+	/**
+	 * Constructor
+	 * 
+	 * @return {@link DynaCacheManager}
+	 */
+	public static EncryptionManager getInstance() {
+		if (em == null) {
+			em = new EncryptionManager();
+		}
+		return em;
+	}
 
 	/**
 	 * Constructor
 	 */
-	public EncryptionManager() {
+	private EncryptionManager() {
 		logger.logEnter("EncryptManager()");
-		
+
 		setupCiphers();
 
 		logger.logExit("EncryptManager()");

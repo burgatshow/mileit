@@ -31,6 +31,7 @@ CREATE TABLE IF NOT EXISTS `maintenances` (
   `date` DATETIME DEFAULT CURRENT_TIMESTAMP,
   `description` VARCHAR(1000) COLLATE utf8mb4_hungarian_ci DEFAULT NULL,
   `amount` DOUBLE UNSIGNED NOT NULL,
+  `expiration` DATETIME NULL DEFAULT NULL,
   PRIMARY KEY (`mntnc_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 

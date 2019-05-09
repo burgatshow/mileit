@@ -86,7 +86,7 @@ public class DynaCacheManager implements Serializable {
 		Object cacheObject = null;
 		if (objectKey != null && !objectKey.isEmpty()) {
 			cacheObject = cacheInstance.get(objectKey);
-			logger.logDebug("get()", LogMessages.LOG_DC_I_RETRIEVE, objectKey, cacheObject);
+			logger.logDebug("get()", LogMessages.LOG_DC_I_RETRIEVE, objectKey);
 		}
 		logger.logExit("get()");
 		return cacheObject;
@@ -138,9 +138,12 @@ public class DynaCacheManager implements Serializable {
 	 * @param key {@link String} Invalidates the object in cache
 	 */
 	public void invalidate(String key) {
+		logger.logEnter("invalidate()");
 		if (key != null && !key.isEmpty()) {
 			cacheInstance.invalidate(key);
+			logger.logDebug("invalidate()", LogMessages.DC_CLEAR);
 		}
+		logger.logExit("invalidate()");
 	}
 
 	public static DistributedMap getCacheInstance() {

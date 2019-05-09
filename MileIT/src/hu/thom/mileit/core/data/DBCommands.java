@@ -43,10 +43,10 @@ public final class DBCommands implements Serializable {
 	/**
 	 * Maintenances
 	 */
-	public static final String SQL_S_MAINTENANCES = "SELECT m.mntnc_id, m.car_id, m.user_id, m.pm_id, IF(((SELECT distance FROM users AS u WHERE u.user_id = m.user_id) = 1), m.odometer, (m.odometer * 0.621)) AS odometer, m.date, m.description, m.amount, c.friendly_name, c.plate_number AS plate_number, pm.name  FROM maintenances AS m, cars AS c, payment_method AS pm WHERE c.car_id = m.car_id AND c.archived = 0 AND m.pm_id = pm.pm_id AND m.user_id = ? ORDER BY m.date DESC";
-	public static final String SQL_I_MAINTENANCE = "INSERT INTO maintenances (car_id, pm_id, odometer, date, description, amount, user_id) VALUES (?, ?, IF(((SELECT distance FROM users WHERE user_id = ?) = 1), ?, (? / 0.621)), ?, ?, ?, ?)";
-	public static final String SQL_U_MAINTENANCE = "UPDATE maintenances SET car_id = ?, pm_id = ?, odometer = IF(((SELECT distance FROM users WHERE user_id = ?) = 1), ?, (? / 0.621)), date = ?, description = ?, amount = ? WHERE user_id = ? AND mntnc_id = ?";
-	public static final String SQL_S_MAINTENANCE = "SELECT m.mntnc_id, m.car_id, m.user_id, m.pm_id, IF(((SELECT distance FROM users AS u WHERE u.user_id = m.user_id) = 1), m.odometer, (m.odometer * 0.621)) as odometer, m.date, m.description, m.amount FROM maintenances AS m WHERE m.mntnc_id = ?";
+	public static final String SQL_S_MAINTENANCES = "SELECT m.mntnc_id, m.car_id, m.user_id, m.pm_id, IF(((SELECT distance FROM users AS u WHERE u.user_id = m.user_id) = 1), m.odometer, (m.odometer * 0.621)) AS odometer, m.date, m.description, m.amount, c.friendly_name, c.plate_number AS plate_number, pm.name, m.expiration FROM maintenances AS m, cars AS c, payment_method AS pm WHERE c.car_id = m.car_id AND c.archived = 0 AND m.pm_id = pm.pm_id AND m.user_id = ? ORDER BY m.date DESC";
+	public static final String SQL_I_MAINTENANCE = "INSERT INTO maintenances (car_id, pm_id, odometer, date, description, amount, expiration, user_id) VALUES (?, ?, IF(((SELECT distance FROM users WHERE user_id = ?) = 1), ?, (? / 0.621)), ?, ?, ?, ?, ?)";
+	public static final String SQL_U_MAINTENANCE = "UPDATE maintenances SET car_id = ?, pm_id = ?, odometer = IF(((SELECT distance FROM users WHERE user_id = ?) = 1), ?, (? / 0.621)), date = ?, description = ?, amount = ?, expiration = ? WHERE user_id = ? AND mntnc_id = ?";
+	public static final String SQL_S_MAINTENANCE = "SELECT m.mntnc_id, m.car_id, m.user_id, m.pm_id, IF(((SELECT distance FROM users AS u WHERE u.user_id = m.user_id) = 1), m.odometer, (m.odometer * 0.621)) as odometer, m.date, m.description, m.amount, m.expiration FROM maintenances AS m WHERE m.mntnc_id = ?";
 
 	/**
 	 * Payment methods
@@ -94,4 +94,16 @@ public final class DBCommands implements Serializable {
 	public static final String SQL_D_ROUTE = "DELETE FROM routes WHERE route_id = ?";
 	public static final String SQL_I_ROUTE = "INSERT INTO routes (car_id, start_place_id, end_place_id, route_type, route_datetime, route_distance, user_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
 	public static final String SQL_U_ROUTE = "UPDATE routes SET car_id = ?, start_place_id = ?, end_place_id = ?, route_type = ?, route_datetime = ?, route_distance = ? WHERE route_id = ?";
+	
+	/**
+	 * Notification scheduler
+	 */
+	public static final String SQL_S_NOTIFIABLE_ITEMS = "SELECT m.car_id, m.user_id, m.description, m.expiration, DATEDIFF(m.expiration, NOW()) AS days_remaining, u.username, u.email, u.pushover_api_user, u.pushover_api_key, u.pushbullet_api_key, c.friendly_name, c.plate_number FROM maintenances AS m, users AS u, cars AS c WHERE m.user_id = u.user_id AND c.car_id = m.car_id AND c.archived = 0 AND m.expiration IS NOT NULL AND m.expiration <= NOW() + INTERVAL ? DAY";
+	
+	
+	
+	
+	
+	
+	
 }

@@ -110,6 +110,10 @@ public class TyreModel extends Model {
 	public TyreModel() {
 	}
 
+	public TyreModel(int id) {
+		setId(id);
+	}
+
 	public TyreModel(int tyre_id, int user_id, byte tyreType, int sizeW, int sizeH, int sizeR, int manufacturerId, String manufacturerName,
 			String model, byte axis, Timestamp purchaseDate, int archived) {
 		setId(tyre_id);
@@ -234,96 +238,112 @@ public class TyreModel extends Model {
 		return result;
 	}
 
-	public void setAxis(Axis axis) {
+	public TyreModel setAxis(Axis axis) {
 		this.axis = axis;
+		return this;
 	}
 
-	public void setAxis(String axis) {
+	public TyreModel setAxis(String axis) {
 		try {
 			this.axis = Axis.fromCode((byte) Integer.parseInt(axis));
 		} catch (Exception e) {
 			this.axis = Axis.NONE;
 		}
+		return this;
 	}
 
-	public void setManufacturerId(int manufacturer) {
+	public TyreModel setManufacturerId(int manufacturer) {
 		this.manufacturerId = manufacturer;
+		return this;
 	}
 
-	public void setManufacturerId(String manufacturer) {
+	public TyreModel setManufacturerId(String manufacturer) {
 		try {
 			this.manufacturerId = Integer.parseInt(manufacturer);
 		} catch (Exception e) {
 			this.manufacturerId = 0;
 		}
+		return this;
 	}
 
-	public void setManufacturerName(String manufacturerName) {
+	public TyreModel setManufacturerName(String manufacturerName) {
 		this.manufacturerName = manufacturerName;
+		return this;
 	}
 
-	public void setModel(String model) {
+	public TyreModel setModel(String model) {
 		this.model = model;
+		return this;
 	}
 
-	public void setPurchaseDate(Date purchaseDate) {
+	public TyreModel setPurchaseDate(Date purchaseDate) {
 		this.purchaseDate = purchaseDate;
+		return this;
 	}
 
-	public void setPurchaseDate(String purchaseDate) {
+	public TyreModel setPurchaseDate(String purchaseDate) {
 		try {
 			this.purchaseDate = this.getDateFormatter(null).parse(purchaseDate);
 		} catch (Exception e) {
 			this.purchaseDate = new Date();
 		}
+		return this;
 	}
 
-	public void setSizeH(int sizeH) {
+	public TyreModel setSizeH(int sizeH) {
 		this.sizeH = sizeH;
+		return this;
 	}
 
-	public void setSizeH(String sizeH) {
+	public TyreModel setSizeH(String sizeH) {
 		try {
 			this.sizeH = Integer.parseInt(sizeH);
 		} catch (Exception e) {
 			this.sizeH = 0;
 		}
+		return this;
 	}
 
-	public void setSizeR(int sizeR) {
+	public TyreModel setSizeR(int sizeR) {
 		this.sizeR = sizeR;
+		return this;
 	}
 
-	public void setSizeR(String sizeR) {
+	public TyreModel setSizeR(String sizeR) {
 		try {
 			this.sizeR = Integer.parseInt(sizeR);
 		} catch (Exception e) {
 			this.sizeR = 0;
 		}
+		return this;
 	}
 
-	public void setSizeW(int sizeW) {
+	public TyreModel setSizeW(int sizeW) {
 		this.sizeW = sizeW;
+		return this;
 	}
 
-	public void setSizeW(String sizeW) {
+	public TyreModel setSizeW(String sizeW) {
 		try {
 			this.sizeW = Integer.parseInt(sizeW);
 		} catch (Exception e) {
 			this.sizeW = 0;
 		}
+		return this;
 	}
 
-	public void setType(String type) {
+	public TyreModel setType(String type) {
 		try {
 			this.type = TyreType.fromCode((byte) Integer.parseInt(type));
 		} catch (Exception e) {
 			this.type = TyreType.OTHER;
 		}
+		return this;
 	}
 
-	public void setType(TyreType type) {
+	public TyreModel setType(TyreType type) {
 		this.type = type;
+		return this;
 	}
 
 	@Override
