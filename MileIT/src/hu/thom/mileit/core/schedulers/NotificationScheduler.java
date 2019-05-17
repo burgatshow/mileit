@@ -29,6 +29,8 @@ public class NotificationScheduler implements Serializable {
 	 */
 	private static final long serialVersionUID = -5167105533214280246L;
 
+	private static final boolean ENABLE_SCHEDULER = false;
+
 	/**
 	 * Logger instance
 	 */
@@ -74,18 +76,22 @@ public class NotificationScheduler implements Serializable {
 
 	public void initialize() {
 		logger.logEnter("initialize()");
-		try {
-			ManagedScheduledExecutorService executor = (ManagedScheduledExecutorService) new InitialContext()
-					.lookup("scheduler/mileit_notifications");
+		if (ENABLE_SCHEDULER) {
+			try {
+				ManagedScheduledExecutorService executor = (ManagedScheduledExecutorService) new InitialContext()
+						.lookup("scheduler/mileit_notifications");
 
-			scheduledFuture = executor.scheduleAtFixedRate(runRunnable(), 0, 10, TimeUnit.SECONDS);
+				scheduledFuture = executor.scheduleAtFixedRate(runRunnable(), 0, 10, TimeUnit.SECONDS);
 
-			logger.logDebug("initialize()", LogMessages.LOG_SCHED_NOTIF_START, new Object[] { 5, "seconds" });
+				logger.logDebug("initialize()", LogMessages.LOG_SCHED_NOTIF_START, new Object[] { 5, "seconds" });
 
-		} catch (Exception e) {
-			logger.logException("initialize()", e);
+			} catch (Exception e) {
+				logger.logException("initialize()", e);
+			}
+
+		} else {
+			logger.logWarn("initialize()", LogMessages.LOG_SCHED_NOTIF_DISABLED);
 		}
-
 		logger.logExit("initialize()");
 	}
 
@@ -135,9 +141,11 @@ public class NotificationScheduler implements Serializable {
 	public void cancelTask() {
 		logger.logEnter("cancelTask()");
 
-		if (!scheduledFuture.isCancelled()) {
-			scheduledFuture.cancel(false);
-			logger.logDebug("cancelTask()", LogMessages.LOG_SCHED_NOTIF_STOP);
+		if (ENABLE_SCHEDULER) {
+			if (!scheduledFuture.isCancelled()) {
+				scheduledFuture.cancel(false);
+				logger.logDebug("cancelTask()", LogMessages.LOG_SCHED_NOTIF_STOP);
+			}
 		}
 
 		logger.logExit("cancelTask()");

@@ -78,8 +78,7 @@
 			<div class="row">
 				<div class="col-md-6">
 					<div class="form-group">
-						<label for="distance"><fmt:message key="profile.form.distance" /></label> <select id="distance" name="distance" class="form-control"
-							name="distance">
+						<label for="distance"><fmt:message key="profile.form.distance" /></label> <select id="distance" name="distance" class="form-control">
 							<option value="1" <c:if test="${user.distance eq '1'}">selected="selected"</c:if>><fmt:message key="profile.form.distance.km" /></option>
 							<option value="2" <c:if test="${user.distance eq '2'}">selected="selected"</c:if>><fmt:message key="profile.form.distance.mi" /></option>
 						</select>
@@ -87,7 +86,7 @@
 				</div>
 				<div class="col-md-6">
 					<div class="form-group">
-						<label for="rounded"><fmt:message key="profile.form.rounded" /></label> <select id="rounded" name="rounded" class="form-control" name="rounded">
+						<label for="rounded"><fmt:message key="profile.form.rounded" /></label> <select id="rounded" name="rounded" class="form-control">
 							<option value="0" <c:if test="${user.rounded eq '0'}">selected="selected"</c:if>><fmt:message key="no" /></option>
 							<option value="1" <c:if test="${user.rounded eq '1'}">selected="selected"</c:if>><fmt:message key="yes" /></option>
 						</select>
@@ -115,6 +114,30 @@
 						<label for="pushbulletKey"><fmt:message key="profile.form.pushbullet.key" /></label> <input name="pushbulletKey" type="text"
 							class="form-control" id="pushbulletKey" placeholder="<fmt:message key="profile.form.pushbullet.key" />"
 							value="<c:out value="${user.pushbulletAPIKey}" />">
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-6">
+					<div class="form-group">
+						<label for="dateFormat"><fmt:message key="profile.form.date_format" /></label> <select id="dateFormat" name="dateFormat" class="form-control">
+							<c:forEach items="1,2,3,4,5,6,7,8,9,10" var="i">
+								<fmt:message key="profile.form.date_format.${i}.val" var="dateValue" />
+								<option <c:if test="${user.dateFormat eq dateValue}">selected="selected"</c:if> value="<c:out value="${dateValue}"  />"><fmt:message
+										key="profile.form.date_format.${i}.label" /></option>
+							</c:forEach>
+						</select>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="form-group">
+						<label for="timeFormat"><fmt:message key="profile.form.time_format" /></label> <select id="timeFormat" name="timeFormat" class="form-control">
+							<c:forEach items="1,2" var="i">
+								<fmt:message key="profile.form.time_format.${i}.val" var="timeValue" />
+								<option <c:if test="${user.timeFormat eq timeValue}">selected="selected"</c:if>
+									value="<c:out value="${timeValue}"  />"><fmt:message key="profile.form.time_format.${i}.label" /></option>
+							</c:forEach>
+						</select>
 					</div>
 				</div>
 			</div>

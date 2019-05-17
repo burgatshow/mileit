@@ -24,9 +24,9 @@ public final class DBCommands implements Serializable {
 	 * User
 	 */
 	public static final String SQL_I_USER = "INSERT IGNORE INTO users (username) VALUES (?)";
-	public static final String SQL_S_AUTH = "SELECT u.username FROM users AS u WHERE u.username = ? AND u.password = ?";
-	public static final String SQL_S_PROFILE = "SELECT u.currency, u.locale, u.user_id, u.username, u.distance, u.rounded, u.email, u.pushover_api_user, u.pushover_api_key, u.pushbullet_api_key FROM users AS u WHERE u.username = ?";
-	public static final String SQL_U_PROFILE = "UPDATE users SET currency = ?, locale = ?, distance = ?, rounded = ?, email = ?, pushover_api_user = ?, pushover_api_key = ?, pushbullet_api_key = ? WHERE user_id = ?";
+	public static final String SQL_S_AUTH = "SELECT u.username FROM users AS u WHERE u.username = ? AND u.password = ? AND u.archived <> 1";
+	public static final String SQL_S_PROFILE = "SELECT u.currency, u.locale, u.user_id, u.username, u.distance, u.rounded, u.email, u.pushover_api_user, u.pushover_api_key, u.pushbullet_api_key, u.archived, u.date_format, u.time_format FROM users AS u WHERE u.username = ?";
+	public static final String SQL_U_PROFILE = "UPDATE users SET currency = ?, locale = ?, distance = ?, rounded = ?, email = ?, pushover_api_user = ?, pushover_api_key = ?, pushbullet_api_key = ?, date_format = ?, time_format = ? WHERE user_id = ?";
 
 	/**
 	 * Cars

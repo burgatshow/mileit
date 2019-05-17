@@ -27,6 +27,9 @@ public final class UIBindings implements Serializable {
 	public static final String[] FORM_ME_PAYMENT_METHOD = { "name" };
 	public static final String[] FORM_ME_ROUTE = { "car", "type", "startPlace", "endPlace", "routeDatetime" };
 
+	public static final String[] VALID_PATTERNS = { "yyyy. MM. dd.", "yyyy-MM-dd", "yyyy/MM/dd", "yyyy. MMMM dd.", "yyyy. MMM. dd.", "dd. MM. yyyy.",
+			"dd-MM-yyyy", "dd/MM/yyyy", "dd. MMMM yyyy.", "dd. MMM. yyyy.", "HH:mm", "h:mm a" };
+
 	/**
 	 * General controller keys
 	 */

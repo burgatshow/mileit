@@ -77,10 +77,4 @@ public class DateModel implements Serializable {
 			return false;
 		return true;
 	}
-
-	@Override
-	public String toString() {
-		return "DateModel [DATE_YEAR_ONLY=" + DATE_YEAR_ONLY + ", DATE=" + DATE + ", DATETIME=" + DATETIME + ", DATETIMESEC=" + DATETIMESEC + "]";
-	}
-
 }

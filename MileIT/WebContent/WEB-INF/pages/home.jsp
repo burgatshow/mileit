@@ -30,7 +30,8 @@
 					</c:if>
 					<c:if test="${not empty lr.refuelDate}">
 						<fmt:message key="index.stat.title">
-							<fmt:formatDate type="both" value="${lr.refuelDate}" pattern="yyyy. MM. dd." var="formatted_LR" />
+<%-- 							<fmt:formatDate type="both" value="${lr.refuelDate}" pattern="yyyy. MM. dd." var="formatted_LR" /> --%>
+							<fmt:formatDate type="both" value="${lr.refuelDate}" pattern="${user.dateFormat}" var="formatted_LR" />
 							<fmt:param value="${formatted_LR}" />
 						</fmt:message>
 					</c:if>
