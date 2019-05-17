@@ -87,7 +87,7 @@
 									</td>
 									<td class="align-middle text-center"><fmt:message
 											key="${t.axis eq 'FRONT' ? 'tyres.form.axis.front' : t.axis eq 'REAR' ? 'tyres.form.axis.rear' : t.axis eq 'BOTH' ? 'tyres.form.axis.all' : 'tyres.form.axis.none'}" /></td>
-									<td class="align-middle text-center"><fmt:formatDate type="both" value="${t.purchaseDate}" pattern="yyyy. MM. dd." /></td>
+									<td class="align-middle text-center"><fmt:formatDate type="both" value="${t.purchaseDate}" pattern="${user.dateFormat}" /></td>
 									<td class="text-center align-middle"><c:out value="${t.car.friendlyName}" /> <br> <span class="badge badge-dark"><c:out
 												value="${t.car.plateNumber}" /></span></td>
 									<td class="align-middle text-center"><c:if test="${t.car.id eq 0}">
@@ -98,11 +98,11 @@
 								</tr>
 								<tr class="table-primary">
 									<th class="align-middle text-left">First installed</th>
-									<td class="align-middle text-center"><fmt:formatDate type="both" value="${t.tyreEvent.dateStart}" pattern="yyyy. MM. dd." /> <br>
+									<td class="align-middle text-center"><fmt:formatDate type="both" value="${t.tyreEvent.dateStart}" pattern="${user.dateFormat}" /> <br>
 										<span class="badge badge-dark"><fmt:formatNumber value="${t.tyreEvent.odometerStart}" pattern="#,##0.00" type="number"
 												minFractionDigits="0" maxFractionDigits="${user.rounded eq 1 ? 0 : 2}" /></span></td>
 									<th class="align-middle text-left">Last removed</th>
-									<td class="align-middle text-center"><fmt:formatDate type="both" value="${t.tyreEvent.dateEnd}" pattern="yyyy. MM. dd." /> <br>
+									<td class="align-middle text-center"><fmt:formatDate type="both" value="${t.tyreEvent.dateEnd}" pattern="${user.dateFormat}" /> <br>
 										<span class="badge badge-dark"><fmt:formatNumber value="${t.tyreEvent.odometerEnd}" pattern="#,##0.00" type="number"
 												minFractionDigits="0" maxFractionDigits="${user.rounded eq 1 ? 0 : 2}" /></span></td>
 									<th class="align-middle text-left">Total distance</th>

@@ -31,6 +31,7 @@ import hu.thom.mileit.models.TyreModel;
 import hu.thom.mileit.models.TyreModel.Axis;
 import hu.thom.mileit.models.TyreModel.TyreType;
 import hu.thom.mileit.utils.LogManager;
+import hu.thom.mileit.utils.LogMessages;
 import hu.thom.mileit.models.UserModel;
 
 /**
@@ -66,9 +67,12 @@ public class DBManager implements Serializable {
 	 * @return {@link DynaCacheManager}
 	 */
 	public static DBManager getInstance() {
+		logger.logEnter("getInstance()");
 		if (db == null) {
 			db = new DBManager();
 		}
+
+		logger.logExit("getInstance()");
 		return db;
 	}
 
@@ -101,6 +105,7 @@ public class DBManager implements Serializable {
 		try {
 			con = ds.getConnection();
 			ps = con.prepareStatement(DBCommands.SQL_U_CAR_ARCHIVE_OR_ACTIVATE);
+			logger.logTrace("archiveOrActivateCar()", LogMessages.SQL_COMMAND, DBCommands.SQL_U_CAR_ARCHIVE_OR_ACTIVATE);
 			ps.setInt(1, value);
 			ps.setInt(2, id);
 
@@ -128,6 +133,7 @@ public class DBManager implements Serializable {
 		try {
 			con = ds.getConnection();
 			ps = con.prepareStatement(DBCommands.SQL_U_PAYMENT_ARCHIVE);
+			logger.logTrace("archivePaymentMethod()", LogMessages.SQL_COMMAND, DBCommands.SQL_U_PAYMENT_ARCHIVE);
 			ps.setInt(1, id);
 
 			status = ps.executeUpdate() >= 1 ? true : false;
@@ -153,6 +159,8 @@ public class DBManager implements Serializable {
 		try {
 			con = ds.getConnection();
 			ps = con.prepareStatement(DBCommands.SQL_U_PLACE_ARCHIVE);
+			logger.logTrace("archivePlace()", LogMessages.SQL_COMMAND, DBCommands.SQL_U_PLACE_ARCHIVE);
+
 			ps.setInt(1, id);
 
 			status = ps.executeUpdate() >= 1 ? true : false;
@@ -178,6 +186,7 @@ public class DBManager implements Serializable {
 		try {
 			con = ds.getConnection();
 			ps = con.prepareStatement(DBCommands.SQL_U_TYRE_ARCHIVE);
+			logger.logTrace("archiveTyre()", LogMessages.SQL_COMMAND, DBCommands.SQL_U_TYRE_ARCHIVE);
 			ps.setInt(1, id);
 
 			status = ps.executeUpdate() >= 1 ? true : false;
@@ -204,6 +213,8 @@ public class DBManager implements Serializable {
 		try {
 			con = ds.getConnection();
 			ps = con.prepareStatement(DBCommands.SQL_S_AUTH);
+			logger.logTrace("authenticateUser()", LogMessages.SQL_COMMAND, DBCommands.SQL_S_AUTH);
+
 			ps.setString(1, username);
 			ps.setString(2, password);
 
@@ -272,6 +283,7 @@ public class DBManager implements Serializable {
 			try {
 				con = ds.getConnection();
 				ps = con.prepareStatement(DBCommands.SQL_I_TYRE_EVENT);
+				logger.logTrace("createTyreEvent()", LogMessages.SQL_COMMAND, DBCommands.SQL_I_TYRE_EVENT);
 
 				ps.setInt(1, tyreEvent.getTyre().getId());
 				ps.setInt(2, tyreEvent.getUser().getId());
@@ -305,6 +317,7 @@ public class DBManager implements Serializable {
 			try {
 				con = ds.getConnection();
 				ps = con.prepareStatement(car.getOperation() == 0 ? DBCommands.SQL_I_CAR : DBCommands.SQL_U_CAR);
+				logger.logTrace("createUpdateCar()", LogMessages.SQL_COMMAND, car.getOperation() == 0 ? DBCommands.SQL_I_CAR : DBCommands.SQL_U_CAR);
 
 				ps.setInt(1, car.getManufacturer());
 				ps.setString(2, car.getModel());
@@ -353,6 +366,8 @@ public class DBManager implements Serializable {
 			try {
 				con = ds.getConnection();
 				ps = con.prepareStatement(m.getOperation() == 0 ? DBCommands.SQL_I_MAINTENANCE : DBCommands.SQL_U_MAINTENANCE);
+				logger.logTrace("createUpdateMaintenance()", LogMessages.SQL_COMMAND,
+						m.getOperation() == 0 ? DBCommands.SQL_I_MAINTENANCE : DBCommands.SQL_U_MAINTENANCE);
 
 				ps.setInt(1, m.getCar().getId());
 				ps.setInt(2, m.getPayment().getId());
@@ -394,6 +409,8 @@ public class DBManager implements Serializable {
 			try {
 				con = ds.getConnection();
 				ps = con.prepareStatement(pm.getOperation() == 0 ? DBCommands.SQL_I_PAYMENT : DBCommands.SQL_U_PAYMENT);
+				logger.logTrace("createUpdatePaymentMethod()", LogMessages.SQL_COMMAND,
+						pm.getOperation() == 0 ? DBCommands.SQL_I_PAYMENT : DBCommands.SQL_U_PAYMENT);
 
 				ps.setString(1, pm.getName());
 				ps.setString(2, pm.getDescription());
@@ -424,6 +441,8 @@ public class DBManager implements Serializable {
 			try {
 				con = ds.getConnection();
 				ps = con.prepareStatement(l.getOperation() == 0 ? DBCommands.SQL_I_PLACE : DBCommands.SQL_U_PLACE);
+				logger.logTrace("createUpdatePlace()", LogMessages.SQL_COMMAND,
+						l.getOperation() == 0 ? DBCommands.SQL_I_PLACE : DBCommands.SQL_U_PLACE);
 
 				ps.setString(1, l.getName());
 				ps.setString(2, l.getAddress());
@@ -457,6 +476,8 @@ public class DBManager implements Serializable {
 			try {
 				con = ds.getConnection();
 				ps = con.prepareStatement(rf.getOperation() == 0 ? DBCommands.SQL_I_REFUEL : DBCommands.SQL_U_REFUEL);
+				logger.logTrace("createUpdateRefuel()", LogMessages.SQL_COMMAND,
+						rf.getOperation() == 0 ? DBCommands.SQL_I_REFUEL : DBCommands.SQL_U_REFUEL);
 
 				ps.setInt(1, rf.getCar().getId());
 				ps.setInt(2, rf.getPlace().getId());
@@ -498,6 +519,9 @@ public class DBManager implements Serializable {
 			try {
 				con = ds.getConnection();
 				ps = con.prepareStatement(r.getOperation() == 0 ? DBCommands.SQL_I_ROUTE : DBCommands.SQL_U_ROUTE);
+				logger.logTrace("createUpdateRoute()", LogMessages.SQL_COMMAND,
+						r.getOperation() == 0 ? DBCommands.SQL_I_ROUTE : DBCommands.SQL_U_ROUTE);
+
 				ps.setInt(1, r.getCar().getId());
 				ps.setInt(2, r.getStartPlace().getId());
 				ps.setInt(3, r.getEndPlace().getId());
@@ -542,22 +566,24 @@ public class DBManager implements Serializable {
 	 * @param car {@link TyreModel} a tyre object
 	 * @return true on success, false otherwise
 	 */
-	public boolean createUpdateTyre(TyreModel tyre) {
+	public boolean createUpdateTyre(TyreModel t) {
 		logger.logEnter("createUpdateTyre()");
-		if (tyre != null) {
+		if (t != null) {
 			try {
 				con = ds.getConnection();
-				ps = con.prepareStatement(tyre.getOperation() == 0 ? DBCommands.SQL_I_TYRE : DBCommands.SQL_U_TYRE);
-				ps.setInt(1, tyre.getType().getCode());
-				ps.setInt(2, tyre.getManufacturerId());
-				ps.setString(3, tyre.getModel());
-				ps.setInt(4, tyre.getAxis().getCode());
-				ps.setInt(5, tyre.getSizeR());
-				ps.setInt(6, tyre.getSizeH());
-				ps.setInt(7, tyre.getSizeW());
-				ps.setTimestamp(8, new Timestamp(tyre.getPurchaseDate().getTime()));
+				ps = con.prepareStatement(t.getOperation() == 0 ? DBCommands.SQL_I_TYRE : DBCommands.SQL_U_TYRE);
+				logger.logTrace("createUpdateTyre()", LogMessages.SQL_COMMAND, t.getOperation() == 0 ? DBCommands.SQL_I_TYRE : DBCommands.SQL_U_TYRE);
 
-				ps.setInt(9, tyre.getOperation() == 0 ? tyre.getUser().getId() : tyre.getId());
+				ps.setInt(1, t.getType().getCode());
+				ps.setInt(2, t.getManufacturerId());
+				ps.setString(3, t.getModel());
+				ps.setInt(4, t.getAxis().getCode());
+				ps.setInt(5, t.getSizeR());
+				ps.setInt(6, t.getSizeH());
+				ps.setInt(7, t.getSizeW());
+				ps.setTimestamp(8, new Timestamp(t.getPurchaseDate().getTime()));
+
+				ps.setInt(9, t.getOperation() == 0 ? t.getUser().getId() : t.getId());
 
 				if (ps.executeUpdate() == 1) {
 					return true;
@@ -585,6 +611,8 @@ public class DBManager implements Serializable {
 		try {
 			con = ds.getConnection();
 			ps = con.prepareStatement(DBCommands.SQL_I_USER);
+			logger.logTrace("createUserProfile()", LogMessages.SQL_COMMAND, DBCommands.SQL_I_USER);
+
 			ps.setString(1, username);
 			status = ps.executeUpdate() == 1 ? true : false;
 		} catch (Exception e) {
@@ -609,6 +637,8 @@ public class DBManager implements Serializable {
 		try {
 			con = ds.getConnection();
 			ps = con.prepareStatement(DBCommands.SQL_D_ROUTE);
+			logger.logTrace("deleteRoute()", LogMessages.SQL_COMMAND, DBCommands.SQL_D_ROUTE);
+
 			ps.setInt(1, id);
 			status = ps.executeUpdate() == 1 ? true : false;
 		} catch (Exception e) {
@@ -633,6 +663,8 @@ public class DBManager implements Serializable {
 		try {
 			con = ds.getConnection();
 			ps = con.prepareStatement(DBCommands.SQL_D_REFUEL);
+			logger.logTrace("deleteRefuel()", LogMessages.SQL_COMMAND, DBCommands.SQL_D_REFUEL);
+
 			ps.setInt(1, id);
 			status = ps.executeUpdate() == 1 ? true : false;
 		} catch (Exception e) {
@@ -657,27 +689,19 @@ public class DBManager implements Serializable {
 		try {
 			con = ds.getConnection();
 			ps = con.prepareStatement(DBCommands.SQL_S_CAR);
+			logger.logTrace("getCar()", LogMessages.SQL_COMMAND, DBCommands.SQL_S_CAR);
+
 			ps.setInt(1, id);
 
 			rs = ps.executeQuery();
 
 			if (rs.next()) {
-				car = new CarModel();
-				car.setId(rs.getInt(1));
-				car.setManufacturer(rs.getInt(2));
-				car.setModel(rs.getString(3));
-				car.setManufacturerDate(rs.getTimestamp(4));
-				car.setColor(rs.getString(5));
-				car.setVin(em != null ? em.decrypt(rs.getString(6)) : rs.getString(6));
-				car.setPlateNumber(em != null ? em.decrypt(rs.getString(7)) : rs.getString(7));
-				car.setFuelCapacity(rs.getDouble(8));
-				car.setFuel(rs.getInt(9));
-				car.setStartDate(rs.getTimestamp(10));
-				car.setEndDate(rs.getTimestamp(11));
-				car.setDescription(rs.getString(12));
-				car.setFriendlyName(rs.getString(13));
-				car.setActive(rs.getInt(14));
-				car.setArchived(rs.getInt(15));
+				car = new CarModel(rs.getInt(1));
+				car.setManufacturer(rs.getInt(2)).setModel(rs.getString(3)).setManufacturerDate(rs.getTimestamp(4)).setColor(rs.getString(5))
+						.setVin(em != null ? em.decrypt(rs.getString(6)) : rs.getString(6))
+						.setPlateNumber(em != null ? em.decrypt(rs.getString(7)) : rs.getString(7)).setFuelCapacity(rs.getDouble(8))
+						.setFuel(rs.getInt(9)).setStartDate(rs.getTimestamp(10)).setEndDate(rs.getTimestamp(11)).setDescription(rs.getString(12))
+						.setFriendlyName(rs.getString(13)).setActive(rs.getInt(14)).setArchived(rs.getInt(15));
 			}
 
 		} catch (Exception e) {
@@ -704,6 +728,7 @@ public class DBManager implements Serializable {
 		try {
 			con = ds.getConnection();
 			ps = con.prepareStatement(DBCommands.SQL_S_CARS);
+			logger.logTrace("getCars()", LogMessages.SQL_COMMAND, DBCommands.SQL_S_CARS);
 			ps.setInt(1, user_id);
 
 			rs = ps.executeQuery();
@@ -712,27 +737,17 @@ public class DBManager implements Serializable {
 			while (rs.next()) {
 				car = new CarModel();
 				car.setId(rs.getInt(1));
-				car.setManufacturer(rs.getInt(2));
-				car.setModel(rs.getString(3));
-				car.setManufacturerDate(rs.getTimestamp(4));
-				car.setColor(rs.getString(5));
+				car.setManufacturer(rs.getInt(2)).setModel(rs.getString(3)).setManufacturerDate(rs.getTimestamp(4)).setColor(rs.getString(5));
 
 				if (em != null) {
-					car.setVin(em.decrypt(rs.getString(6)));
-					car.setPlateNumber(em.decrypt(rs.getString(7)));
+					car.setVin(em.decrypt(rs.getString(6))).setPlateNumber(em.decrypt(rs.getString(7)));
 				} else {
-					car.setVin(null);
-					car.setPlateNumber(null);
+					car.setVin(null).setPlateNumber(null);
 				}
-				car.setFuelCapacity(rs.getDouble(8));
-				car.setFuel(rs.getInt(9));
-				car.setStartDate(rs.getTimestamp(10));
-				car.setEndDate(rs.getTimestamp(11));
-				car.setDescription(rs.getString(12));
-				car.setFriendlyName(rs.getString(13));
-				car.setActive(rs.getInt(14));
+				car.setFuelCapacity(rs.getDouble(8)).setFuel(rs.getInt(9)).setStartDate(rs.getTimestamp(10)).setEndDate(rs.getTimestamp(11))
+						.setDescription(rs.getString(12)).setFriendlyName(rs.getString(13)).setActive(rs.getInt(14)).setArchived(rs.getInt(17));
 				car.setManufacturerName(rs.getString(16));
-				car.setArchived(rs.getInt(17));
+
 				cars.add(car);
 			}
 		} catch (Exception e) {
@@ -793,6 +808,8 @@ public class DBManager implements Serializable {
 		try {
 			con = ds.getConnection();
 			ps = con.prepareStatement(DBCommands.SQL_S_PRICE_GRAPH);
+			logger.logTrace("getFuelPriceStats()", LogMessages.SQL_COMMAND, DBCommands.SQL_S_PRICE_GRAPH);
+
 			ps.setInt(1, user_id);
 
 			rs = ps.executeQuery();
@@ -822,6 +839,8 @@ public class DBManager implements Serializable {
 		try {
 			con = ds.getConnection();
 			ps = con.prepareStatement(DBCommands.SQL_S_BIG_STAT);
+			logger.logTrace("getLastRefuel()", LogMessages.SQL_COMMAND, DBCommands.SQL_S_BIG_STAT);
+
 			ps.setInt(1, user_id);
 
 			rs = ps.executeQuery();
@@ -861,6 +880,8 @@ public class DBManager implements Serializable {
 		try {
 			con = ds.getConnection();
 			ps = con.prepareStatement(DBCommands.SQL_S_MAINTENANCE);
+			logger.logTrace("getMaintenance()", LogMessages.SQL_COMMAND, DBCommands.SQL_S_MAINTENANCE);
+
 			ps.setInt(1, id);
 
 			rs = ps.executeQuery();
@@ -901,6 +922,8 @@ public class DBManager implements Serializable {
 		try {
 			con = ds.getConnection();
 			ps = con.prepareStatement(DBCommands.SQL_S_MAINTENANCES);
+			logger.logTrace("getMaintenances()", LogMessages.SQL_COMMAND, DBCommands.SQL_S_MAINTENANCES);
+
 			ps.setInt(1, id);
 
 			rs = ps.executeQuery();
@@ -947,6 +970,8 @@ public class DBManager implements Serializable {
 		try {
 			con = ds.getConnection();
 			ps = con.prepareStatement(DBCommands.SQL_S_NOTIFIABLE_ITEMS);
+			logger.logTrace("getNotifiableItems()", LogMessages.SQL_COMMAND, DBCommands.SQL_S_NOTIFIABLE_ITEMS);
+
 			ps.setInt(1, deadlineDay);
 
 			rs = ps.executeQuery();
@@ -995,6 +1020,8 @@ public class DBManager implements Serializable {
 		try {
 			con = ds.getConnection();
 			ps = con.prepareStatement(DBCommands.SQL_S_PAYMENT);
+			logger.logTrace("getPaymentMethod()", LogMessages.SQL_COMMAND, DBCommands.SQL_S_PAYMENT);
+
 			ps.setInt(1, id);
 
 			rs = ps.executeQuery();
@@ -1026,6 +1053,7 @@ public class DBManager implements Serializable {
 		try {
 			con = ds.getConnection();
 			ps = con.prepareStatement(DBCommands.SQL_S_PAYMENTS);
+			logger.logTrace("getPaymentMethods()", LogMessages.SQL_COMMAND, DBCommands.SQL_S_PAYMENTS);
 			ps.setInt(1, id);
 
 			rs = ps.executeQuery();
@@ -1055,6 +1083,8 @@ public class DBManager implements Serializable {
 		try {
 			con = ds.getConnection();
 			ps = con.prepareStatement(DBCommands.SQL_S_PLACE);
+			logger.logTrace("getPlace()", LogMessages.SQL_COMMAND, DBCommands.SQL_S_PLACE);
+
 			ps.setInt(1, id);
 
 			rs = ps.executeQuery();
@@ -1087,6 +1117,8 @@ public class DBManager implements Serializable {
 		try {
 			con = ds.getConnection();
 			ps = con.prepareStatement(DBCommands.SQL_S_PLACES);
+			logger.logTrace("getPlaces()", LogMessages.SQL_COMMAND, DBCommands.SQL_S_PLACES);
+
 			ps.setInt(1, id);
 
 			rs = ps.executeQuery();
@@ -1116,16 +1148,15 @@ public class DBManager implements Serializable {
 		try {
 			con = ds.getConnection();
 			ps = con.prepareStatement(DBCommands.SQL_S_REFUEL);
+			logger.logTrace("getRefuel()", LogMessages.SQL_COMMAND, DBCommands.SQL_S_REFUEL);
+
 			ps.setInt(1, id);
 
 			rs = ps.executeQuery();
 
 			if (rs.next()) {
 				rf = new RefuelModel(rs.getInt(1));
-				rf.setCar(new CarModel(rs.getInt(2)));
-				rf.setPlace(new PlaceModel(rs.getInt(3)));
-				rf.setPayment(new PaymentMethodModel(rs.getInt(8)));
-
+				rf.setCar(new CarModel(rs.getInt(2))).setPlace(new PlaceModel(rs.getInt(3))).setPayment(new PaymentMethodModel(rs.getInt(8)));
 				rf.setRefuelDate(rs.getTimestamp(4)).setOdometer(rs.getDouble(5)).setUnitPrice(rs.getDouble(6)).setFuelAmount(rs.getDouble(7))
 						.setAmount(rs.getDouble(9)).setPartialRefuel(rs.getInt(11));
 			}
@@ -1155,6 +1186,8 @@ public class DBManager implements Serializable {
 		try {
 			con = ds.getConnection();
 			ps = con.prepareStatement(DBCommands.SQL_S_REFUELS);
+			logger.logTrace("getRefuels()", LogMessages.SQL_COMMAND, DBCommands.SQL_S_REFUELS);
+
 			ps.setInt(1, user_id);
 
 			rs = ps.executeQuery();
@@ -1195,6 +1228,8 @@ public class DBManager implements Serializable {
 		try {
 			con = ds.getConnection();
 			ps = con.prepareStatement(DBCommands.SQL_S_ROUTE);
+			logger.logTrace("getRoute()", LogMessages.SQL_COMMAND, DBCommands.SQL_S_ROUTE);
+
 			ps.setInt(1, route_id);
 
 			rs = ps.executeQuery();
@@ -1232,6 +1267,8 @@ public class DBManager implements Serializable {
 		try {
 			con = ds.getConnection();
 			ps = con.prepareStatement(DBCommands.SQL_S_ROUTES);
+			logger.logTrace("getRoutes()", LogMessages.SQL_COMMAND, DBCommands.SQL_S_ROUTES);
+
 			ps.setInt(1, user_id);
 
 			rs = ps.executeQuery();
@@ -1269,6 +1306,8 @@ public class DBManager implements Serializable {
 		try {
 			con = ds.getConnection();
 			ps = con.prepareStatement(DBCommands.SQL_S_TYRE);
+			logger.logTrace("getTyre()", LogMessages.SQL_COMMAND, DBCommands.SQL_S_TYRE);
+
 			ps.setInt(1, id);
 
 			rs = ps.executeQuery();
@@ -1303,6 +1342,8 @@ public class DBManager implements Serializable {
 		try {
 			con = ds.getConnection();
 			ps = con.prepareStatement(DBCommands.SQL_S_TYRES);
+			logger.logTrace("getTyres()", LogMessages.SQL_COMMAND, DBCommands.SQL_S_TYRES);
+
 			ps.setInt(1, user_id);
 
 			rs = ps.executeQuery();
@@ -1341,6 +1382,7 @@ public class DBManager implements Serializable {
 		try {
 			con = ds.getConnection();
 			ps = con.prepareStatement(DBCommands.SQL_S_TYRE_VENDORS);
+			logger.logTrace("getTyreVendors()", LogMessages.SQL_COMMAND, DBCommands.SQL_S_TYRE_VENDORS);
 
 			rs = ps.executeQuery();
 
@@ -1375,14 +1417,16 @@ public class DBManager implements Serializable {
 		try {
 			con = ds.getConnection();
 			ps = con.prepareStatement(DBCommands.SQL_S_PROFILE);
+			logger.logTrace("getUserProfile()", LogMessages.SQL_COMMAND, DBCommands.SQL_S_PROFILE);
+
 			ps.setString(1, username);
 
 			rs = ps.executeQuery();
 
 			if (rs.next()) {
 				user = new UserModel(rs.getInt(3));
-				user = new UserModel().setCurrency(rs.getString(1)).setLocale(rs.getString(2)).setUsername(rs.getString(4)).setDistance(rs.getInt(5))
-						.setRounded(rs.getInt(6));
+				user.setCurrency(rs.getString(1)).setLocale(rs.getString(2)).setUsername(rs.getString(4)).setDistance(rs.getInt(5))
+						.setRounded(rs.getInt(6)).setDateFormat(rs.getString(12)).setTimeFormat(rs.getString(13));
 
 				if (em != null) {
 					user.setEmail(em.decrypt(rs.getString(7))).setPushoverUserKey(em.decrypt(rs.getString(8)))
@@ -1390,6 +1434,8 @@ public class DBManager implements Serializable {
 				} else {
 					user.setEmail(null).setPushoverUserKey(null).setPushoverAPIKey(null).setPushbulletAPIKey(null);
 				}
+
+				user.setArchived(rs.getInt(11));
 
 			}
 		} catch (Exception e) {
@@ -1428,6 +1474,8 @@ public class DBManager implements Serializable {
 		try {
 			con = ds.getConnection();
 			ps = con.prepareStatement(isNewCar ? DBCommands.SQL_I_CAR_PRIMARY : DBCommands.SQL_U_CAR_PRIMARY);
+			logger.logTrace("setPrimaryCar()", LogMessages.SQL_COMMAND, isNewCar ? DBCommands.SQL_I_CAR_PRIMARY : DBCommands.SQL_U_CAR_PRIMARY);
+
 			ps.setInt(1, isNewCar ? user_id : car_id);
 			ps.setInt(2, user_id);
 
@@ -1455,6 +1503,7 @@ public class DBManager implements Serializable {
 			try {
 				con = ds.getConnection();
 				ps = con.prepareStatement(DBCommands.SQL_U_PROFILE);
+				logger.logTrace("updateUserProfile()", LogMessages.SQL_COMMAND, DBCommands.SQL_U_PROFILE);
 
 				ps.setString(1, user.getCurrency());
 				ps.setString(2, user.getLocale());
@@ -1464,7 +1513,9 @@ public class DBManager implements Serializable {
 				ps.setString(6, em.encrypt(user.getPushoverUserKey()));
 				ps.setString(7, em.encrypt(user.getPushoverAPIKey()));
 				ps.setString(8, em.encrypt(user.getPushbulletAPIKey()));
-				ps.setInt(9, user.getId());
+				ps.setString(9, user.getDateFormat());
+				ps.setString(10, user.getTimeFormat());
+				ps.setInt(11, user.getId());
 
 				status = ps.executeUpdate() == 1 ? true : false;
 			} catch (Exception e) {

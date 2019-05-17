@@ -165,6 +165,8 @@ public class RefuelController extends Controller {
 				assignedObjects.put(UIBindings.STATUS, db.createUpdateRefuel(rf) ? 1 : -1);
 				dc.put(userRefuelsKey, db.getRefuels(user.getId(), em), DynaCacheManager.DC_TTL_1H, user.getUsername());
 				assignedObjects.put(UIBindings.REFUELS, db.getRefuels(user.getId(), em));
+				dc.invalidate(UIBindings.LAST_REFUEL);
+				dc.invalidate(UIBindings.FUEL_STATS);
 				renderPage(REFUELS, request, response);
 			} else {
 				assignedObjects.put(UIBindings.STATUS, -2);

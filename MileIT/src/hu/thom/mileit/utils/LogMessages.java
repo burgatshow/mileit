@@ -20,6 +20,7 @@ public final class LogMessages implements Serializable {
 	public static final String LOG_EXCEPTION 			= "MILEIT0001E: An application exception occured, see details.";
 	public static final String LOG_DC_E_GET 			= "MILEIT0002E: Unable to get object from Dyna Cache!";
 	public static final String LOG_DC_E_PUT 			= "MILEIT0002E: Unable to put object to Dyna Cache!";
+	public static final String INVALID_INPUT			= "MILEIT0004E: Invalid or insufficient amount of parameters.";
 	
 	/**
 	 * Info message strings
@@ -36,9 +37,9 @@ public final class LogMessages implements Serializable {
 	public static final String APPLICATION_STOPPED		= "MILEIT0010I: MileIT application is successfully stopped.";
 	
 	/**
-	 * Error message strings
+	 * Warning message strings
 	 */
-	public static final String INVALID_INPUT			= "MILEIT0001E: Invalid or insufficient amount of parameters.";
+	public static final String LOG_SCHED_NOTIF_DISABLED = "MILEIT0001W: Notification scheduler is disabled!";
 	
 	/**
 	 * Debug message strings
@@ -48,6 +49,7 @@ public final class LogMessages implements Serializable {
 	public static final String LOG_SEC_FFF_J2C 			= "MILEIT0003D: Obtain J2C credential: ";
 	public static final String DC_CLEAR 				= "MILEIT0004D:	Dynamic cache content wiped out.";
 	public static final String NO_USERS_TO_NOTIFY 		= "MILEIT0005D: Currently, there are no expiring items.";
+	public static final String SQL_COMMAND 				= "MILEIT0006D: SQL command used:";
 	
 	/**
 	 * Trace message strings

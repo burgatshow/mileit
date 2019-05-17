@@ -80,14 +80,14 @@
 								<tr>
 									<td class="text-center align-middle"><c:out value="${m.car.friendlyName}" /> <br> <span class="badge badge-dark"><c:out
 												value="${m.car.plateNumber}" /></span></td>
-									<td class="align-middle"><fmt:formatDate type="both" value="${m.maintenanceDate}" pattern="yyyy. MM. dd." /><br> <span
+									<td class="align-middle"><fmt:formatDate type="both" value="${m.maintenanceDate}" pattern="${user.dateFormat}" /><br> <span
 										class="badge badge-dark"><c:out value="${m.description}" /></span></td>
 									<td class="text-right align-middle"><fmt:formatNumber value="${m.amount}" type="number"
 											maxFractionDigits="${user.rounded eq 1 ? '0' : '2'}" pattern="#,##0.00" /></td>
 									<td class="text-center align-middle"><c:out value="${m.payment.name}" /></td>
 									<td class="text-right align-middle"><fmt:formatNumber value="${m.odometer}" pattern="#,##0.00" type="number" minFractionDigits="0"
 											maxFractionDigits="${user.rounded eq 1 ? '0' : '2'}" /></td>
-									<td class="text-center align-middle"><fmt:formatDate type="both" value="${m.expiration}" pattern="yyyy. MM. dd. HH:mm:ss" /><br></td>
+									<td class="text-center align-middle"><fmt:formatDate type="both" value="${m.expiration}" pattern="${user.dateFormat} ${user.timeFormat}" /><br></td>
 									<td class="text-center align-middle"><a href="?m=update&amp;id=<c:out value="${m.id}" />" class="btn btn-primary" role="button"><fmt:message
 												key="button.edit" /></a></td>
 								</tr>

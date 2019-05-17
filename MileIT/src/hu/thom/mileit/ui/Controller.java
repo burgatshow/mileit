@@ -28,7 +28,7 @@ import hu.thom.mileit.utils.UIBindings;
 public class Controller extends HttpServlet {
 	private static final long serialVersionUID = 1849843955087394555L;
 
-	public static final String VERSION = "0.0.4 (beta)";
+	public static final String VERSION = "0.0.8";
 	public static final String LOGIN = "/WEB-INF/pages/login.jsp";
 	public static final String HOME = "/WEB-INF/pages/home.jsp";
 	public static final String REGISTER = "/WEB-INF/pages/register.jsp";

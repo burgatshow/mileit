@@ -61,14 +61,37 @@ public class ProfileController extends Controller {
 		} else {
 			parseMode(request);
 
-			user.setCurrency(request.getParameter("currency"));
-			user.setLocale(request.getParameter("locale"));
-			user.setDistance(request.getParameter("distance"));
-			user.setRounded(request.getParameter("rounded"));
-			user.setEmail(request.getParameter("email"));
-			user.setPushbulletAPIKey(request.getParameter("pushbulletKey"));
-			user.setPushoverUserKey(request.getParameter("pushoverUser"));
-			user.setPushoverAPIKey(request.getParameter("pushoverAPIKey"));
+			user.setCurrency(request.getParameter("currency")).setLocale(request.getParameter("locale")).setDistance(request.getParameter("distance"))
+					.setRounded(request.getParameter("rounded")).setEmail(request.getParameter("email"))
+					.setPushbulletAPIKey(request.getParameter("pushbulletKey")).setPushoverUserKey(request.getParameter("pushoverUser"))
+					.setPushoverAPIKey(request.getParameter("pushoverAPIKey")).setDateFormat(request.getParameter("dateformat"))
+					.setTimeFormat(request.getParameter("datetimeformat"));
+
+			if (request.getParameter("dateFormat") != null && !request.getParameter("dateFormat").isEmpty()) {
+				for (String s : UIBindings.VALID_PATTERNS) {
+					if (s.equals(request.getParameter("dateFormat"))) {
+						user.setDateFormat(request.getParameter("dateFormat"));
+						break;
+					}
+				}
+
+				if (user.getDateFormat() == null) {
+					user.setDateFormat("yyyy-MM-dd");
+				}
+			}
+
+			if (request.getParameter("timeFormat") != null && !request.getParameter("timeFormat").isEmpty()) {
+				for (String s : UIBindings.VALID_PATTERNS) {
+					if (s.equals(request.getParameter("timeFormat"))) {
+						user.setTimeFormat(request.getParameter("timeFormat"));
+						break;
+					}
+				}
+
+				if (user.getTimeFormat() == null) {
+					user.setTimeFormat("HH:mm");
+				}
+			}
 
 			assignedObjects.put(UIBindings.STATUS, db.updateUserProfile(user, em) ? 0 : -1);
 			renderPage(PROFILE_FORM, request, response);
