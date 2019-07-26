@@ -25,62 +25,62 @@
 package hu.thom.mileit.ui;
 
 import java.io.IOException;
+import java.io.OutputStream;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import hu.thom.mileit.models.UserModel;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.WriterException;
+import com.google.zxing.client.j2se.MatrixToImageWriter;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.QRCodeWriter;
 
-/**
- * Servlet class to manage user logout
- * 
- * @author thom <tamas.bures@protonmail.com>
- *
- */
-@WebServlet("/logout")
-public class LogoutController extends Controller {
-	private static final long serialVersionUID = -1161650807822947664L;
+import hu.thom.mileit.models.UserModel;
+import hu.thom.mileit.utils.UIBindings;
+
+@WebServlet(value = "/qr_code")
+public class QRCodeGenerator extends Controller {
+	private static final long serialVersionUID = -2207503484323385610L;
 
 	/**
 	 * Constructor
 	 */
-	public LogoutController() {
+	public QRCodeGenerator() {
 		super();
 	}
 
-	/**
-	 * Method to manage HTTP GET method.
-	 * 
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
-	 *      response)
-	 */
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		super.doGet(request, response);
-		UserModel user = (UserModel) request.getSession().getAttribute("user");
-		if (user != null) {
-			// Clean up cache
-			dc.invalidate(user.getUsername());
+		user = (UserModel) request.getSession().getAttribute("user");
+		if (user == null) {
+			response.sendRedirect("login");
+		} else {
+			String s = dc.getString(String.format(UIBindings.TOTP_SECRET_USER, user.getUsername()));
+			if (s != null && !"".equalsIgnoreCase(s) && user.getTotpEnabled() == 0) {
+				String qrContent = totp.enrollToken(user.getUsername(), s);
 
-			// Destroy user's session then log out
-			request.getSession().invalidate();
-			request.logout();
+				try {
+					OutputStream outStream = response.getOutputStream();
+					QRCodeWriter qrCodeWriter = new QRCodeWriter();
+					BitMatrix bitMatrix = qrCodeWriter.encode(qrContent, BarcodeFormat.QR_CODE, 300, 300);
+
+					MatrixToImageWriter.writeToStream(bitMatrix, "PNG", outStream);
+
+					response.setContentType("image/png");
+
+					outStream.flush();
+					outStream.close();
+				} catch (WriterException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			} else {
+				System.err.println("AAAAAAUUUCH!!!");
+			}
 		}
-		response.sendRedirect("login");
-	}
-
-	/**
-	 * Method to manage HTTP POST method.
-	 * 
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
-	 *      response)
-	 */
-	@Override
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		super.doPost(request, response);
-		doGet(request, response);
 	}
 }

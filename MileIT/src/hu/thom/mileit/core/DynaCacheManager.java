@@ -1,6 +1,32 @@
+/**
+ * MIT License
+ *
+ * Copyright (c) 2019 Tamas BURES
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *
+ */
 package hu.thom.mileit.core;
 
 import java.io.Serializable;
+import java.util.Date;
+import java.util.List;
 
 import javax.naming.InitialContext;
 
@@ -30,6 +56,7 @@ public class DynaCacheManager implements Serializable {
 	public static final int DC_TTL_1W = 3600 * 24 * 7;
 	public static final int DC_TTL_1H = 3600;
 	public static final int DC_TTL_30M = 1800;
+	public static final int DC_TTL_5M = 300;
 
 	/**
 	 * Instance
@@ -92,6 +119,14 @@ public class DynaCacheManager implements Serializable {
 		return cacheObject;
 	}
 
+	public Date getDate(String objectKey) {
+		return (Date) get(objectKey);
+	}
+	
+	public String getString(String objectKey) {
+		return (String) get(objectKey);
+	}
+	
 	/**
 	 * Puts an object to DynaCache using a key
 	 * 

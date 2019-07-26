@@ -25,6 +25,10 @@
 		<error-code>404</error-code>
 		<location>/WEB-INF/pages/errors/404.jsp</location>
 	</error-page>
+	<error-page id="Error500">
+		<error-code>500</error-code>
+		<location>/WEB-INF/pages/errors/500.jsp</location>
+	</error-page>
 	<error-page id="Error503">
 		<error-code>503</error-code>
 		<location>/WEB-INF/pages/errors/503.jsp</location>
@@ -32,6 +36,59 @@
 	<filter>
 		<display-name>XSS Filter mechanism</display-name>
 		<filter-name>XSSFilter</filter-name>
-		<filter-class>hu.thom.mileit.ui.xss.XSSFilter</filter-class>
+		<filter-class>hu.thom.mileit.security.XSSFilter</filter-class>
 	</filter>
+	<!--  filter-mapping>
+		<filter-name>XSSFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping-->
+	<security-constraint>
+		<web-resource-collection>
+			<web-resource-name>MileIT</web-resource-name>
+			<url-pattern>/*</url-pattern>
+		</web-resource-collection>
+		<user-data-constraint>
+			<transport-guarantee>CONFIDENTIAL</transport-guarantee>
+		</user-data-constraint>
+	</security-constraint>
+	<filter>
+		<filter-name>CSRFLoader</filter-name>
+		<filter-class>hu.thom.mileit.security.CSRFLoader</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>CSRFLoader</filter-name>
+		<url-pattern>/login</url-pattern>
+		<url-pattern>/logout</url-pattern>
+		<url-pattern>/cars</url-pattern>
+		<url-pattern>/ajax</url-pattern>
+		<url-pattern>/setup_2fa</url-pattern>
+		<url-pattern>/index</url-pattern>
+		<url-pattern>/payment_methods</url-pattern>
+		<url-pattern>/places</url-pattern>
+		<url-pattern>/profile</url-pattern>
+		<url-pattern>/maintenance</url-pattern>
+		<url-pattern>/refuels</url-pattern>
+		<url-pattern>/routes</url-pattern>
+		<url-pattern>/tyres</url-pattern>
+	</filter-mapping>
+	<filter>
+		<filter-name>CSRFValidator</filter-name>
+		<filter-class>hu.thom.mileit.security.CSRFValidator</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>CSRFValidator</filter-name>
+		<url-pattern>/login</url-pattern>
+		<url-pattern>/logout</url-pattern>
+		<url-pattern>/cars</url-pattern>
+		<url-pattern>/ajax</url-pattern>
+		<url-pattern>/setup_2fa</url-pattern>
+		<url-pattern>/index</url-pattern>
+		<url-pattern>/payment_methods</url-pattern>
+		<url-pattern>/places</url-pattern>
+		<url-pattern>/profile</url-pattern>
+		<url-pattern>/maintenance</url-pattern>
+		<url-pattern>/refuels</url-pattern>
+		<url-pattern>/routes</url-pattern>
+		<url-pattern>/tyres</url-pattern>
+	</filter-mapping>
 </web-app>

@@ -1,3 +1,27 @@
+/**
+ * MIT License
+ *
+ * Copyright (c) 2019 Tamas BURES
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *
+ */
 package hu.thom.mileit.core.data;
 
 import java.io.Serializable;
@@ -25,8 +49,9 @@ public final class DBCommands implements Serializable {
 	 */
 	public static final String SQL_I_USER = "INSERT IGNORE INTO users (username) VALUES (?)";
 	public static final String SQL_S_AUTH = "SELECT u.username FROM users AS u WHERE u.username = ? AND u.password = ? AND u.archived <> 1";
-	public static final String SQL_S_PROFILE = "SELECT u.currency, u.locale, u.user_id, u.username, u.distance, u.rounded, u.email, u.pushover_api_user, u.pushover_api_key, u.pushbullet_api_key, u.archived, u.date_format, u.time_format FROM users AS u WHERE u.username = ?";
+	public static final String SQL_S_PROFILE = "SELECT u.currency, u.locale, u.user_id, u.username, u.distance, u.rounded, u.email, u.pushover_api_user, u.pushover_api_key, u.pushbullet_api_key, u.archived, u.date_format, u.time_format, totp_enabled, totp_secret, totp_backup_1, totp_backup_2, totp_backup_3, totp_backup_4, totp_backup_5, totp_backup_6 FROM users AS u WHERE u.username = ?";
 	public static final String SQL_U_PROFILE = "UPDATE users SET currency = ?, locale = ?, distance = ?, rounded = ?, email = ?, pushover_api_user = ?, pushover_api_key = ?, pushbullet_api_key = ?, date_format = ?, time_format = ? WHERE user_id = ?";
+	public static final String SQL_U_2FA = "UPDATE users SET totp_enabled = ?, totp_secret = ?, totp_backup_1 = ?, totp_backup_2 = ?, totp_backup_3 = ?, totp_backup_4 = ?, totp_backup_5 = ?, totp_backup_6 = ? WHERE user_id = ?";
 
 	/**
 	 * Cars
@@ -94,16 +119,10 @@ public final class DBCommands implements Serializable {
 	public static final String SQL_D_ROUTE = "DELETE FROM routes WHERE route_id = ?";
 	public static final String SQL_I_ROUTE = "INSERT INTO routes (car_id, start_place_id, end_place_id, route_type, route_datetime, route_distance, user_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
 	public static final String SQL_U_ROUTE = "UPDATE routes SET car_id = ?, start_place_id = ?, end_place_id = ?, route_type = ?, route_datetime = ?, route_distance = ? WHERE route_id = ?";
-	
+
 	/**
 	 * Notification scheduler
 	 */
 	public static final String SQL_S_NOTIFIABLE_ITEMS = "SELECT m.car_id, m.user_id, m.description, m.expiration, DATEDIFF(m.expiration, NOW()) AS days_remaining, u.username, u.email, u.pushover_api_user, u.pushover_api_key, u.pushbullet_api_key, c.friendly_name, c.plate_number FROM maintenances AS m, users AS u, cars AS c WHERE m.user_id = u.user_id AND c.car_id = m.car_id AND c.archived = 0 AND m.expiration IS NOT NULL AND m.expiration <= NOW() + INTERVAL ? DAY";
-	
-	
-	
-	
-	
-	
-	
+
 }

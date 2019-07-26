@@ -1,9 +1,35 @@
+/**
+ * MIT License
+ *
+ * Copyright (c) 2019 Tamas BURES
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *
+ */
 package hu.thom.mileit.models;
 
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
+import com.ibm.json.java.JSONObject;
 
 /**
  * Model file representing all attributes of a car
@@ -218,6 +244,14 @@ public class CarModel extends Model {
 		return new Timestamp(endDate.getTime());
 	}
 
+	public String getEndDateAsString() {
+		if (endDate == null) {
+			return "";
+		}
+
+		return endDate.toString();
+	}
+
 	public String getFriendlyName() {
 		return friendlyName;
 	}
@@ -246,6 +280,14 @@ public class CarModel extends Model {
 		return new Timestamp(manufacturerDate.getTime());
 	}
 
+	public String getManufacturerDateAsString() {
+		if (manufacturerDate == null) {
+			return "";
+		}
+
+		return manufacturerDate.toString();
+	}
+
 	public String getManufacturerName() {
 		return manufacturerName;
 	}
@@ -268,6 +310,14 @@ public class CarModel extends Model {
 		}
 
 		return new Timestamp(startDate.getTime());
+	}
+
+	public String getStartDateAsString() {
+		if (startDate == null) {
+			return "";
+		}
+
+		return startDate.toString();
 	}
 
 	public String getVin() {
@@ -450,4 +500,26 @@ public class CarModel extends Model {
 				+ friendlyName + ", toString()=" + super.toString() + "]";
 	}
 
+	public JSONObject toJSONObject() {
+		JSONObject car = new JSONObject();
+
+		car.put("id", super.getId());
+		car.put("manufacturer", manufacturer);
+		car.put("manufacturer_name", manufacturerName);
+		car.put("model", model);
+		car.put("manufacturer_date", getManufacturerDateAsString());
+		car.put("color_as_hex", color);
+		car.put("vin", vin);
+		car.put("plate_number", plateNumber);
+		car.put("fuel", fuel.getCode());
+		car.put("fuel_capacity", fuelCapacity);
+		car.put("start_date", getStartDateAsString());
+		car.put("end_date", getEndDateAsString());
+		car.put("description", description);
+		car.put("friendly_name", friendlyName);
+		car.put("primary", super.isActive());
+		car.put("archived", super.isArchived());
+
+		return car;
+	}
 }

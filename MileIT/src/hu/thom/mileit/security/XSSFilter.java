@@ -22,65 +22,53 @@
  * SOFTWARE.
  *
  */
-package hu.thom.mileit.ui;
+package hu.thom.mileit.security;
 
 import java.io.IOException;
+import java.io.Serializable;
 
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import hu.thom.mileit.models.UserModel;
 
 /**
- * Servlet class to manage user logout
+ * Servlet filter to be able to avoid XSS attack
  * 
  * @author thom <tamas.bures@protonmail.com>
  *
  */
-@WebServlet("/logout")
-public class LogoutController extends Controller {
-	private static final long serialVersionUID = -1161650807822947664L;
-
+public class XSSFilter implements Filter, Serializable {
 	/**
-	 * Constructor
+	 * Serial version UID
 	 */
-	public LogoutController() {
-		super();
-	}
+	private static final long serialVersionUID = 3318304833803444808L;
 
 	/**
-	 * Method to manage HTTP GET method.
-	 * 
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
-	 *      response)
+	 * @see Filter#init(FilterConfig)
 	 */
 	@Override
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		super.doGet(request, response);
-		UserModel user = (UserModel) request.getSession().getAttribute("user");
-		if (user != null) {
-			// Clean up cache
-			dc.invalidate(user.getUsername());
+	public void init(FilterConfig filterConfig) throws ServletException {
 
-			// Destroy user's session then log out
-			request.getSession().invalidate();
-			request.logout();
-		}
-		response.sendRedirect("login");
 	}
 
 	/**
-	 * Method to manage HTTP POST method.
-	 * 
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
-	 *      response)
+	 * @see Filter#doFilter(ServletRequest, ServletResponse, FilterChain)
 	 */
 	@Override
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		super.doPost(request, response);
-		doGet(request, response);
+	public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
+			throws IOException, ServletException {
+		filterChain.doFilter(new XSSRequestWrapper((HttpServletRequest) servletRequest), servletResponse);
 	}
+
+	/**
+	 * @see Filter#destroy()
+	 */
+	@Override
+	public void destroy() {
+	}
+
 }

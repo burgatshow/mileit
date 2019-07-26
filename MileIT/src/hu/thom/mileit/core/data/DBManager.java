@@ -1,3 +1,27 @@
+/**
+ * MIT License
+ *
+ * Copyright (c) 2019 Tamas BURES
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *
+ */
 package hu.thom.mileit.core.data;
 
 import java.io.Serializable;
@@ -30,9 +54,9 @@ import hu.thom.mileit.models.TyreEventModel;
 import hu.thom.mileit.models.TyreModel;
 import hu.thom.mileit.models.TyreModel.Axis;
 import hu.thom.mileit.models.TyreModel.TyreType;
+import hu.thom.mileit.models.UserModel;
 import hu.thom.mileit.utils.LogManager;
 import hu.thom.mileit.utils.LogMessages;
-import hu.thom.mileit.models.UserModel;
 
 /**
  * Contains all the methods operating with database tables
@@ -201,7 +225,7 @@ public class DBManager implements Serializable {
 	}
 
 	/**
-	 * Authenticates the user during logon process
+	 * Authenticates the user during logon process on the UI or the API access
 	 * 
 	 * @param username {@link String} the user's username
 	 * @param password {@link String} the user's encrypted password
@@ -324,8 +348,8 @@ public class DBManager implements Serializable {
 
 				ps.setTimestamp(3, car.getManufacturerDateAsTimestamp());
 				ps.setString(4, car.getColor());
-				ps.setString(5, car.getVin().toUpperCase());
-				ps.setString(6, car.getPlateNumber().toUpperCase());
+				ps.setString(5, car.getVin());
+				ps.setString(6, car.getPlateNumber());
 				ps.setDouble(7, car.getFuelCapacity());
 				ps.setInt(8, car.getFuel().getCode());
 				ps.setTimestamp(9, car.getStartDateAsTimestamp());
@@ -1426,18 +1450,31 @@ public class DBManager implements Serializable {
 			if (rs.next()) {
 				user = new UserModel(rs.getInt(3));
 				user.setCurrency(rs.getString(1)).setLocale(rs.getString(2)).setUsername(rs.getString(4)).setDistance(rs.getInt(5))
-						.setRounded(rs.getInt(6)).setDateFormat(rs.getString(12)).setTimeFormat(rs.getString(13));
+						.setRounded(rs.getInt(6)).setDateFormat(rs.getString(12)).setTimeFormat(rs.getString(13)).setTotpEnabled(rs.getInt(14));
 
 				if (em != null) {
 					user.setEmail(em.decrypt(rs.getString(7))).setPushoverUserKey(em.decrypt(rs.getString(8)))
 							.setPushoverAPIKey(em.decrypt(rs.getString(9))).setPushbulletAPIKey(em.decrypt(rs.getString(10)));
+
+					if (user.getTotpEnabled() == 1) {
+						user.setTotpSecret(em.decrypt(rs.getString(15)));
+
+						user.setTotpBackupCodes(new int[6]);
+						for (int i = 0; i <= 5; i++) {
+							user.getTotpBackupCodes()[i] = Integer.valueOf(em.decrypt(rs.getString(i + 16)));
+						}
+					}
 				} else {
-					user.setEmail(null).setPushoverUserKey(null).setPushoverAPIKey(null).setPushbulletAPIKey(null);
+					user.setEmail(null).setPushoverUserKey(null).setPushoverAPIKey(null).setPushbulletAPIKey(null).setTotpSecret(null)
+							.setTotpBackupCodes(null);
 				}
+				
+				System.out.println(user);
 
 				user.setArchived(rs.getInt(11));
 
 			}
+
 		} catch (Exception e) {
 			logger.logException("getUserProfile()", e);
 		} finally {
@@ -1526,6 +1563,42 @@ public class DBManager implements Serializable {
 		}
 
 		logger.logExit("updateUserProfile()");
+		return status;
+	}
+
+	/**
+	 * Updates the user profile to enable or disable TOTP
+	 * 
+	 * @param user {@link UserModel} the user data need to be written into the DB
+	 * @return boolean true on success, false otherwise
+	 */
+	public boolean updateUserProfileTOTP(UserModel user, EncryptionManager em) {
+		logger.logEnter("updateUserProfileTOTP()");
+		boolean status = false;
+		if (user.getUsername() != null && !user.getUsername().isEmpty()) {
+			try {
+				con = ds.getConnection();
+				ps = con.prepareStatement(DBCommands.SQL_U_2FA);
+
+				ps.setInt(1, user.getTotpEnabled());
+				ps.setString(2, em.encrypt(user.getTotpSecret()));
+				ps.setString(3, em.encrypt(String.valueOf(user.getTotpBackupCodes()[0])));
+				ps.setString(4, em.encrypt(String.valueOf(user.getTotpBackupCodes()[1])));
+				ps.setString(5, em.encrypt(String.valueOf(user.getTotpBackupCodes()[2])));
+				ps.setString(6, em.encrypt(String.valueOf(user.getTotpBackupCodes()[3])));
+				ps.setString(7, em.encrypt(String.valueOf(user.getTotpBackupCodes()[4])));
+				ps.setString(8, em.encrypt(String.valueOf(user.getTotpBackupCodes()[5])));
+				ps.setInt(9, user.getId());
+
+				status = ps.executeUpdate() == 1 ? true : false;
+			} catch (Exception e) {
+				logger.logException("updateUserProfileTOTP()", e);
+			} finally {
+				closeConnection();
+			}
+		}
+
+		logger.logExit("updateUserProfileTOTP()");
 		return status;
 	}
 }

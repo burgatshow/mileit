@@ -24,6 +24,6 @@
 	<script src="<c:out value="${ctxRoot}" />/js/mileit.charts.js" type="text/javascript"></script>
 </c:if>
 <c:if test="${loadMap eq 1}">
-	<script src="http://www.openlayers.org/api/OpenLayers.js"></script>
+	<script type="text/javascript" src="https://www.openlayers.org/api/OpenLayers.js"></script>
 	<script src="<c:out value="${ctxRoot}" />/js/mileit.maps.js" type="text/javascript"></script>
 </c:if>

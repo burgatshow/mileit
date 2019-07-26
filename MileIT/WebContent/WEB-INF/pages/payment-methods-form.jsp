@@ -44,6 +44,7 @@
 			</div>
 		</div>
 		<form method="post">
+			<input type="hidden" name="ct" value="<c:out value="${ct}" />">
 			<c:if test="${not empty pms}">
 				<input type="hidden" name="id" value="<c:out value="${pms.id}" />">
 			</c:if>

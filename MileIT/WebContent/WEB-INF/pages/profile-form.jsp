@@ -29,9 +29,28 @@
 						<fmt:message key="profile.status.ok" />
 					</div>
 				</c:if>
+				<c:if test="${status eq 100}">
+					<div class="alert alert-dismissible alert-success mt-4">
+						<fmt:message key="profile.status.ok_2fa" />
+						<hr>
+						<fmt:message key="profile.status.ok_2fa_backup_codes">
+							<fmt:param value="${backup_code_0}" />
+							<fmt:param value="${backup_code_1}" />
+							<fmt:param value="${backup_code_2}" />
+							<fmt:param value="${backup_code_3}" />
+							<fmt:param value="${backup_code_4}" />
+							<fmt:param value="${backup_code_5}" />
+						</fmt:message>
+					</div>
+				</c:if>
 				<c:if test="${status eq -1}">
 					<div class="alert alert-dismissible alert-danger mt-4">
 						<fmt:message key="profile.status.nok" />
+					</div>
+				</c:if>
+				<c:if test="${status eq -99}">
+					<div class="alert alert-dismissible alert-danger mt-4">
+						<fmt:message key="profile.status.2fa_already_enabled" />
 					</div>
 				</c:if>
 			</div>
@@ -44,6 +63,7 @@
 			</div>
 		</div>
 		<form method="post">
+			<input type="hidden" name="ct" value="<c:out value="${ct}" />">
 			<div class="row">
 				<div class="col-md-6">
 					<div class="form-group">
@@ -134,11 +154,22 @@
 						<label for="timeFormat"><fmt:message key="profile.form.time_format" /></label> <select id="timeFormat" name="timeFormat" class="form-control">
 							<c:forEach items="1,2" var="i">
 								<fmt:message key="profile.form.time_format.${i}.val" var="timeValue" />
-								<option <c:if test="${user.timeFormat eq timeValue}">selected="selected"</c:if>
-									value="<c:out value="${timeValue}"  />"><fmt:message key="profile.form.time_format.${i}.label" /></option>
+								<option <c:if test="${user.timeFormat eq timeValue}">selected="selected"</c:if> value="<c:out value="${timeValue}"  />"><fmt:message
+										key="profile.form.time_format.${i}.label" /></option>
 							</c:forEach>
 						</select>
 					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<fmt:message key="${user.totpEnabled eq 1 ? 'yes': 'no' }" var="two_fa_setup" />
+					<fmt:message key="profile.form.totp">
+						<fmt:param value="${two_fa_setup}" />
+					</fmt:message>
+					<c:if test="${user.totpEnabled eq 0}">
+						<a href="setup_2fa"><fmt:message key="profile.form.totp.setup" /></a>
+					</c:if>
 				</div>
 			</div>
 			<div class="row">
