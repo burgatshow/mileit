@@ -22,15 +22,14 @@
 	<keyStore id="defaultKeyStore"
 		password="{xor}CDo9HiwIOj0eDA==" />
 
-	<!-- MariaDB driver location -->
-	<library id="mariadb-lib">
-		<fileset dir="${server.config.dir}/lib"
-			includes="mariadb-java-client-1.7.4.jar" />
+	<!-- Libs -->
+	<library id="libs">
+		<fileset dir="${server.config.dir}/lib" includes="*.jar" />
 	</library>
 
 	<!-- encoded password is: mileitpwd -->
 	<dataSource jndiName="jdbc/mileit">
-		<jdbcDriver libraryRef="mariadb-lib" />
+		<jdbcDriver libraryRef="libs" />
 		<properties databaseName="mileit"
 			password="{xor}MjYzOjYrLyg7" portNumber="3306" serverName="localhost"
 			user="mileit" />
@@ -47,6 +46,11 @@
 	<authData id="password_j2c_salt"
 		password="{xor}Lz4sLCgwLTsANW08ACw+Mys=" user="passwordSalt" />
 
+	<!-- Scheduler for notification service -->
 	<managedScheduledExecutorService
 		jndiName="scheduler/mileit_notifications" />
+
+	<!-- HTTP cookie hardening -->
+	<httpSession cookieSecure="true"
+		useContextRootAsCookiePath="true" sslTrackingEnabled="true" />
 </server>

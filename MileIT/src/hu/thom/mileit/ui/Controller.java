@@ -1,3 +1,27 @@
+/**
+ * MIT License
+ *
+ * Copyright (c) 2019 Tamas BURES
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *
+ */
 package hu.thom.mileit.ui;
 
 import java.io.IOException;
@@ -15,6 +39,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import hu.thom.mileit.core.DynaCacheManager;
 import hu.thom.mileit.core.EncryptionManager;
+import hu.thom.mileit.core.TOTPManager;
 import hu.thom.mileit.core.data.DBManager;
 import hu.thom.mileit.models.UserModel;
 import hu.thom.mileit.utils.UIBindings;
@@ -26,9 +51,12 @@ import hu.thom.mileit.utils.UIBindings;
  *
  */
 public class Controller extends HttpServlet {
+	/**
+	 * Serial version UID
+	 */
 	private static final long serialVersionUID = 1849843955087394555L;
 
-	public static final String VERSION = "0.0.8";
+	public static final String VERSION = "0.1.0";
 	public static final String LOGIN = "/WEB-INF/pages/login.jsp";
 	public static final String HOME = "/WEB-INF/pages/home.jsp";
 	public static final String REGISTER = "/WEB-INF/pages/register.jsp";
@@ -41,6 +69,7 @@ public class Controller extends HttpServlet {
 	public static final String PLACES = "/WEB-INF/pages/places.jsp";
 	public static final String PLACES_FORM = "/WEB-INF/pages/places-form.jsp";
 	public static final String PROFILE_FORM = "/WEB-INF/pages/profile-form.jsp";
+	public static final String PROFILE_2FA = "/WEB-INF/pages/profile-2fa.jsp";
 	public static final String MAINTENANCES = "/WEB-INF/pages/maintenances.jsp";
 	public static final String MAINTENANCES_FORM = "/WEB-INF/pages/maintenances-form.jsp";
 	public static final String TYRES = "/WEB-INF/pages/tyres.jsp";
@@ -52,6 +81,7 @@ public class Controller extends HttpServlet {
 	public DBManager db = null;
 	public DynaCacheManager dc = null;
 	public EncryptionManager em = null;
+	public TOTPManager totp = null;
 
 	public String m = "";
 	public int id = 0;
@@ -73,6 +103,7 @@ public class Controller extends HttpServlet {
 
 		db = (DBManager) dc.get("db");
 		em = (EncryptionManager) dc.get("em");
+		totp = (TOTPManager) dc.get("totp");
 
 		assignedObjects.put(UIBindings.VERSION, VERSION);
 		assignedObjects.put(UIBindings.PAGE, "index");
@@ -134,7 +165,7 @@ public class Controller extends HttpServlet {
 	 *      response)
 	 */
 	public void renderPage(String targetJSP, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		if (assignedObjects != null && assignedObjects.size() > 0) {
+		if (assignedObjects != null && !assignedObjects.isEmpty()) {
 			for (Map.Entry<String, Object> entry : assignedObjects.entrySet()) {
 				request.setAttribute(entry.getKey(), entry.getValue());
 			}
