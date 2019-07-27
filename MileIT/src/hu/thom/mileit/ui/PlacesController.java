@@ -54,7 +54,7 @@ public class PlacesController extends Controller {
 	 */
 	public PlacesController() {
 		super();
-		assignedObjects.put(UIBindings.PAGE, "locations");
+		assignedObjects.put(UIBindings.PAGE, UIBindings.PLACES);
 	}
 
 	/**
@@ -78,7 +78,7 @@ public class PlacesController extends Controller {
 		super.doGet(request, response);
 		user = (UserModel) request.getSession().getAttribute(UIBindings.USER);
 		if (user == null) {
-			response.sendRedirect("login");
+			response.sendRedirect(UIBindings.LOGIN);
 		} else {
 			userPlacesKey = user.getUsername() + "_" + UIBindings.PLACES;
 
@@ -139,7 +139,7 @@ public class PlacesController extends Controller {
 		super.doPost(request, response);
 		user = (UserModel) request.getSession().getAttribute(UIBindings.USER);
 		if (user == null) {
-			response.sendRedirect("login");
+			response.sendRedirect(UIBindings.LOGIN);
 		} else {
 			userPlacesKey = user.getUsername() + "_" + UIBindings.PLACES;
 			

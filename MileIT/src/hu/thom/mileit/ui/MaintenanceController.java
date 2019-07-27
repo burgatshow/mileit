@@ -56,7 +56,7 @@ public class MaintenanceController extends Controller {
 	 */
 	public MaintenanceController() {
 		super();
-		assignedObjects.put(UIBindings.PAGE, "maintenance");
+		assignedObjects.put(UIBindings.PAGE, UIBindings.MAINTENANCES);
 	}
 
 	/**
@@ -80,7 +80,7 @@ public class MaintenanceController extends Controller {
 		super.doGet(request, response);
 		user = (UserModel) request.getSession().getAttribute(UIBindings.USER);
 		if (user == null) {
-			response.sendRedirect("login");
+			response.sendRedirect(UIBindings.LOGIN);
 		} else {
 			userMaintenanceKey = user.getUsername() + "_" + UIBindings.MAINTENANCES;
 			userCarsKey = user.getUsername() + "_" + UIBindings.CARS;
@@ -143,7 +143,7 @@ public class MaintenanceController extends Controller {
 		super.doPost(request, response);
 		user = (UserModel) request.getSession().getAttribute(UIBindings.USER);
 		if (user == null) {
-			response.sendRedirect("login");
+			response.sendRedirect(UIBindings.LOGIN);
 		} else {
 			userMaintenanceKey = user.getUsername() + "_" + UIBindings.MAINTENANCES;
 			

@@ -50,7 +50,7 @@ public class Configure2FAController extends Controller {
 	 */
 	public Configure2FAController() {
 		super();
-		assignedObjects.put(UIBindings.PAGE, "setup_2fa");
+		assignedObjects.put(UIBindings.PAGE, UIBindings.SETUP_2FA);
 	}
 
 	/**
@@ -63,11 +63,11 @@ public class Configure2FAController extends Controller {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		super.doGet(request, response);
 
-		assignedObjects.remove("status");
+		assignedObjects.remove(UIBindings.STATUS);
 
 		user = (UserModel) request.getSession().getAttribute(UIBindings.USER);
 		if (user == null) {
-			response.sendRedirect("login");
+			response.sendRedirect(UIBindings.LOGIN);
 		} else {
 			if (user.getTotpEnabled() == 0) {
 				if (dc.get(String.format(UIBindings.TOTP_SECRET_USER, user.getUsername())) == null) {
@@ -84,7 +84,7 @@ public class Configure2FAController extends Controller {
 					renderPage(PROFILE_2FA, request, response);
 				}
 			} else {
-				assignedObjects.put("status", -99);
+				assignedObjects.put(UIBindings.STATUS, -99);
 				renderPage(PROFILE_FORM, request, response);
 			}
 		}
@@ -101,9 +101,9 @@ public class Configure2FAController extends Controller {
 		super.doPost(request, response);
 		user = (UserModel) request.getSession().getAttribute(UIBindings.USER);
 		if (user == null) {
-			response.sendRedirect("login");
+			response.sendRedirect(UIBindings.LOGIN);
 		} else {
-			String verificationCode = request.getParameter("totp_code");
+			String verificationCode = request.getParameter(UIBindings.TOTP_CODE);
 			String secret = dc.getString(String.format(UIBindings.TOTP_SECRET_USER, user.getUsername()));
 			try {
 				Date current = Calendar.getInstance().getTime();
@@ -125,25 +125,25 @@ public class Configure2FAController extends Controller {
 							for (int i = 0; i < user.getTotpBackupCodes().length; i++) {
 								assignedObjects.put("backup_code_" + i, user.getTotpBackupCodes()[i]);
 							}
-							assignedObjects.put("status", 100);
+							assignedObjects.put(UIBindings.STATUS, 100);
 							renderPage(PROFILE_FORM, request, response);
 						} else {
-							// DB update failed, stay on no TOTP
+							//FIXME DB update failed, stay on no TOTP
 							System.err.println("Hupsz");
 						}
 					} else {
 						// Provided code does not match
-						assignedObjects.put("status", -2);
+						assignedObjects.put(UIBindings.STATUS, -2);
 						renderPage(PROFILE_2FA, request, response);
 					}
 				} else {
 					// Ran out of time during enrollment or invalid start or end date
-					assignedObjects.put("status", -4);
+					assignedObjects.put(UIBindings.STATUS, -4);
 					renderPage(PROFILE_2FA, request, response);
 				}
 			} catch (GeneralSecurityException e) {
 				// An issue occured, notify user
-				assignedObjects.put("status", -3);
+				assignedObjects.put(UIBindings.STATUS, -3);
 				renderPage(PROFILE_2FA, request, response);
 			}
 		}

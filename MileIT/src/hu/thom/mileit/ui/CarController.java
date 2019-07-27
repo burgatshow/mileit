@@ -54,7 +54,7 @@ public class CarController extends Controller {
 	 */
 	public CarController() {
 		super();
-		assignedObjects.put(UIBindings.PAGE, "cars");
+		assignedObjects.put(UIBindings.PAGE, UIBindings.CARS);
 	}
 
 	/**
@@ -78,7 +78,7 @@ public class CarController extends Controller {
 		super.doGet(request, response);
 		user = (UserModel) request.getSession().getAttribute(UIBindings.USER);
 		if (user == null) {
-			response.sendRedirect("login");
+			response.sendRedirect(UIBindings.LOGIN);
 		} else {
 			userCarsKey = user.getUsername() + "_" + UIBindings.CARS;
 			
@@ -153,7 +153,7 @@ public class CarController extends Controller {
 		super.doPost(request, response);
 		user = (UserModel) request.getSession().getAttribute(UIBindings.USER);
 		if (user == null) {
-			response.sendRedirect("login");
+			response.sendRedirect(UIBindings.LOGIN);
 		} else {
 			userCarsKey = user.getUsername() + "_" + UIBindings.CARS;
 

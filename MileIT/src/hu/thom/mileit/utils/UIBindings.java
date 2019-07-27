@@ -51,6 +51,7 @@ public final class UIBindings implements Serializable {
 	public static final String[] FORM_ME_PLACE = { "name", "fuelStation" };
 	public static final String[] FORM_ME_PAYMENT_METHOD = { "name" };
 	public static final String[] FORM_ME_ROUTE = { "car", "type", "startPlace", "endPlace", "routeDatetime" };
+	public static final String[] FORM_ME_PROFILE = {"currency", "locale", "distance", "rounded", "email", "pushbulletKey", "pushoverUser", "pushoverAPIKey", "dateDormat", "timeFormat"};
 
 	public static final String[] VALID_PATTERNS = { "yyyy. MM. dd.", "yyyy-MM-dd", "yyyy/MM/dd", "yyyy. MMMM dd.", "yyyy. MMM. dd.", "dd. MM. yyyy.",
 			"dd-MM-yyyy", "dd/MM/yyyy", "dd. MMMM yyyy.", "dd. MMM. yyyy.", "HH:mm", "h:mm a" };
@@ -59,6 +60,7 @@ public final class UIBindings implements Serializable {
 	 * LoginController
 	 */
 	public static final String TWO_FA_REQUIRED = "two_fa_required";
+	public static final String LOGIN = "login";
 	
 	/**
 	 * General controller keys
@@ -83,7 +85,18 @@ public final class UIBindings implements Serializable {
 	public static final String LOAD_CHARTS = "loadCharts";
 	public static final String PARAM_MODE = "m";
 	public static final String PARAM_ID = "id";
+	public static final String MEDIATYPE_JSON = "application/json";
+	public static final String MEDIATYPE_HTML = "text/html";
+	public static final String MEDIATYPE_PNG = "image/png";
 
+	/**
+	 * AJAXController
+	 */
+	public static final String DATE = "date";
+	public static final String PAID = "paid";
+	public static final String UNIT_PRICE = "unitPrice";
+	
+	
 	/**
 	 * IndexController
 	 */
@@ -100,6 +113,7 @@ public final class UIBindings implements Serializable {
 	/**
 	 * PaymentMethodController
 	 */
+	public static final String PAYMENT = "payment";
 	public static final String PMS = "pms";
 
 	/**
@@ -132,7 +146,10 @@ public final class UIBindings implements Serializable {
 	/**
 	 * ProfileController & Configure2FAController
 	 */
+	public static final String PROFILE = "profile";
+	public static final String TOTP_CODE = "totp_code";
 	public static final String TOTP_SECRET_USER = "totp_secret_%s";
 	public static final String TOTP_START_USER = "totp_start_%s";
 	public static final String TOTP_END_USER = "totp_end_%s";
+	public static final String SETUP_2FA = "setup_2fa";
 }

@@ -70,7 +70,7 @@ public class LogoutController extends Controller {
 			request.getSession().invalidate();
 			request.logout();
 		}
-		response.sendRedirect("login");
+		response.sendRedirect(UIBindings.LOGIN);
 	}
 
 	/**

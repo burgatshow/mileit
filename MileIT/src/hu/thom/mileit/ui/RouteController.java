@@ -56,7 +56,7 @@ public class RouteController extends Controller {
 	 */
 	public RouteController() {
 		super();
-		assignedObjects.put(UIBindings.PAGE, "routes");
+		assignedObjects.put(UIBindings.PAGE, UIBindings.ROUTES);
 	}
 
 	/**
@@ -80,7 +80,7 @@ public class RouteController extends Controller {
 		super.doGet(request, response);
 		user = (UserModel) request.getSession().getAttribute(UIBindings.USER);
 		if (user == null) {
-			response.sendRedirect("login");
+			response.sendRedirect(UIBindings.LOGIN);
 		} else {
 			userRoutesKey = user.getUsername() + "_" + UIBindings.ROUTES;
 			userCarsKey = user.getUsername() + "_" + UIBindings.CARS;
@@ -153,7 +153,7 @@ public class RouteController extends Controller {
 		super.doPost(request, response);
 		user = (UserModel) request.getSession().getAttribute(UIBindings.USER);
 		if (user == null) {
-			response.sendRedirect("login");
+			response.sendRedirect(UIBindings.LOGIN);
 		} else {
 			userRoutesKey = user.getUsername() + "_" + UIBindings.ROUTES;
 
@@ -166,7 +166,6 @@ public class RouteController extends Controller {
 
 				switch (m) {
 				case UIBindings.MODE_NEW:
-					System.out.println("Round-trip: " + request.getParameter("roundTrip") != null ? true : false);
 					r.setRoundTrip(request.getParameter("roundTrip") != null ? true : false);
 					r.setOperation(0);
 					break;

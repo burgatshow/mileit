@@ -57,7 +57,7 @@ public class RefuelController extends Controller {
 	 */
 	public RefuelController() {
 		super();
-		assignedObjects.put(UIBindings.PAGE, "refuels");
+		assignedObjects.put(UIBindings.PAGE, UIBindings.REFUELS);
 	}
 
 	/**
@@ -82,7 +82,7 @@ public class RefuelController extends Controller {
 
 		user = (UserModel) request.getSession().getAttribute(UIBindings.USER);
 		if (user == null) {
-			response.sendRedirect("login");
+			response.sendRedirect(UIBindings.LOGIN);
 		} else {
 			userPaymentsKey = user.getUsername() + "_" + UIBindings.PMS;
 			userCarsKey = user.getUsername() + "_" + UIBindings.CARS;
@@ -160,7 +160,7 @@ public class RefuelController extends Controller {
 		super.doPost(request, response);
 		user = (UserModel) request.getSession().getAttribute(UIBindings.USER);
 		if (user == null) {
-			response.sendRedirect("login");
+			response.sendRedirect(UIBindings.LOGIN);
 		} else {
 			userRefuelsKey = user.getUsername() + "_" + UIBindings.REFUELS;
 

@@ -55,7 +55,7 @@ public class TyreController extends Controller {
 	 */
 	public TyreController() {
 		super();
-		assignedObjects.put(UIBindings.PAGE, "tyres");
+		assignedObjects.put(UIBindings.PAGE, UIBindings.TYRES);
 	}
 
 	/**
@@ -79,7 +79,7 @@ public class TyreController extends Controller {
 		super.doGet(request, response);
 		user = (UserModel) request.getSession().getAttribute(UIBindings.USER);
 		if (user == null) {
-			response.sendRedirect("login");
+			response.sendRedirect(UIBindings.LOGIN);
 		} else {
 			userTyresKey = user.getUsername() + "_" + UIBindings.TYRES;
 
@@ -165,7 +165,7 @@ public class TyreController extends Controller {
 		super.doPost(request, response);
 		user = (UserModel) request.getSession().getAttribute(UIBindings.USER);
 		if (user == null) {
-			response.sendRedirect("login");
+			response.sendRedirect(UIBindings.LOGIN);
 		} else {
 			userTyresKey = user.getUsername() + "_" + UIBindings.TYRES;
 
