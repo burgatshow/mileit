@@ -42,6 +42,7 @@ public final class UIBindings implements Serializable {
 	 * Form submission must elements
 	 */
 	public static final String[] FORM_LOGIN = { "username", "password" };
+	public static final String[] FORM_LOGIN_2FA = { "2fa_verification" };
 	public static final String[] FORM_ME_CARS = { "manufacturer", "fuel", "model", "vin", "plateNumber", "status" };
 	public static final String[] FORM_ME_MAINTENANCE = { "car", "odometer", "paymentMethod", "amount", "maintenanceDate" };
 	public static final String[] FORM_ME_TYRE = { "manufacturer", "model", "width", "height", "radius", "axis", "type" };
@@ -54,6 +55,11 @@ public final class UIBindings implements Serializable {
 	public static final String[] VALID_PATTERNS = { "yyyy. MM. dd.", "yyyy-MM-dd", "yyyy/MM/dd", "yyyy. MMMM dd.", "yyyy. MMM. dd.", "dd. MM. yyyy.",
 			"dd-MM-yyyy", "dd/MM/yyyy", "dd. MMMM yyyy.", "dd. MMM. yyyy.", "HH:mm", "h:mm a" };
 
+	/**
+	 * LoginController
+	 */
+	public static final String TWO_FA_REQUIRED = "two_fa_required";
+	
 	/**
 	 * General controller keys
 	 */
@@ -72,6 +78,7 @@ public final class UIBindings implements Serializable {
 	public static final String MODE_DELETE = "delete";
 	public static final String MODE_AJAX_FUELSTAT = "afs";
 	public static final String MODE_AJAX_AMOUNTPAID = "aap";
+	public static final String MODE_2FA = "2fa";
 	public static final String LOAD_MAPS = "loadMap";
 	public static final String LOAD_CHARTS = "loadCharts";
 	public static final String PARAM_MODE = "m";
@@ -80,6 +87,7 @@ public final class UIBindings implements Serializable {
 	/**
 	 * IndexController
 	 */
+	public static final String INDEX = "index";
 	public static final String LAST_REFUEL = "lr";
 	public static final String FUEL_STATS = "fs";
 

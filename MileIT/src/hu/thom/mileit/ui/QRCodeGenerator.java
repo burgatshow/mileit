@@ -55,7 +55,7 @@ public class QRCodeGenerator extends Controller {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		super.doGet(request, response);
-		user = (UserModel) request.getSession().getAttribute("user");
+		user = (UserModel) request.getSession().getAttribute(UIBindings.USER);
 		if (user == null) {
 			response.sendRedirect("login");
 		} else {

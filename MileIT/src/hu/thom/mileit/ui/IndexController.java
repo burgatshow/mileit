@@ -52,7 +52,7 @@ public class IndexController extends Controller {
 	 */
 	public IndexController() {
 		super();
-		assignedObjects.put(UIBindings.PAGE, "index");
+		assignedObjects.put(UIBindings.PAGE, UIBindings.INDEX);
 		assignedObjects.put(UIBindings.LOAD_CHARTS, 1);
 	}
 
@@ -65,7 +65,7 @@ public class IndexController extends Controller {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		super.doGet(request, response);
 
-		user = (UserModel) request.getSession().getAttribute("user");
+		user = (UserModel) request.getSession().getAttribute(UIBindings.USER);
 
 		if (user == null) {
 			response.sendRedirect("login");

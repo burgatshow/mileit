@@ -1460,7 +1460,7 @@ public class DBManager implements Serializable {
 						user.setTotpSecret(em.decrypt(rs.getString(15)));
 
 						user.setTotpBackupCodes(new int[6]);
-						for (int i = 0; i <= 5; i++) {
+						for (int i = 0; i < 6; i++) {
 							user.getTotpBackupCodes()[i] = Integer.valueOf(em.decrypt(rs.getString(i + 16)));
 						}
 					}
@@ -1468,8 +1468,6 @@ public class DBManager implements Serializable {
 					user.setEmail(null).setPushoverUserKey(null).setPushoverAPIKey(null).setPushbulletAPIKey(null).setTotpSecret(null)
 							.setTotpBackupCodes(null);
 				}
-				
-				System.out.println(user);
 
 				user.setArchived(rs.getInt(11));
 

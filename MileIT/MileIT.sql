@@ -89,12 +89,12 @@ CREATE TABLE IF NOT EXISTS `users` (
   `api_token` VARCHAR(100) NULL DEFAULT NULL COLLATE utf8mb4_hungarian_ci,
   `totp_enabled` TINYINT(1) UNSIGNED NOT NULL DEFAULT 0,
   `totp_secret` VARCHAR(200) NULL DEFAULT NULL COLLATE utf8mb4_hungarian_ci,
-  `totp_backup_1 VARCHAR(200) NULL DEFAULT NULL COLLATE utf8mb4_hungarian_ci,
-  `totp_backup_2 VARCHAR(200) NULL DEFAULT NULL COLLATE utf8mb4_hungarian_ci,
-  `totp_backup_3 VARCHAR(200) NULL DEFAULT NULL COLLATE utf8mb4_hungarian_ci,
-  `totp_backup_4 VARCHAR(200) NULL DEFAULT NULL COLLATE utf8mb4_hungarian_ci,
-  `totp_backup_5 VARCHAR(200) NULL DEFAULT NULL COLLATE utf8mb4_hungarian_ci,
-  `totp_backup_6 VARCHAR(200) NULL DEFAULT NULL COLLATE utf8mb4_hungarian_ci,
+  `totp_backup_1` VARCHAR(200) NULL DEFAULT NULL COLLATE utf8mb4_hungarian_ci,
+  `totp_backup_2` VARCHAR(200) NULL DEFAULT NULL COLLATE utf8mb4_hungarian_ci,
+  `totp_backup_3` VARCHAR(200) NULL DEFAULT NULL COLLATE utf8mb4_hungarian_ci,
+  `totp_backup_4` VARCHAR(200) NULL DEFAULT NULL COLLATE utf8mb4_hungarian_ci,
+  `totp_backup_5` VARCHAR(200) NULL DEFAULT NULL COLLATE utf8mb4_hungarian_ci,
+  `totp_backup_6` VARCHAR(200) NULL DEFAULT NULL COLLATE utf8mb4_hungarian_ci,
   PRIMARY KEY (`user_id`), UNIQUE KEY `username` (`username`)) 
   ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
