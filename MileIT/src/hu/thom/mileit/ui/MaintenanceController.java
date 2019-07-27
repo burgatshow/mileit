@@ -56,7 +56,7 @@ public class MaintenanceController extends Controller {
 	 */
 	public MaintenanceController() {
 		super();
-		assignedObjects.put(UIBindings.PAGE, "maintenance");
+		assignedObjects.put(UIBindings.PAGE, UIBindings.MAINTENANCES);
 	}
 
 	/**
@@ -78,9 +78,9 @@ public class MaintenanceController extends Controller {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		super.doGet(request, response);
-		user = (UserModel) request.getSession().getAttribute("user");
+		user = (UserModel) request.getSession().getAttribute(UIBindings.USER);
 		if (user == null) {
-			response.sendRedirect("login");
+			response.sendRedirect(UIBindings.LOGIN);
 		} else {
 			userMaintenanceKey = user.getUsername() + "_" + UIBindings.MAINTENANCES;
 			userCarsKey = user.getUsername() + "_" + UIBindings.CARS;
@@ -141,9 +141,9 @@ public class MaintenanceController extends Controller {
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		super.doPost(request, response);
-		user = (UserModel) request.getSession().getAttribute("user");
+		user = (UserModel) request.getSession().getAttribute(UIBindings.USER);
 		if (user == null) {
-			response.sendRedirect("login");
+			response.sendRedirect(UIBindings.LOGIN);
 		} else {
 			userMaintenanceKey = user.getUsername() + "_" + UIBindings.MAINTENANCES;
 			

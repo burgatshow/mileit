@@ -25,6 +25,7 @@
 package hu.thom.mileit.ui;
 
 import java.io.IOException;
+import java.security.GeneralSecurityException;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -71,12 +72,14 @@ public class LoginController extends Controller {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		super.doGet(request, response);
-		
-		if (request.getSession().getAttribute("user") == null) {
-			validationMessages.clear();
+
+		assignedObjects.put(UIBindings.TWO_FA_REQUIRED, 0);
+		validationMessages.clear();
+
+		if (request.getSession().getAttribute(UIBindings.USER) == null) {
 			renderPage(LOGIN, request, response);
 		} else {
-			response.sendRedirect("index");
+			response.sendRedirect(UIBindings.INDEX);
 		}
 	}
 
@@ -89,28 +92,71 @@ public class LoginController extends Controller {
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		super.doPost(request, response);
+		parseMode(request);
 
-		if (request.getSession().getAttribute("user") == null) {
+		UserModel user = (UserModel) request.getSession().getAttribute(UIBindings.USER);
 
-			checkValidationMessages(UIBindings.FORM_LOGIN, validationMessages, request);
+		if (user == null || m.equals(UIBindings.MODE_2FA)) {
+			switch (m) {
+			case UIBindings.MODE_2FA:
+				checkValidationMessages(UIBindings.FORM_LOGIN_2FA, validationMessages, request);
+				assignedObjects.put(UIBindings.TWO_FA_REQUIRED, 1);
+				if (validationMessages.isEmpty()) {
+					String userCode = request.getParameter(UIBindings.FORM_LOGIN_2FA[0]);
+					String currentCode = null;
+					try {
+						currentCode = totp.generateCurrentNumber(user.getTotpSecret());
+					} catch (GeneralSecurityException e) {
+						// Something failed, redirecting to first login page and notifying user
+						assignedObjects.put(UIBindings.STATUS, -3);
+						assignedObjects.put(UIBindings.TWO_FA_REQUIRED, 0);
+						renderPage(LOGIN, request, response);
+					}
 
-			if (validationMessages.isEmpty()) {
-				String username = request.getParameter("username");
-				String password = request.getParameter("password");
-				if (db.authenticateUser(username, em.encrypt(password))) {
-					UserModel user = db.getUserProfile(username, em);
-					request.getSession().setAttribute("user", user);
-					response.sendRedirect("index");
+					if (userCode.equals(currentCode)) {
+						validationMessages.clear();
+						response.sendRedirect(UIBindings.INDEX);
+					} else {
+						assignedObjects.put(UIBindings.STATUS, -4);
+						assignedObjects.put(UIBindings.TWO_FA_REQUIRED, 1);
+						renderPage(LOGIN, request, response);
+					}
 				} else {
-					assignedObjects.put(UIBindings.STATUS, -1);
+					assignedObjects.put(UIBindings.STATUS, -2);
 					renderPage(LOGIN, request, response);
 				}
-			} else {
-				assignedObjects.put(UIBindings.STATUS, -2);
-				renderPage(LOGIN, request, response);
+				break;
+
+			default:
+				checkValidationMessages(UIBindings.FORM_LOGIN, validationMessages, request);
+
+				if (validationMessages.isEmpty()) {
+					String username = request.getParameter(UIBindings.FORM_LOGIN[0]);
+					String password = request.getParameter(UIBindings.FORM_LOGIN[1]);
+
+					if (db.authenticateUser(username, em.encrypt(password))) {
+						UserModel userRecord = db.getUserProfile(username, em);
+						request.getSession().setAttribute(UIBindings.USER, userRecord);
+
+						if (userRecord.getTotpEnabled() == 1) {
+							assignedObjects.put(UIBindings.TWO_FA_REQUIRED, 1);
+							renderPage(LOGIN, request, response);
+						} else {
+							validationMessages.clear();
+							response.sendRedirect(UIBindings.INDEX);
+						}
+					} else {
+						assignedObjects.put(UIBindings.STATUS, -1);
+						renderPage(LOGIN, request, response);
+					}
+				} else {
+					assignedObjects.put(UIBindings.STATUS, -2);
+					renderPage(LOGIN, request, response);
+				}
+				break;
 			}
 		} else {
-			response.sendRedirect("index");
+			response.sendRedirect(UIBindings.INDEX);
 		}
 	}
 }

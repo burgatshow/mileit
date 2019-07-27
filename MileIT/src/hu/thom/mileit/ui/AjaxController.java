@@ -83,10 +83,10 @@ public class AjaxController extends Controller {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		super.doGet(request, response);
 
-		user = (UserModel) request.getSession().getAttribute("user");
+		user = (UserModel) request.getSession().getAttribute(UIBindings.USER);
 
 		if (user == null) {
-			response.sendRedirect("login");
+			response.sendRedirect(UIBindings.LOGIN);
 		} else {
 			PrintWriter w = response.getWriter();
 
@@ -101,7 +101,7 @@ public class AjaxController extends Controller {
 			}
 
 			if (fuelStats != null && fuelStats.size() > 0) {
-				response.setContentType("application/json");
+				response.setContentType(UIBindings.MEDIATYPE_JSON);
 
 				parseMode(request);
 
@@ -113,8 +113,8 @@ public class AjaxController extends Controller {
 				case UIBindings.MODE_AJAX_FUELSTAT:
 					for (RefuelModel rm : fuelStats) {
 						item = new JSONObject();
-						item.put("date", df.format(rm.getRefuelDate()));
-						item.put("unitPrice", rm.getUnitPrice());
+						item.put(UIBindings.DATE, df.format(rm.getRefuelDate()));
+						item.put(UIBindings.UNIT_PRICE, rm.getUnitPrice());
 
 						chartData.add(item);
 					}
@@ -124,8 +124,8 @@ public class AjaxController extends Controller {
 				case UIBindings.MODE_AJAX_AMOUNTPAID:
 					for (RefuelModel rm : fuelStats) {
 						item = new JSONObject();
-						item.put("date", df.format(rm.getRefuelDate()));
-						item.put("paid", rm.getAmount());
+						item.put(UIBindings.DATE, df.format(rm.getRefuelDate()));
+						item.put(UIBindings.PAID, rm.getAmount());
 
 						chartData.add(item);
 					}
@@ -140,7 +140,7 @@ public class AjaxController extends Controller {
 
 			} else {
 				// FIXME bibi van
-				response.setContentType("text/html");
+				response.setContentType(UIBindings.MEDIATYPE_HTML);
 			}
 
 			w.flush();

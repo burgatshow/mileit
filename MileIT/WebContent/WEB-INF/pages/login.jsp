@@ -38,23 +38,44 @@
 						<fmt:message key="status.login" />
 					</div>
 				</c:if>
+				<c:if test="${status eq -3}">
+					<div class="alert alert-dismissible alert-danger mt-4">
+						<fmt:message key="status.2fa_error" />
+					</div>
+				</c:if>
+				<c:if test="${status eq -4}">
+					<div class="alert alert-dismissible alert-danger mt-4">
+						<fmt:message key="status.2fa_invalid" />
+					</div>
+				</c:if>
 			</div>
 		</div>
 		<form action="login" method="post" class="mt-3">
 			<input type="hidden" name="ct" value="<c:out value="${ct}" />">
+			<c:if test="${two_fa_required eq 1}">
+				<input type="hidden" name="m" value="2fa">
+			</c:if>
 			<div class="row">
 				<div class="col-md-4"></div>
 				<div class="col-md-4">
-					<div class="form-group">
-						<label for="username"><fmt:message key="login.username" /></label> <input type="text" name="username"
-							class="form-control <c:if test="${validationMessages.contains('username') }">is-invalid</c:if>" id="username"
-							placeholder="<fmt:message key="login.username" />">
-					</div>
-					<div class="form-group">
-						<label for="password"><fmt:message key="login.password" /></label> <input type="password" name="password"
-							class="form-control <c:if test="${validationMessages.contains('password') }">is-invalid</c:if>" id="password"
-							placeholder="<fmt:message key="login.password" />">
-					</div>
+					<c:if test="${two_fa_required eq 1}">
+						<div class="form-group">
+							<label for="2fa_verification"><fmt:message key="login.2fa_code" /></label> <input type="number" name="2fa_verification"
+								class="form-control <c:if test="${validationMessages.contains('2fa_verification') }">is-invalid</c:if>" id="2fa_verification">
+						</div>
+					</c:if>
+					<c:if test="${two_fa_required ne 1}">
+						<div class="form-group">
+							<label for="username"><fmt:message key="login.username" /></label> <input type="text" name="username"
+								class="form-control <c:if test="${validationMessages.contains('username') }">is-invalid</c:if>" id="username"
+								placeholder="<fmt:message key="login.username" />">
+						</div>
+						<div class="form-group">
+							<label for="password"><fmt:message key="login.password" /></label> <input type="password" name="password"
+								class="form-control <c:if test="${validationMessages.contains('password') }">is-invalid</c:if>" id="password"
+								placeholder="<fmt:message key="login.password" />">
+						</div>
+					</c:if>
 				</div>
 				<div class="col-md-4"></div>
 			</div>

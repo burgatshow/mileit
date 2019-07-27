@@ -33,6 +33,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import hu.thom.mileit.models.UserModel;
+import hu.thom.mileit.utils.UIBindings;
 
 /**
  * Servlet class to manage user logout
@@ -60,7 +61,7 @@ public class LogoutController extends Controller {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		super.doGet(request, response);
-		UserModel user = (UserModel) request.getSession().getAttribute("user");
+		UserModel user = (UserModel) request.getSession().getAttribute(UIBindings.USER);
 		if (user != null) {
 			// Clean up cache
 			dc.invalidate(user.getUsername());
@@ -69,7 +70,7 @@ public class LogoutController extends Controller {
 			request.getSession().invalidate();
 			request.logout();
 		}
-		response.sendRedirect("login");
+		response.sendRedirect(UIBindings.LOGIN);
 	}
 
 	/**

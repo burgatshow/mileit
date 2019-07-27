@@ -55,9 +55,9 @@ public class QRCodeGenerator extends Controller {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		super.doGet(request, response);
-		user = (UserModel) request.getSession().getAttribute("user");
+		user = (UserModel) request.getSession().getAttribute(UIBindings.USER);
 		if (user == null) {
-			response.sendRedirect("login");
+			response.sendRedirect(UIBindings.LOGIN);
 		} else {
 			String s = dc.getString(String.format(UIBindings.TOTP_SECRET_USER, user.getUsername()));
 			if (s != null && !"".equalsIgnoreCase(s) && user.getTotpEnabled() == 0) {
@@ -70,7 +70,7 @@ public class QRCodeGenerator extends Controller {
 
 					MatrixToImageWriter.writeToStream(bitMatrix, "PNG", outStream);
 
-					response.setContentType("image/png");
+					response.setContentType(UIBindings.MEDIATYPE_PNG);
 
 					outStream.flush();
 					outStream.close();
@@ -79,6 +79,7 @@ public class QRCodeGenerator extends Controller {
 					e.printStackTrace();
 				}
 			} else {
+				//FIXME
 				System.err.println("AAAAAAUUUCH!!!");
 			}
 		}

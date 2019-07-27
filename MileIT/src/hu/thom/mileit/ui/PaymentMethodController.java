@@ -54,7 +54,7 @@ public class PaymentMethodController extends Controller {
 	 */
 	public PaymentMethodController() {
 		super();
-		assignedObjects.put(UIBindings.PAGE, "payment");
+		assignedObjects.put(UIBindings.PAGE, UIBindings.PAYMENT);
 	}
 
 	/**
@@ -76,9 +76,9 @@ public class PaymentMethodController extends Controller {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		super.doGet(request, response);
-		user = (UserModel) request.getSession().getAttribute("user");
+		user = (UserModel) request.getSession().getAttribute(UIBindings.USER);
 		if (user == null) {
-			response.sendRedirect("login");
+			response.sendRedirect(UIBindings.LOGIN);
 		} else {
 			userPaymentsKey = user.getUsername() + "_" + UIBindings.PMS;
 
@@ -136,9 +136,9 @@ public class PaymentMethodController extends Controller {
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		super.doPost(request, response);
-		user = (UserModel) request.getSession().getAttribute("user");
+		user = (UserModel) request.getSession().getAttribute(UIBindings.USER);
 		if (user == null) {
-			response.sendRedirect("login");
+			response.sendRedirect(UIBindings.LOGIN);
 		} else {
 			userPaymentsKey = user.getUsername() + "_" + UIBindings.PMS;
 			

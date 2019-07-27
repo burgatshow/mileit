@@ -50,7 +50,7 @@ public class ProfileController extends Controller {
 	 */
 	public ProfileController() {
 		super();
-		assignedObjects.put(UIBindings.PAGE, "profile");
+		assignedObjects.put(UIBindings.PAGE, UIBindings.PROFILE);
 	}
 
 	/**
@@ -62,9 +62,9 @@ public class ProfileController extends Controller {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		super.doGet(request, response);
-		user = (UserModel) request.getSession().getAttribute("user");
+		user = (UserModel) request.getSession().getAttribute(UIBindings.USER);
 		if (user == null) {
-			response.sendRedirect("login");
+			response.sendRedirect(UIBindings.LOGIN);
 		} else {
 			renderPage(PROFILE_FORM, request, response);
 		}
@@ -79,41 +79,44 @@ public class ProfileController extends Controller {
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		super.doPost(request, response);
-		user = (UserModel) request.getSession().getAttribute("user");
+		user = (UserModel) request.getSession().getAttribute(UIBindings.USER);
 		if (user == null) {
-			response.sendRedirect("login");
+			response.sendRedirect(UIBindings.LOGIN);
 		} else {
 			parseMode(request);
 
-			user.setCurrency(request.getParameter("currency")).setLocale(request.getParameter("locale")).setDistance(request.getParameter("distance"))
-					.setRounded(request.getParameter("rounded")).setEmail(request.getParameter("email"))
-					.setPushbulletAPIKey(request.getParameter("pushbulletKey")).setPushoverUserKey(request.getParameter("pushoverUser"))
-					.setPushoverAPIKey(request.getParameter("pushoverAPIKey")).setDateFormat(request.getParameter("dateformat"))
-					.setTimeFormat(request.getParameter("datetimeformat"));
+			user.setCurrency(request.getParameter(UIBindings.FORM_ME_PROFILE[0])).setLocale(request.getParameter(UIBindings.FORM_ME_PROFILE[1]))
+					.setDistance(request.getParameter(UIBindings.FORM_ME_PROFILE[2])).setRounded(request.getParameter(UIBindings.FORM_ME_PROFILE[3]))
+					.setEmail(request.getParameter(UIBindings.FORM_ME_PROFILE[4]))
+					.setPushbulletAPIKey(request.getParameter(UIBindings.FORM_ME_PROFILE[5]))
+					.setPushoverUserKey(request.getParameter(UIBindings.FORM_ME_PROFILE[6]))
+					.setPushoverAPIKey(request.getParameter(UIBindings.FORM_ME_PROFILE[7]))
+					.setDateFormat(request.getParameter(UIBindings.FORM_ME_PROFILE[8]))
+					.setTimeFormat(request.getParameter(UIBindings.FORM_ME_PROFILE[9]));
 
-			if (request.getParameter("dateFormat") != null && !request.getParameter("dateFormat").isEmpty()) {
+			if (request.getParameter(UIBindings.FORM_ME_PROFILE[8]) != null && !request.getParameter(UIBindings.FORM_ME_PROFILE[8]).isEmpty()) {
 				for (String s : UIBindings.VALID_PATTERNS) {
-					if (s.equals(request.getParameter("dateFormat"))) {
-						user.setDateFormat(request.getParameter("dateFormat"));
+					if (s.equals(request.getParameter(UIBindings.FORM_ME_PROFILE[8]))) {
+						user.setDateFormat(request.getParameter(UIBindings.FORM_ME_PROFILE[8]));
 						break;
 					}
 				}
 
 				if (user.getDateFormat() == null) {
-					user.setDateFormat("yyyy-MM-dd");
+					user.setDateFormat(UIBindings.VALID_PATTERNS[1]);
 				}
 			}
 
-			if (request.getParameter("timeFormat") != null && !request.getParameter("timeFormat").isEmpty()) {
+			if (request.getParameter(UIBindings.FORM_ME_PROFILE[9]) != null && !request.getParameter(UIBindings.FORM_ME_PROFILE[9]).isEmpty()) {
 				for (String s : UIBindings.VALID_PATTERNS) {
-					if (s.equals(request.getParameter("timeFormat"))) {
-						user.setTimeFormat(request.getParameter("timeFormat"));
+					if (s.equals(request.getParameter(UIBindings.FORM_ME_PROFILE[9]))) {
+						user.setTimeFormat(request.getParameter(UIBindings.FORM_ME_PROFILE[9]));
 						break;
 					}
 				}
 
 				if (user.getTimeFormat() == null) {
-					user.setTimeFormat("HH:mm");
+					user.setTimeFormat(UIBindings.VALID_PATTERNS[10]);
 				}
 			}
 
