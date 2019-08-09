@@ -30,7 +30,7 @@
 					</c:if>
 					<c:if test="${not empty lr.refuelDate}">
 						<fmt:message key="index.stat.title">
-<%-- 							<fmt:formatDate type="both" value="${lr.refuelDate}" pattern="yyyy. MM. dd." var="formatted_LR" /> --%>
+							<%-- 							<fmt:formatDate type="both" value="${lr.refuelDate}" pattern="yyyy. MM. dd." var="formatted_LR" /> --%>
 							<fmt:formatDate type="both" value="${lr.refuelDate}" pattern="${user.dateFormat}" var="formatted_LR" />
 							<fmt:param value="${formatted_LR}" />
 						</fmt:message>
@@ -86,7 +86,9 @@
 		</div>
 		<div class="row">
 			<div class="col-md-12">
-				<canvas id="priceChart" height="50"></canvas>
+				<canvas id="priceChart"
+					data-location="${pageContext.request.scheme}://${pageContext.request.localName}:${pageContext.request.localPort}${pageContext.request.contextPath}/"
+					height="50"></canvas>
 			</div>
 		</div>
 		<div class="row mt-3">
@@ -98,7 +100,9 @@
 		</div>
 		<div class="row">
 			<div class="col-md-12">
-				<canvas id="amountChart" height="50"></canvas>
+				<canvas id="amountChart"
+					data-location="${pageContext.request.scheme}://${pageContext.request.localName}:${pageContext.request.localPort}${pageContext.request.contextPath}/"
+					height="50"></canvas>
 			</div>
 		</div>
 	</div>

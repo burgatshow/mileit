@@ -20,7 +20,9 @@
 
 	<!-- encoded password is: WebASWebAS -->
 	<keyStore id="defaultKeyStore"
-		password="{xor}CDo9HiwIOj0eDA==" />
+		password="{xor}CDo9HiwIOj0eDA=="
+		location="${server.output.dir}/resources/security/mileit-keystore.jks"
+		type="PKCS12" />
 
 	<!-- Libs -->
 	<library id="libs">
@@ -53,4 +55,6 @@
 	<!-- HTTP cookie hardening -->
 	<httpSession cookieSecure="true"
 		useContextRootAsCookiePath="true" sslTrackingEnabled="true" />
+		
+	<webContainer disableXPoweredBy="true" />
 </server>

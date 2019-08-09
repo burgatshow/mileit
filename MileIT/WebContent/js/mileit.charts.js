@@ -1,6 +1,7 @@
 $(document).ready(function() {
+	var priceChart = $("#priceChart");
 	$.ajax({
-		url : "./ajax?m=afs",
+		url : priceChart.data("location") + "ajax?m=afs",
 		method : "GET",
 		success : function(data) {
 			var date = [];
@@ -20,7 +21,6 @@ $(document).ready(function() {
 				} ]
 			};
 
-			var priceChart = $("#priceChart");
 			var barGraph = new Chart(priceChart, {
 				type : 'line',
 				data : chartdata,
@@ -35,8 +35,9 @@ $(document).ready(function() {
 		}
 	});
 
+	var amountChart = $("#amountChart");
 	$.ajax({
-		url : "./ajax?m=aap",
+		url : amountChart.data("location") + "./ajax?m=aap",
 		method : "GET",
 		success : function(data) {
 			var date = [];
@@ -56,7 +57,7 @@ $(document).ready(function() {
 				} ]
 			};
 
-			var amountChart = $("#amountChart");
+			
 			var barGraph = new Chart(amountChart, {
 				type : 'line',
 				data : chartdata,
