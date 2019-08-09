@@ -119,6 +119,14 @@ public class Controller extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
+		response.setHeader("X-Frame-Options", "SAMEORIGIN");
+
+		response.setHeader("Content-Security-Policy",
+				"default-src 'self'; object-src 'none'; style-src 'self'; img-src 'self'; media-src 'self'; frame-src 'none'; font-src 'self'; connect-src 'self'");
+		response.setHeader("X-Content-Security-Policy",
+				"default-src 'self'; object-src 'none'; style-src 'self'; img-src 'self'; media-src 'self'; frame-src 'none'; font-src 'self'; connect-src 'self'");
+		response.setHeader("X-WebKit-CSP",
+				"default-src 'self'; object-src 'none'; style-src 'self'; img-src 'self'; media-src 'self'; frame-src 'none'; font-src 'self'; connect-src 'self'");
 	}
 
 	/**
@@ -129,6 +137,13 @@ public class Controller extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
+		response.setHeader("X-Frame-Options", "SAMEORIGIN");
+		response.setHeader("Content-Security-Policy",
+				"default-src 'self'; object-src 'none'; style-src 'self'; img-src 'self'; media-src 'self'; frame-src 'none'; font-src 'self'; connect-src 'self'");
+		response.setHeader("X-Content-Security-Policy",
+				"default-src 'self'; object-src 'none'; style-src 'self'; img-src 'self'; media-src 'self'; frame-src 'none'; font-src 'self'; connect-src 'self'");
+		response.setHeader("X-WebKit-CSP",
+				"default-src 'self'; object-src 'none'; style-src 'self'; img-src 'self'; media-src 'self'; frame-src 'none'; font-src 'self'; connect-src 'self'");
 	}
 
 	/**
