@@ -27,10 +27,12 @@ package hu.thom.mileit.ui;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -92,6 +94,8 @@ public class Controller extends HttpServlet {
 
 	public final Set<String> validationMessages = new HashSet<String>();
 	public final Map<String, Object> assignedObjects = new HashMap<String, Object>();
+	
+	private static final Stream<String> headers = Arrays.stream(new String[] { "Content-Security-Policy", "X-Content-Security-Policy", "X-WebKit-CSP" });
 
 	/**
 	 * Constructor
@@ -121,12 +125,8 @@ public class Controller extends HttpServlet {
 		request.setCharacterEncoding("UTF-8");
 		response.setHeader("X-Frame-Options", "SAMEORIGIN");
 
-		response.setHeader("Content-Security-Policy",
-				"default-src 'self'; object-src 'none'; style-src 'self'; img-src 'self'; media-src 'self'; frame-src 'none'; font-src 'self'; connect-src 'self'");
-		response.setHeader("X-Content-Security-Policy",
-				"default-src 'self'; object-src 'none'; style-src 'self'; img-src 'self'; media-src 'self'; frame-src 'none'; font-src 'self'; connect-src 'self'");
-		response.setHeader("X-WebKit-CSP",
-				"default-src 'self'; object-src 'none'; style-src 'self'; img-src 'self'; media-src 'self'; frame-src 'none'; font-src 'self'; connect-src 'self'");
+		headers.forEach(x -> response.setHeader(x,
+				"default-src 'self'; object-src 'none'; style-src 'self'; img-src 'self'; media-src 'self'; frame-src 'none'; font-src 'self'; connect-src 'self'"));
 	}
 
 	/**
@@ -138,12 +138,9 @@ public class Controller extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
 		response.setHeader("X-Frame-Options", "SAMEORIGIN");
-		response.setHeader("Content-Security-Policy",
-				"default-src 'self'; object-src 'none'; style-src 'self'; img-src 'self'; media-src 'self'; frame-src 'none'; font-src 'self'; connect-src 'self'");
-		response.setHeader("X-Content-Security-Policy",
-				"default-src 'self'; object-src 'none'; style-src 'self'; img-src 'self'; media-src 'self'; frame-src 'none'; font-src 'self'; connect-src 'self'");
-		response.setHeader("X-WebKit-CSP",
-				"default-src 'self'; object-src 'none'; style-src 'self'; img-src 'self'; media-src 'self'; frame-src 'none'; font-src 'self'; connect-src 'self'");
+		
+		headers.forEach(x -> response.setHeader(x,
+				"default-src 'self'; object-src 'none'; style-src 'self'; img-src 'self'; media-src 'self'; frame-src 'none'; font-src 'self'; connect-src 'self'"));
 	}
 
 	/**
