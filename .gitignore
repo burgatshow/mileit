@@ -16,3 +16,4 @@ MileIT/*/bin/
 *.prefs
 .DS_Store
 MileIT/WebContent/WEB-INF/lib/esapi-2.2.0.0-RC2.jar
+*.class
