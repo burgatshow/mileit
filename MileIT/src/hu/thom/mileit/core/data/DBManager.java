@@ -1220,7 +1220,7 @@ public class DBManager implements Serializable {
 			while (rs.next()) {
 				refuel = new RefuelModel(rs.getInt(1));
 				refuel.setRefuelDate(rs.getTimestamp(4)).setOdometer(rs.getDouble(5)).setFuelAmount(rs.getDouble(7)).setAmount(rs.getDouble(9))
-						.setUnitPrice(rs.getDouble(6)).setDistance(rs.getDouble(15));
+						.setUnitPrice(rs.getDouble(6)).setDistance(rs.getDouble(15)).setAvgConsumption(rs.getDouble(16));
 
 				refuel.setCar(new CarModel(rs.getInt(2), rs.getString(12), em != null ? em.decrypt(rs.getString(11)) : rs.getString(11)));
 				refuel.setPlace(new PlaceModel(rs.getInt(3), rs.getString(13), null, 0, 0, 1));

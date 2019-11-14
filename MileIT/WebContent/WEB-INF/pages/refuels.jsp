@@ -81,6 +81,9 @@
 							<th class="text-center"><fmt:message key="refuels.form.distance">
 									<fmt:param value="${user.distance eq '1' ? 'km' : 'mi'}" />
 								</fmt:message></th>
+							<th class="text-center"><fmt:message key="refuels.form.avg_consumption">
+									<fmt:param value="L/100 km" />
+								</fmt:message></th>
 							<th class="text-center"><fmt:message key="table.actions" /></th>
 						</tr>
 					</thead>
@@ -90,8 +93,8 @@
 								<tr>
 									<td class="text-center align-middle"><c:out value="${r.car.friendlyName}" /> <br> <span class="badge badge-dark"><c:out
 												value="${r.car.plateNumber}" /></span></td>
-									<td class="align-middle"><c:out value="${r.place.name}" /><br> <span class="badge badge-dark"><fmt:formatDate
-												type="both" value="${r.refuelDate}" pattern="${user.dateFormat}" /></span></td>
+									<td class="align-middle"><c:out value="${r.place.name}" /><br> <span class="badge badge-dark"><fmt:formatDate type="both"
+												value="${r.refuelDate}" pattern="${user.dateFormat}" /></span></td>
 									<td class="text-right align-middle"><fmt:formatNumber value="${r.unitPrice}" type="number" pattern="#,##0.00"
 											maxFractionDigits="${user.rounded eq 1 ? 0 : 2}" minFractionDigits="0" /></td>
 									<td class="text-right align-middle"><fmt:formatNumber type="number" pattern="#,##0.00" maxFractionDigits="${user.rounded eq 1 ? 0 : 2}"
@@ -101,6 +104,8 @@
 									<td class="text-right align-middle"><fmt:formatNumber value="${r.odometer}" pattern="#,##0.00" type="number" minFractionDigits="0"
 											maxFractionDigits="${user.rounded eq 1 ? 0 : 2}" /></td>
 									<td class="text-right align-middle"><fmt:formatNumber value="${r.distance}" pattern="#,##0.00" type="number" minFractionDigits="0"
+											maxFractionDigits="${user.rounded eq 1 ? 0 : 2}" /></td>
+									<td class="text-right align-middle"><fmt:formatNumber value="${r.avgConsumption}" pattern="#,##0.00" type="number" minFractionDigits="0"
 											maxFractionDigits="${user.rounded eq 1 ? 0 : 2}" /></td>
 									<td class="align-middle text-center"><a href="?m=update&amp;id=<c:out value="${r.id}" />" class="btn btn-primary" role="button"><fmt:message
 												key="button.edit" /></a><a href="#" data-href="?m=delete&amp;id=<c:out value="${r.id}" />" class="btn btn-danger ml-2" data-toggle="modal"

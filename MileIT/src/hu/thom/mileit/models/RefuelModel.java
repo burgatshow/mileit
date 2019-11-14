@@ -44,6 +44,7 @@ public class RefuelModel extends Model {
 	private double amount;
 	private boolean partialRefuel;
 	private double distance;
+	private double avgConsumption;
 
 	public RefuelModel() {
 	}
@@ -76,8 +77,43 @@ public class RefuelModel extends Model {
 		setId(id);
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		RefuelModel other = (RefuelModel) obj;
+		if (Double.doubleToLongBits(amount) != Double.doubleToLongBits(other.amount))
+			return false;
+		if (Double.doubleToLongBits(avgConsumption) != Double.doubleToLongBits(other.avgConsumption))
+			return false;
+		if (Double.doubleToLongBits(distance) != Double.doubleToLongBits(other.distance))
+			return false;
+		if (Double.doubleToLongBits(fuelAmount) != Double.doubleToLongBits(other.fuelAmount))
+			return false;
+		if (Double.doubleToLongBits(odometer) != Double.doubleToLongBits(other.odometer))
+			return false;
+		if (partialRefuel != other.partialRefuel)
+			return false;
+		if (refuelDate == null) {
+			if (other.refuelDate != null)
+				return false;
+		} else if (!refuelDate.equals(other.refuelDate))
+			return false;
+		if (Double.doubleToLongBits(unitPrice) != Double.doubleToLongBits(other.unitPrice))
+			return false;
+		return true;
+	}
+
 	public double getAmount() {
 		return amount;
+	}
+
+	public double getAvgConsumption() {
+		return avgConsumption;
 	}
 
 	public double getDistance() {
@@ -108,6 +144,28 @@ public class RefuelModel extends Model {
 		return unitPrice;
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		long temp;
+		temp = Double.doubleToLongBits(amount);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(avgConsumption);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(distance);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(fuelAmount);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(odometer);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		result = prime * result + (partialRefuel ? 1231 : 1237);
+		result = prime * result + ((refuelDate == null) ? 0 : refuelDate.hashCode());
+		temp = Double.doubleToLongBits(unitPrice);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		return result;
+	}
+
 	public boolean isPartialRefuel() {
 		return partialRefuel;
 	}
@@ -123,6 +181,11 @@ public class RefuelModel extends Model {
 		} catch (Exception e) {
 			this.amount = 0;
 		}
+		return this;
+	}
+
+	public RefuelModel setAvgConsumption(double avgConsumption) {
+		this.avgConsumption = avgConsumption;
 		return this;
 	}
 
@@ -214,58 +277,9 @@ public class RefuelModel extends Model {
 	}
 
 	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = super.hashCode();
-		long temp;
-		temp = Double.doubleToLongBits(amount);
-		result = prime * result + (int) (temp ^ (temp >>> 32));
-		temp = Double.doubleToLongBits(distance);
-		result = prime * result + (int) (temp ^ (temp >>> 32));
-		temp = Double.doubleToLongBits(fuelAmount);
-		result = prime * result + (int) (temp ^ (temp >>> 32));
-		temp = Double.doubleToLongBits(odometer);
-		result = prime * result + (int) (temp ^ (temp >>> 32));
-		result = prime * result + (partialRefuel ? 1231 : 1237);
-		result = prime * result + ((refuelDate == null) ? 0 : refuelDate.hashCode());
-		temp = Double.doubleToLongBits(unitPrice);
-		result = prime * result + (int) (temp ^ (temp >>> 32));
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (!super.equals(obj))
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		RefuelModel other = (RefuelModel) obj;
-		if (Double.doubleToLongBits(amount) != Double.doubleToLongBits(other.amount))
-			return false;
-		if (Double.doubleToLongBits(distance) != Double.doubleToLongBits(other.distance))
-			return false;
-		if (Double.doubleToLongBits(fuelAmount) != Double.doubleToLongBits(other.fuelAmount))
-			return false;
-		if (Double.doubleToLongBits(odometer) != Double.doubleToLongBits(other.odometer))
-			return false;
-		if (partialRefuel != other.partialRefuel)
-			return false;
-		if (refuelDate == null) {
-			if (other.refuelDate != null)
-				return false;
-		} else if (!refuelDate.equals(other.refuelDate))
-			return false;
-		if (Double.doubleToLongBits(unitPrice) != Double.doubleToLongBits(other.unitPrice))
-			return false;
-		return true;
-	}
-
-	@Override
 	public String toString() {
 		return "RefuelModel [refuelDate=" + refuelDate + ", odometer=" + odometer + ", unitPrice=" + unitPrice + ", fuelAmount=" + fuelAmount
-				+ ", amount=" + amount + ", partialRefuel=" + partialRefuel + ", distance=" + distance + ", toString()=" + super.toString() + "]";
+				+ ", amount=" + amount + ", partialRefuel=" + partialRefuel + ", distance=" + distance + ", avgConsumption=" + avgConsumption + "]";
 	}
 
 }
